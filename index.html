@@ -11,7 +11,7 @@
     --gold: #ffb800;
     --crimson: #e62429;
     --cyan: #00d4ff;
-    --glass: rgba(10, 14, 28, 0.9);
+    --glass: rgba(10, 14, 28, 0.88);
   }
 
   * {
@@ -29,14 +29,171 @@
     height: 100%;
     height: 100dvh;
     overflow: hidden;
-    background: #05070e;
+    background: #070b14;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     color: #fff;
     touch-action: none;
   }
 
   /* =========================================================
-     SPLASH / OPEN IMAGE OVERLAY (FULLSCREEN 1280x700 SUPPORT)
+     GTA V STYLE LOADING SCREEN
+     ========================================================= */
+  #gta-loading-screen {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10500;
+    background: #05070e;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 1;
+    transition: opacity 0.45s ease;
+  }
+  #gta-loading-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .gta-bg-wrap {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at 65% 35%, #2b143b 0%, #0d1633 52%, #05070e 100%);
+  }
+  #gta-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.65s ease;
+    animation: gtaKenBurns 9s ease-in-out infinite alternate;
+  }
+  @keyframes gtaKenBurns {
+    0% { transform: scale(1.0) translate(0%, 0%); }
+    100% { transform: scale(1.1) translate(-1.8%, -1.2%); }
+  }
+  .gta-fallback-art {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(120deg, rgba(255, 184, 0, 0.14) 0%, transparent 45%),
+      linear-gradient(295deg, rgba(0, 212, 255, 0.16) 0%, transparent 48%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 14px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8vw;
+  }
+  .gta-emblem {
+    text-align: right;
+    transform: skewX(-8deg);
+    opacity: 0.92;
+  }
+  .gta-emblem .g1 { font-size: clamp(28px, 5vw, 56px); font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 6px 24px rgba(0,0,0,0.8); }
+  .gta-emblem .g2 {
+    font-size: clamp(38px, 7vw, 78px); font-weight: 900; line-height: 0.9;
+    background: linear-gradient(180deg, #ffe77a, #ff8800);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 6px 18px rgba(255,120,0,0.45));
+  }
+  .gta-emblem .g3 { font-size: clamp(18px, 3vw, 34px); font-weight: 800; letter-spacing: 8px; color: #ff474c; }
+
+  .gta-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4,6,14,0.65) 0%, rgba(4,6,14,0.12) 45%, rgba(4,6,14,0.92) 100%);
+    pointer-events: none;
+  }
+  .gta-top-bar {
+    position: relative;
+    z-index: 2;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .gta-badge {
+    background: rgba(255, 184, 0, 0.16);
+    border: 1px solid rgba(255, 184, 0, 0.7);
+    color: var(--gold);
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .gta-bottom-bar {
+    position: relative;
+    z-index: 2;
+    padding: 18px 28px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .gta-tip-box {
+    max-width: min(560px, 62vw);
+    border-left: 4px solid var(--gold);
+    padding-left: 14px;
+  }
+  .gta-tip-title {
+    font-size: clamp(14px, 2vw, 20px);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .gta-tip-text {
+    font-size: clamp(12px, 1.45vw, 15px);
+    color: #e2e8f0;
+    line-height: 1.4;
+  }
+  .gta-progress-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: clamp(190px, 26vw, 290px);
+  }
+  .gta-status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(12px, 1.4vw, 14px);
+    font-weight: 700;
+    color: #fff;
+  }
+  .gta-spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: gtaSpin 0.8s linear infinite;
+  }
+  @keyframes gtaSpin { to { transform: rotate(360deg); } }
+  .gta-track {
+    width: 100%;
+    height: 7px;
+    background: rgba(255,255,255,0.16);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .gta-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff7b00, #ffb800, #42e64d);
+    transition: width 0.22s ease;
+  }
+
+  /* =========================================================
+     WELCOME SPLASH OVERLAY (5 SECONDS AFTER GTA LOADING)
      ========================================================= */
   #splash-screen {
     position: fixed;
@@ -48,9 +205,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    transition: opacity 0.35s ease;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
     overflow: hidden;
+  }
+  #splash-screen.show {
+    opacity: 1;
+    pointer-events: auto;
   }
   #splash-screen.fade-out {
     opacity: 0;
@@ -171,26 +333,27 @@
   .screen { position: absolute; inset: 0; display: none; pointer-events: auto; }
   .screen.active { display: flex; }
 
-  /* Live Streaming Download Pill */
+  /* Live Streaming Pill */
   #asset-pill {
     position: fixed;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 40;
-    background: rgba(10, 14, 28, 0.94);
+    background: rgba(10, 14, 28, 0.92);
     border: 1px solid rgba(255, 184, 0, 0.6);
-    padding: 6px 15px;
+    padding: 5px 14px;
     border-radius: 99px;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 600;
     color: #e4ecff;
     display: flex;
     align-items: center;
     gap: 8px;
     pointer-events: none;
+    opacity: 0;
     transition: opacity 0.45s ease;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
   }
   .spin-dot {
     width: 8px; height: 8px; border-radius: 50%;
@@ -201,14 +364,14 @@
 
   /* MAIN MENU */
   #menu-screen {
-    background: linear-gradient(90deg, rgba(6,8,18,0.92) 0%, rgba(6,8,18,0.44) 40%, rgba(6,8,18,0.08) 100%);
+    background: linear-gradient(90deg, rgba(6,8,18,0.82) 0%, rgba(6,8,18,0.3) 42%, rgba(6,8,18,0.02) 100%);
     padding: 14px 24px;
     justify-content: space-between;
     align-items: stretch;
     pointer-events: none;
   }
   .menu-left, .menu-right { pointer-events: none; }
-  .menu-left *, .menu-right .top-right-tools, .menu-right .menu-bottom-right { pointer-events: auto; }
+  .menu-left *, .menu-right .menu-bottom-right { pointer-events: auto; }
 
   .menu-left {
     width: clamp(200px, 27vw, 290px);
@@ -234,8 +397,8 @@
 
   .coin-badge {
     margin-top: 8px;
-    background: rgba(255, 184, 0, 0.16);
-    border: 1px solid rgba(255, 184, 0, 0.55);
+    background: rgba(15, 20, 36, 0.85);
+    border: 1px solid rgba(255, 184, 0, 0.65);
     padding: 4px 12px; border-radius: 20px;
     font-size: 12px; font-weight: 700; color: var(--gold);
     display: inline-flex; align-items: center; gap: 6px;
@@ -264,16 +427,7 @@
 
   .menu-right {
     flex: 1; display: flex; flex-direction: column;
-    justify-content: space-between; align-items: flex-end; padding-bottom: 2px;
-  }
-
-  .top-right-tools { display: flex; gap: 8px; align-items: center; }
-  .env-toggle-btn {
-    background: var(--glass);
-    border: 1px solid rgba(255, 184, 0, 0.55);
-    color: #fff; padding: 7px 14px; border-radius: 22px;
-    font-size: 12px; font-weight: 700; cursor: pointer;
-    display: flex; align-items: center; gap: 7px;
+    justify-content: flex-end; align-items: flex-end; padding-bottom: 2px;
   }
 
   .menu-bottom-right { display: flex; flex-direction: column; align-items: flex-end; }
@@ -496,6 +650,8 @@
     #btn-punch { width: 52px; height: 52px; right: 66px; top: 24px; }
     #btn-kick  { width: 52px; height: 52px; right: 6px; bottom: 4px; }
     #btn-block { width: 50px; height: 50px; left: 10px; bottom: 4px; }
+    .gta-top-bar { padding: 10px 18px; }
+    .gta-bottom-bar { padding: 10px 18px 14px; }
   }
 
   .overlay-card {
@@ -519,7 +675,42 @@
 </head>
 
 <body>
-  <!-- GAME OPEN SPLASH SCREEN (FULLSCREEN 1280x700 SUPPORT) -->
+  <!-- STEP 1: GTA V STYLE LOADING SCREEN (LOADS ALL ASSETS BEFORE MENU) -->
+  <div id="gta-loading-screen">
+    <div class="gta-bg-wrap">
+      <div class="gta-fallback-art" id="gta-fallback-art">
+        <div class="gta-emblem">
+          <div class="g1">WAR</div>
+          <div class="g2">LEGEND</div>
+          <div class="g3">ARENA</div>
+        </div>
+      </div>
+      <img id="gta-slide-img" alt="Loading Slide" />
+      <div class="gta-vignette"></div>
+    </div>
+
+    <div class="gta-top-bar">
+      <div class="gta-badge">WAR LEGEND ARENA • STORY &amp; COMBAT</div>
+      <div style="font-size:12px;color:#b7c4e0;font-weight:700;">TAP SCREEN TO ENABLE AUDIO</div>
+    </div>
+
+    <div class="gta-bottom-bar">
+      <div class="gta-tip-box">
+        <div class="gta-tip-title" id="gta-tip-title">COMBAT MASTERY</div>
+        <div class="gta-tip-text" id="gta-tip-text">Preparing 3D Arena, Fighters, Animations and Audio...</div>
+      </div>
+
+      <div class="gta-progress-box">
+        <div class="gta-status-row">
+          <div class="gta-spinner"></div>
+          <span id="gta-status-text">Initializing Engine... 0%</span>
+        </div>
+        <div class="gta-track"><div class="gta-fill" id="gta-progress-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: WELCOME SPLASH SCREEN (5 SECONDS WITH IMAGE & AUDIO) -->
   <div id="splash-screen">
     <img id="splash-img" alt="Welcome to War Legend Arena" />
     <div id="splash-fallback">
@@ -549,7 +740,7 @@
   <div id="damage-vignette"></div>
   <div id="dmg-layer"></div>
 
-  <div id="asset-pill"><span class="spin-dot"></span><span id="asset-pill-text">Starting 3D Engine...</span></div>
+  <div id="asset-pill"><span class="spin-dot"></span><span id="asset-pill-text">Ready</span></div>
 
   <div class="ui-layer">
     <!-- MAIN MENU -->
@@ -587,17 +778,10 @@
           </button>
         </nav>
 
-        <div style="font-size:11px;color:#8a96b8;">v9.0 • Mobile Smooth • Big Floor &amp; Earth</div>
+        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v10.0 • Sunny Arena • 300 HP</div>
       </div>
 
       <div class="menu-right">
-        <div class="top-right-tools">
-          <button class="env-toggle-btn" id="btn-time-toggle">
-            <span id="time-ico"></span>
-            <span id="time-label">Mode: Night</span>
-          </button>
-        </div>
-
         <div class="menu-bottom-right">
           <div class="fighter-preview-info">
             <h3 id="preview-name">Ganfaul M. Aure</h3>
@@ -716,17 +900,19 @@
     </div>
   </div>
 
-<!-- Safety Splash Watchdog -->
+<!-- Safety Watchdog -->
 <script>
   window.__GAME_BOOTED = false;
   setTimeout(function() {
     if (!window.__GAME_BOOTED) {
+      var gta = document.getElementById('gta-loading-screen');
+      if (gta) gta.style.display = 'none';
       var sp = document.getElementById('splash-screen');
-      if (sp) { sp.classList.add('fade-out'); setTimeout(function(){ sp.style.display = 'none'; }, 360); }
+      if (sp) sp.style.display = 'none';
       var pill = document.getElementById('asset-pill-text');
       if (pill) pill.textContent = 'Engine Loading Slow (Check Internet / WebGL)';
     }
-  }, 8500);
+  }, 14000);
 </script>
 
 <script type="module">
@@ -788,7 +974,7 @@ const CHARACTER_LIST = [
 ];
 
 /* ============================================================================
-   [EASY EDIT 2] আপনার কাস্টম 3D অ্যারেনা ফাইল কনফিগারেশন (১০০% সংরক্ষিত)
+   [EASY EDIT 2] আপনার কাস্টম অ্যারেনা ফাইল কনফিগারেশন (3D Model + PNG Scenery)
    ============================================================================ */
 const ARENA_CONFIG = {
   floorFile:  './tileable_stylized_wooden_floor_texture.glb',
@@ -800,11 +986,42 @@ const ARENA_CONFIG = {
 };
 
 /* ============================================================================
-   [EASY EDIT 3] GAME OPEN IMAGE (1280x700) & ANNOUNCEMENT AUDIO FILES
+   [EASY EDIT 3] GTA V STYLE LOADING SCREEN SLIDES (এখানে ছবির নাম বসাতে পারবে)
+   ============================================================================ */
+const GTA_LOADING_CONFIG = {
+  enabled: true,
+  minDurationMs: 4200,
+  slideIntervalMs: 2200,
+  slides: [
+    {
+      image: './gta_load_1.png',
+      title: 'GANFAUL M. AURE',
+      tip: 'Press GUARD right as an attack lands to execute a zero-damage PARRY!'
+    },
+    {
+      image: './gta_load_2.png',
+      title: 'PALADIN NORDSTROM',
+      tip: 'Tap SLASH (L) to draw the Dragon Katana for devastating heavy damage!'
+    },
+    {
+      image: './gta_load_3.png',
+      title: 'VAMPIRE A. LUSTH',
+      tip: 'Chain Punch → Kick → Slash quickly to build unstoppable Combos!'
+    },
+    {
+      image: './gta_load_4.png',
+      title: 'VENOM SYMBIOTE',
+      tip: 'Every fighter enters the arena with 300 HP. Win 2 out of 3 rounds to claim victory!'
+    }
+  ]
+};
+
+/* ============================================================================
+   [EASY EDIT 4] WELCOME IMAGE & AUDIO FILES (5 SECONDS AFTER LOADING)
    ============================================================================ */
 const SPLASH_AND_ANNOUNCEMENT_CONFIG = {
   openImage: './20261121_031610.png',
-  splashDurationMs: 3500,
+  splashDurationMs: 5000,
   announcements: {
     welcome:    './AUD-20261121-WA0001.aac',
     round1:     './round_one_fight.mp3',
@@ -824,7 +1041,7 @@ const FIGHTERS = CHARACTER_LIST.map((c) => ({
   defenseMult: 0.9 + (c.defense / 100) * 0.18
 }));
 
-const CACHE_NAME = 'war-legend-cache-v9';
+const CACHE_NAME = 'war-legend-cache-v10';
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
 const DEVICE_MEM = navigator.deviceMemory || (IS_MOBILE ? 3 : 8);
 const CPU_CORES = navigator.hardwareConcurrency || 4;
@@ -859,12 +1076,8 @@ const ANIM_CANDIDATES = {
 
 const STATE = {
   screen: 'menu',
-  timeOfDay: 'night',
   quality: IS_LOW_END ? 'low' : (IS_MOBILE ? 'med' : 'high'),
   lowEndMode: IS_LOW_END,
-  builtinFloor: true,
-  builtinTrees: true,
-  builtinHouses: true,
   selectedHeroIdx: 0,
   selectedRivalIdx: Math.min(1, FIGHTERS.length - 1),
   difficulty: 'normal',
@@ -885,7 +1098,8 @@ const STATE = {
   roundEndTimer: 0,
   roundWinnerIdx: 0,
   sessionId: 0,
-  splashActive: true
+  gtaLoadingActive: true,
+  splashActive: false
 };
 
 const DIAG = {
@@ -1076,8 +1290,8 @@ class SoundManager {
       if (!url || this.announcements[key]) continue;
       try {
         const audio = new Audio(encodeURI(url));
-        audio.preload = STATE.lowEndMode ? 'none' : 'metadata';
-        audio.volume = 0.92;
+        audio.preload = 'auto';
+        audio.volume = 0.94;
         this.announcements[key] = audio;
       } catch (_) {}
     }
@@ -1125,11 +1339,11 @@ class SoundManager {
           const audio = new Audio(encodeURI(url));
           audio.loop = true;
           audio.volume = 0.28;
-          audio.preload = 'metadata';
+          audio.preload = 'auto';
           this.bgmAudio = audio;
           this.bgmReady = true;
           DIAG.audio.BGM = `Loaded (${url})`;
-          if (!STATE.splashActive && (STATE.screen === 'menu' || STATE.matchOver)) this.startBGM();
+          if (!STATE.gtaLoadingActive && !STATE.splashActive && (STATE.screen === 'menu' || STATE.matchOver)) this.startBGM();
           return;
         }
       } catch (_) {}
@@ -1153,7 +1367,7 @@ class SoundManager {
   }
 
   startBGM() {
-    if (STATE.splashActive) return;
+    if (STATE.gtaLoadingActive || STATE.splashActive) return;
     this.initCtx();
     if (!STATE.bgmEnabled || !this.bgmAudio) return;
     if (!this.bgmPlaying) {
@@ -1209,6 +1423,7 @@ const sound = new SoundManager();
 
 document.addEventListener('pointerdown', () => {
   sound.initCtx();
+  if (STATE.gtaLoadingActive) return;
   if (STATE.splashActive) {
     if (sound.pendingWelcomePlay) {
       sound.pendingWelcomePlay = false;
@@ -1220,20 +1435,29 @@ document.addEventListener('pointerdown', () => {
 }, { passive: true });
 
 /* ============================================================
-   5B. SPLASH SCREEN CONTROLLER
+   5B. GTA V LOADING SCREEN + 5-SECOND WELCOME SPLASH SEQUENCE
    ============================================================ */
+function setGtaProgress(pct, text) {
+  const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+  const fill = document.getElementById('gta-progress-fill');
+  const txt = document.getElementById('gta-status-text');
+  if (fill) fill.style.width = `${clamped}%`;
+  if (txt) txt.textContent = `${text} (${clamped}%)`;
+}
+
 function finishSplash() {
   const splashEl = document.getElementById('splash-screen');
   if (!STATE.splashActive) return;
   STATE.splashActive = false;
   sound.stopAnnouncement('welcome');
+  splashEl.classList.remove('show');
   splashEl.classList.add('fade-out');
-  setTimeout(() => { splashEl.style.display = 'none'; }, 360);
+  setTimeout(() => { splashEl.style.display = 'none'; }, 420);
   if (STATE.screen === 'menu') sound.startBGM();
-  setTimeout(() => { streamAllAssets(); }, 100);
 }
 
-function startSplashSequence() {
+function startWelcomeSplash() {
+  const splashEl = document.getElementById('splash-screen');
   const splashImg = document.getElementById('splash-img');
   const splashFallback = document.getElementById('splash-fallback');
 
@@ -1249,14 +1473,88 @@ function startSplashSequence() {
     };
   }
 
+  splashEl.style.display = 'flex';
+  requestAnimationFrame(() => splashEl.classList.add('show'));
+
   sound.playAnnouncement('welcome');
-  const dur = Math.max(2500, Math.min(4500, SPLASH_AND_ANNOUNCEMENT_CONFIG.splashDurationMs || 3500));
+  const dur = SPLASH_AND_ANNOUNCEMENT_CONFIG.splashDurationMs || 5000;
   setTimeout(finishSplash, dur);
 }
-startSplashSequence();
+
+async function startBootSequence() {
+  const gtaEl = document.getElementById('gta-loading-screen');
+  const slideImg = document.getElementById('gta-slide-img');
+  const fallbackArt = document.getElementById('gta-fallback-art');
+  const tipTitle = document.getElementById('gta-tip-title');
+  const tipText = document.getElementById('gta-tip-text');
+
+  // Pre-load openImage cleanly during GTA Loading
+  if (SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage) {
+    const pre = new Image();
+    pre.src = encodeURI(SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage);
+  }
+
+  let slideIdx = 0;
+  const slides = GTA_LOADING_CONFIG.slides || [];
+  function showSlide(idx) {
+    if (!slides.length) return;
+    const s = slides[idx % slides.length];
+    tipTitle.textContent = s.title || 'WAR LEGEND ARENA';
+    tipText.textContent = s.tip || '';
+    if (s.image) {
+      const tester = new Image();
+      tester.src = encodeURI(s.image);
+      tester.onload = () => {
+        slideImg.style.opacity = '0';
+        setTimeout(() => {
+          slideImg.src = tester.src;
+          slideImg.style.opacity = '1';
+          fallbackArt.style.display = 'none';
+        }, 180);
+      };
+      tester.onerror = () => {
+        slideImg.style.opacity = '0';
+        fallbackArt.style.display = 'flex';
+      };
+    }
+  }
+
+  showSlide(0);
+  const slideTimer = setInterval(() => {
+    slideIdx++;
+    showSlide(slideIdx);
+  }, GTA_LOADING_CONFIG.slideIntervalMs || 2200);
+
+  const bootStart = performance.now();
+  setGtaProgress(4, 'Starting 3D Arena');
+
+  // Load ALL 3D models, animations, images & audio while GTA loading screen plays!
+  await Promise.race([
+    streamAllAssets((pct, label) => setGtaProgress(pct, label)),
+    new Promise((res) => setTimeout(res, 22000)) // Safety cap so slow network never freezes permanently
+  ]);
+
+  const elapsed = performance.now() - bootStart;
+  const waitLeft = Math.max(0, (GTA_LOADING_CONFIG.minDurationMs || 4200) - elapsed);
+  if (waitLeft > 0) {
+    setGtaProgress(96, 'Finalizing Arena');
+    await new Promise((r) => setTimeout(r, waitLeft));
+  }
+
+  setGtaProgress(100, 'Ready!');
+  clearInterval(slideTimer);
+  await new Promise((r) => setTimeout(r, 250));
+
+  STATE.gtaLoadingActive = false;
+  gtaEl.classList.add('fade-out');
+  setTimeout(() => { gtaEl.style.display = 'none'; }, 460);
+
+  // Immediately play the 5-second Welcome Image & Audio Splash
+  startWelcomeSplash();
+}
 
 /* ============================================================
-   6. THREE.JS SCENE (MOBILE ULTRA-SMOOTH + BIG FLOOR & EARTH SOIL)
+   6. THREE.JS SCENE (BRIGHT COLOURFUL SUNNY DAYTIME ONLY)
    ============================================================ */
 const canvas = document.getElementById('game-canvas');
 let renderer;
@@ -1283,7 +1581,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.type = THREE.BasicShadowMap;
 if (!IS_MOBILE && !STATE.lowEndMode) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.24;
+  renderer.toneMappingExposure = 1.2;
 }
 
 canvas.addEventListener('webglcontextlost', (e) => {
@@ -1297,17 +1595,18 @@ canvas.addEventListener('webglcontextrestored', () => {
 }, false);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x090d1f);
-scene.fog = new THREE.FogExp2(0x0c1126, 0.018);
+scene.background = new THREE.Color(0x87cefa);
+scene.fog = new THREE.FogExp2(0xd8eeff, 0.0065);
 
-const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 120);
+const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 130);
 camera.position.set(0, 2.2, 8.2);
 
-const hemiLight = new THREE.HemisphereLight(0x88a8ff, 0x3b2618, IS_MOBILE ? 1.85 : 1.55);
+// Bright, vibrant & colourful daytime lighting (fast on mobile!)
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffeed8, IS_MOBILE ? 2.25 : 2.05);
 scene.add(hemiLight);
 
-const mainDirLight = new THREE.DirectionalLight(0xd0e2ff, IS_MOBILE ? 2.45 : 2.35);
-mainDirLight.position.set(4, 12, 6);
+const mainDirLight = new THREE.DirectionalLight(0xfff6e5, IS_MOBILE ? 2.45 : 2.6);
+mainDirLight.position.set(-4, 14, 9);
 mainDirLight.castShadow = false;
 mainDirLight.shadow.mapSize.set(512, 512);
 mainDirLight.shadow.camera.near = 1; mainDirLight.shadow.camera.far = 28;
@@ -1315,209 +1614,38 @@ mainDirLight.shadow.camera.left = -9; mainDirLight.shadow.camera.right = 9;
 mainDirLight.shadow.camera.top = 7; mainDirLight.shadow.camera.bottom = -3;
 scene.add(mainDirLight);
 
-const warmRimLeft = new THREE.PointLight(0xff6622, 2.8, 18); warmRimLeft.position.set(-5.5, 2.8, 3.0); scene.add(warmRimLeft);
-const coolRimRight = new THREE.PointLight(0x00b7ff, 2.8, 18); coolRimRight.position.set(5.5, 2.8, 3.0); scene.add(coolRimRight);
+const fillDirLight = new THREE.DirectionalLight(0xe0f2fe, 0.95);
+fillDirLight.position.set(6, 7, 8);
+scene.add(fillDirLight);
 
 const shadowTex = (() => {
   const c = document.createElement('canvas');
   c.width = 64; c.height = 64;
   const ctx = c.getContext('2d');
   const grad = ctx.createRadialGradient(32, 32, 4, 32, 32, 30);
-  grad.addColorStop(0, 'rgba(0,0,0,0.75)');
-  grad.addColorStop(0.55, 'rgba(0,0,0,0.36)');
+  grad.addColorStop(0, 'rgba(0,0,0,0.62)');
+  grad.addColorStop(0.55, 'rgba(0,0,0,0.28)');
   grad.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 64, 64);
   return new THREE.CanvasTexture(c);
 })();
 
-/* Procedural Earth / Soil (মাটি) Texture - Power of 2 (512x512) for 100% Mobile GPU Compatibility */
-function createSoilTexture() {
-  const c = document.createElement('canvas');
-  c.width = 512; c.height = 512;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#4a3525';
-  ctx.fillRect(0, 0, 512, 512);
-
-  // Subtle earthy soil grain, pebbles & natural variation
-  for (let i = 0; i < 3200; i++) {
-    const x = Math.random() * 512;
-    const y = Math.random() * 512;
-    const r = 1 + Math.random() * 3.5;
-    const shade = Math.random();
-    if (shade < 0.35) ctx.fillStyle = 'rgba(38, 25, 16, 0.35)';
-    else if (shade < 0.7) ctx.fillStyle = 'rgba(92, 66, 44, 0.32)';
-    else if (shade < 0.9) ctx.fillStyle = 'rgba(116, 86, 56, 0.25)';
-    else ctx.fillStyle = 'rgba(65, 78, 42, 0.22)'; // subtle moss/grass speck
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(16, 12);
-  tex.anisotropy = 1;
-  return tex;
-}
-
-const groundSoilGroup = new THREE.Group();
-const builtinFloorGroup = new THREE.Group();
-const builtinTreesGroup = new THREE.Group();
-const builtinHousesGroup = new THREE.Group();
 const customArenaGroup = new THREE.Group();
-scene.add(groundSoilGroup, builtinFloorGroup, builtinTreesGroup, builtinHousesGroup, customArenaGroup);
+scene.add(customArenaGroup);
 
-let soilGroundMat = null;
-let soilRimMat = null;
-let celestialOrb = null;
-let arenaRuneRing = null;
+// Simple minimal floor placeholder ONLY while floor GLB hasn't loaded (hidden automatically once custom floor loads)
+const fallbackFloorMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(54, 32),
+  new THREE.MeshLambertMaterial({ color: 0x7c5836, side: THREE.DoubleSide })
+);
+fallbackFloorMesh.rotation.x = -Math.PI / 2;
+fallbackFloorMesh.position.y = -0.02;
+scene.add(fallbackFloorMesh);
+
 let loadedSkyTex = null;
-const lanternLights = [];
 
-function buildPermanentSoilGround() {
-  const soilTex = createSoilTexture();
-  soilGroundMat = new THREE.MeshLambertMaterial({ color: 0xb89c80, map: soilTex });
-  // Huge continuous earth/soil ground extending far beyond the wooden floor
-  const earthPlane = new THREE.Mesh(new THREE.PlaneGeometry(140, 100), soilGroundMat);
-  earthPlane.rotation.x = -Math.PI / 2;
-  earthPlane.position.set(0, -0.08, -10);
-  groundSoilGroup.add(earthPlane);
-
-  // Raised earthen foundation under the big wooden stage so it sits naturally on soil
-  soilRimMat = new THREE.MeshLambertMaterial({ color: 0x543c29, map: soilTex });
-  const earthMound = new THREE.Mesh(new THREE.BoxGeometry(50, 0.36, 30), soilRimMat);
-  earthMound.position.set(0, -0.22, 0);
-  groundSoilGroup.add(earthMound);
-
-  freezeStaticTransforms(groundSoilGroup);
-}
-buildPermanentSoilGround();
-
-function createSakuraTree(x, z, scale = 1) {
-  const tree = new THREE.Group();
-  const trunkMat = new THREE.MeshLambertMaterial({ color: 0x3b261d });
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.16 * scale, 0.32 * scale, 3.3 * scale, 5), trunkMat);
-  trunk.position.y = 1.65 * scale; tree.add(trunk);
-
-  const leafMat = new THREE.MeshLambertMaterial({ color: 0xff85b8, emissive: 0x260512 });
-  [[0, 3.5, 0, 1.55], [-1.05, 3.0, 0.4, 1.2], [1.05, 3.1, -0.3, 1.25]].forEach(([bx, by, bz, br]) => {
-    const crown = new THREE.Mesh(new THREE.DodecahedronGeometry(br * scale, 0), leafMat);
-    crown.position.set(bx * scale, by * scale, bz * scale);
-    tree.add(crown);
-  });
-  tree.position.set(x, 0, z);
-  builtinTreesGroup.add(tree);
-}
-
-function buildArenaEnvironment() {
-  const floorMat = new THREE.MeshLambertMaterial({ color: 0x242b42 });
-  const floor = new THREE.Mesh(new THREE.BoxGeometry(42, 0.14, 24), floorMat);
-  floor.position.set(0, -0.07, 0); builtinFloorGroup.add(floor);
-
-  const stoneMat = new THREE.MeshLambertMaterial({ color: 0x313a56 });
-  const centerSlab = new THREE.Mesh(new THREE.BoxGeometry(26, 0.04, 8), stoneMat);
-  centerSlab.position.set(0, 0.005, 0); builtinFloorGroup.add(centerSlab);
-
-  const borderMat = new THREE.MeshLambertMaterial({ color: 0x7a5e28 });
-  const frontTrim = new THREE.Mesh(new THREE.BoxGeometry(36, 0.16, 0.4), borderMat);
-  frontTrim.position.set(0, 0.04, 4.2); builtinFloorGroup.add(frontTrim);
-
-  [-14, 14].forEach((px) => {
-    const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.44, 0.5), borderMat);
-    pillar.position.set(px, 0.22, 4.2);
-    builtinFloorGroup.add(pillar);
-  });
-
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(2.6, 2.82, 32),
-    new THREE.MeshBasicMaterial({ color: 0xffb800, side: THREE.DoubleSide, transparent: true, opacity: 0.48 })
-  );
-  ring.rotation.x = -Math.PI / 2; ring.position.y = 0.028; builtinFloorGroup.add(ring);
-
-  arenaRuneRing = new THREE.Mesh(
-    new THREE.RingGeometry(2.1, 2.22, 16),
-    new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide, transparent: true, opacity: 0.32, wireframe: true })
-  );
-  arenaRuneRing.rotation.x = -Math.PI / 2; arenaRuneRing.position.y = 0.029;
-  builtinFloorGroup.add(arenaRuneRing);
-
-  const innerRing = new THREE.Mesh(
-    new THREE.RingGeometry(1.1, 1.18, 24),
-    new THREE.MeshBasicMaterial({ color: 0x00d4ff, side: THREE.DoubleSide, transparent: true, opacity: 0.38 })
-  );
-  innerRing.rotation.x = -Math.PI / 2; innerRing.position.y = 0.03; builtinFloorGroup.add(innerRing);
-
-  const grid = new THREE.GridHelper(38, 22, 0x525d7d, 0x343c54);
-  grid.position.y = 0.022; builtinFloorGroup.add(grid);
-
-  const trimMat = new THREE.MeshLambertMaterial({ color: 0x3c445e });
-  const backStep = new THREE.Mesh(new THREE.BoxGeometry(24, 0.36, 1.6), trimMat);
-  backStep.position.set(0, 0.18, -5.2); builtinHousesGroup.add(backStep);
-
-  const redMat = new THREE.MeshLambertMaterial({ color: 0xa61c22 });
-  const darkRoofMat = new THREE.MeshLambertMaterial({ color: 0x161a26 });
-  const railBar = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 0.12), redMat);
-  railBar.position.set(0, 0.95, -4.55); builtinHousesGroup.add(railBar);
-  for (let rx = -9; rx <= 9; rx += 3) {
-    const post = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.85, 0.14), trimMat);
-    post.position.set(rx, 0.65, -4.55); builtinHousesGroup.add(post);
-  }
-
-  const pL = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 5.4, 7), redMat); pL.position.set(-2.6, 2.7, -6.2);
-  const pR = pL.clone(); pR.position.x = 2.6;
-  const basePedL = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.45, 0.7), darkRoofMat); basePedL.position.set(-2.6, 0.22, -6.2);
-  const basePedR = basePedL.clone(); basePedR.position.x = 2.6;
-  const topBeam = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.44, 0.6), darkRoofMat); topBeam.position.set(0, 5.25, -6.2);
-  const subBeam = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.28, 0.4), redMat); subBeam.position.set(0, 4.3, -6.2);
-  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.16), borderMat); plaque.position.set(0, 4.78, -5.95);
-  builtinHousesGroup.add(pL, pR, basePedL, basePedR, topBeam, subBeam, plaque);
-
-  const pagoda = new THREE.Group();
-  const wallMat = new THREE.MeshLambertMaterial({ color: 0x24283b });
-  const winMat = new THREE.MeshBasicMaterial({ color: 0xffaa44 });
-  for (let tier = 0; tier < 3; tier++) {
-    const w = 4.2 - tier * 0.9, yBase = 1.2 + tier * 2.1;
-    const body = new THREE.Mesh(new THREE.BoxGeometry(w, 1.5, w * 0.7), wallMat); body.position.y = yBase;
-    const win = new THREE.Mesh(new THREE.BoxGeometry(w * 0.45, 0.45, w * 0.72), winMat); win.position.y = yBase;
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(w * 0.92, 0.95, 4), darkRoofMat); roof.position.y = yBase + 1.15; roof.rotation.y = Math.PI / 4;
-    pagoda.add(body, win, roof);
-  }
-  pagoda.position.set(-6.4, 0, -12.5); builtinHousesGroup.add(pagoda);
-  const pagoda2 = pagoda.clone(); pagoda2.scale.setScalar(0.84); pagoda2.position.set(6.8, 0, -13.2); builtinHousesGroup.add(pagoda2);
-
-  const mtnMat = new THREE.MeshLambertMaterial({ color: 0x14192e });
-  [[-12, -22, 7, 10], [0, -26, 9, 12], [13, -23, 7.5, 11]].forEach(([mx, mz, mr, mh]) => {
-    const mtn = new THREE.Mesh(new THREE.ConeGeometry(mr, mh, 5), mtnMat);
-    mtn.position.set(mx, mh * 0.42, mz);
-    builtinHousesGroup.add(mtn);
-  });
-
-  [-4.6, 4.6, -7.5, 7.5].forEach((lx, idx) => {
-    const lz = idx < 2 ? -4.1 : -3.2;
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.44, 1.4, 6), trimMat); base.position.set(lx, 0.7, lz);
-    const flame = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.48, 0.42), new THREE.MeshBasicMaterial({ color: 0xffaa33 })); flame.position.set(lx, 1.65, lz);
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(0.64, 0.46, 6), darkRoofMat); roof.position.set(lx, 2.1, lz);
-    builtinHousesGroup.add(base, flame, roof);
-    if (idx < 2) {
-      const pt = new THREE.PointLight(0xff9933, 2.2, 10); pt.position.set(lx, 1.7, lz + 0.3);
-      lanternLights.push(pt); builtinHousesGroup.add(pt);
-    }
-  });
-
-  createSakuraTree(-7.2, -5.2, 1.15);
-  createSakuraTree(7.2, -5.4, 1.2);
-  createSakuraTree(-10.0, -8.5, 1.35);
-  createSakuraTree(10.0, -8.8, 1.3);
-
-  celestialOrb = new THREE.Mesh(new THREE.CircleGeometry(3.6, 22), new THREE.MeshBasicMaterial({ color: 0xdce8ff, fog: false }));
-  celestialOrb.position.set(2.4, 7.2, -28);
-  scene.add(celestialOrb);
-}
-buildArenaEnvironment();
-
-const PETAL_COUNT = 50;
+const PETAL_COUNT = 42;
 let activePetals = 14;
 const petalGeo = new THREE.BufferGeometry();
 const petalPos = new Float32Array(PETAL_COUNT * 3);
@@ -1527,7 +1655,7 @@ for (let i = 0; i < PETAL_COUNT; i++) {
   petalPos[i * 3 + 2] = (Math.random() - 0.5) * 9 - 1;
 }
 petalGeo.setAttribute('position', new THREE.BufferAttribute(petalPos, 3));
-const petals = new THREE.Points(petalGeo, new THREE.PointsMaterial({ color: 0xff9ec7, size: 0.12, transparent: true, opacity: 0.85 }));
+const petals = new THREE.Points(petalGeo, new THREE.PointsMaterial({ color: 0xff8fc3, size: 0.13, transparent: true, opacity: 0.9 }));
 scene.add(petals);
 
 function applyQuality(q) {
@@ -1537,75 +1665,30 @@ function applyQuality(q) {
     renderer.setPixelRatio(IS_MOBILE ? 0.72 : 0.9);
     renderer.shadowMap.enabled = false;
     mainDirLight.castShadow = false;
-    warmRimLeft.visible = false;
-    coolRimRight.visible = false;
-    lanternLights.forEach(l => l.visible = false);
+    fillDirLight.visible = true;
     activePetals = IS_MOBILE ? 8 : 14;
   } else if (q === 'med') {
     renderer.setPixelRatio(IS_MOBILE ? Math.min(dpr, 0.88) : Math.min(dpr, 1.3));
     renderer.shadowMap.enabled = false;
     mainDirLight.castShadow = false;
-    warmRimLeft.visible = !IS_MOBILE && !STATE.lowEndMode;
-    coolRimRight.visible = !IS_MOBILE;
-    lanternLights.forEach(l => l.visible = !IS_MOBILE);
-    activePetals = IS_MOBILE ? 14 : 32;
+    fillDirLight.visible = true;
+    activePetals = IS_MOBILE ? 14 : 28;
   } else {
     renderer.setPixelRatio(Math.min(dpr, IS_MOBILE ? 1.15 : 1.75));
     renderer.shadowMap.enabled = !IS_MOBILE;
     mainDirLight.castShadow = !IS_MOBILE;
     mainDirLight.shadow.mapSize.set(IS_MOBILE ? 512 : 1024, IS_MOBILE ? 512 : 1024);
     if (mainDirLight.shadow.map) { mainDirLight.shadow.map.dispose(); mainDirLight.shadow.map = null; }
-    warmRimLeft.visible = true;
-    coolRimRight.visible = true;
-    lanternLights.forEach(l => l.visible = true);
-    activePetals = IS_MOBILE ? 24 : PETAL_COUNT;
+    fillDirLight.visible = true;
+    activePetals = IS_MOBILE ? 22 : PETAL_COUNT;
   }
   petalGeo.setDrawRange(0, activePetals);
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 applyQuality(STATE.quality);
 
-function syncArenaVisibility() {
-  builtinFloorGroup.visible = STATE.builtinFloor;
-  builtinTreesGroup.visible = STATE.builtinTrees;
-  builtinHousesGroup.visible = STATE.builtinHouses;
-}
-
-function applyTimeOfDay(mode) {
-  STATE.timeOfDay = mode;
-  const isDay = mode === 'day';
-  if (isDay) {
-    scene.background = loadedSkyTex ? loadedSkyTex : new THREE.Color(0x8bc9ff);
-    scene.fog.color.setHex(0xcbe6ff); scene.fog.density = 0.012;
-    hemiLight.color.setHex(0xe8f4ff); hemiLight.groundColor.setHex(0x6e5e4d); hemiLight.intensity = IS_MOBILE ? 2.1 : 1.95;
-    mainDirLight.color.setHex(0xfff1d0); mainDirLight.intensity = IS_MOBILE ? 2.6 : 2.85; mainDirLight.position.set(-5, 14, 8);
-    warmRimLeft.intensity = 1.4; coolRimRight.intensity = 1.2;
-    celestialOrb.material.color.setHex(0xffe885); celestialOrb.position.set(-3.5, 7.6, -28);
-    petals.material.color.setHex(0xff9ec7);
-    lanternLights.forEach(l => l.intensity = 0.4);
-    if (soilGroundMat) soilGroundMat.color.setHex(0xd4b696);
-    if (soilRimMat) soilRimMat.color.setHex(0x876749);
-  } else {
-    scene.background = loadedSkyTex ? loadedSkyTex : new THREE.Color(0x090d1f);
-    scene.fog.color.setHex(0x0c1126); scene.fog.density = 0.018;
-    hemiLight.color.setHex(0x88a8ff); hemiLight.groundColor.setHex(0x3b2618); hemiLight.intensity = IS_MOBILE ? 1.85 : 1.55;
-    mainDirLight.color.setHex(0xd0e2ff); mainDirLight.intensity = IS_MOBILE ? 2.45 : 2.35; mainDirLight.position.set(4, 12, 6);
-    warmRimLeft.intensity = 2.8; coolRimRight.intensity = 2.8;
-    celestialOrb.material.color.setHex(0xdce8ff); celestialOrb.position.set(2.4, 7.2, -28);
-    petals.material.color.setHex(0xffb8d9);
-    lanternLights.forEach(l => l.intensity = 2.2);
-    if (soilGroundMat) soilGroundMat.color.setHex(0x8c735a);
-    if (soilRimMat) soilRimMat.color.setHex(0x523b28);
-  }
-  const sunSVG = `<svg class="svg-ico" style="color:#ffb800;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
-  const moonSVG = `<svg class="svg-ico" style="color:#9ec5ff;" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
-  document.getElementById('time-ico').innerHTML = isDay ? sunSVG : moonSVG;
-  document.getElementById('time-label').textContent = isDay ? 'Mode: Morning' : 'Mode: Night';
-}
-applyTimeOfDay('night');
-
 /* ============================================================
-   7. TEXTURE DOWNSCALER, INSTANCED ARENA LOADER & LOW-RAM CACHE
+   7. TEXTURE DOWNSCALER, FULL ARENA LOADER (3D + PNG SCENERY)
    ============================================================ */
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
@@ -1614,12 +1697,16 @@ const assetCache = { models: {}, weapons: {}, animations: {} };
 
 function updateAssetPill(text, done = false) {
   const pill = document.getElementById('asset-pill');
+  if (STATE.gtaLoadingActive) {
+    pill.style.opacity = '0';
+    return;
+  }
   pill.style.opacity = '1';
   document.getElementById('asset-pill-text').textContent = text;
   const dot = pill.querySelector('.spin-dot');
   if (done) {
     dot.style.background = '#42e64d'; dot.style.animation = 'none';
-    setTimeout(() => { pill.style.opacity = '0'; }, 3500);
+    setTimeout(() => { pill.style.opacity = '0'; }, 3000);
   } else {
     dot.style.background = 'var(--gold)'; dot.style.animation = 'blink 0.7s infinite alternate';
   }
@@ -1653,17 +1740,16 @@ function downscaleTextureIfNeeded(tex, maxDim, disableMipmaps = false) {
   tex.anisotropy = 1;
 }
 
-function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = false) {
+function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = false, forceDoubleSide = false) {
   if (!m) return m;
   if (m.map) downscaleTextureIfNeeded(m.map, maxTexSize, useFastLambert);
   if (m.emissiveMap) downscaleTextureIfNeeded(m.emissiveMap, maxTexSize, useFastLambert);
   if (m.alphaMap) downscaleTextureIfNeeded(m.alphaMap, maxTexSize, useFastLambert);
 
-  const targetSide = isArenaProp ? (m.side !== undefined ? m.side : THREE.FrontSide) : THREE.FrontSide;
-  // Convert expensive alpha blending on tree leaves into fast alphaTest cutout on mobile
+  const targetSide = forceDoubleSide ? THREE.DoubleSide : (isArenaProp ? (m.side !== undefined ? m.side : THREE.DoubleSide) : THREE.FrontSide);
   const useCutout = isArenaProp && m.transparent && m.opacity >= 0.95 && (m.map || m.alphaMap);
   const isTransparent = useCutout ? false : (isArenaProp ? !!m.transparent : (m.transparent && m.opacity < 1));
-  const targetAlphaTest = useCutout ? Math.max(m.alphaTest || 0, 0.38) : (m.alphaTest || 0);
+  const targetAlphaTest = useCutout ? Math.max(m.alphaTest || 0, 0.36) : (m.alphaTest || 0);
 
   if (useFastLambert) {
     ['normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'bumpMap', 'displacementMap'].forEach((k) => {
@@ -1671,7 +1757,8 @@ function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = 
     });
     if (m.isMeshStandardMaterial || m.isMeshPhysicalMaterial || m.isMeshPhongMaterial) {
       const col = m.color ? m.color.clone() : new THREE.Color(0xffffff);
-      if (!m.map && (col.r + col.g + col.b) < 0.08) col.setHex(0x6c7a96);
+      if (m.map && (col.r + col.g + col.b) < 0.25) col.setHex(0xffffff);
+      else if (!m.map && (col.r + col.g + col.b) < 0.08) col.setHex(0x8a95ad);
       const lambert = new THREE.MeshLambertMaterial({
         color: col,
         map: m.map || null,
@@ -1681,28 +1768,33 @@ function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = 
         transparent: isTransparent,
         opacity: m.opacity !== undefined ? m.opacity : 1,
         alphaTest: targetAlphaTest,
-        vertexColors: !!m.vertexColors,
+        vertexColors: isArenaProp ? false : !!m.vertexColors,
         side: targetSide
       });
       m.dispose();
       return lambert;
+    } else {
+      m.side = targetSide;
+      if (m.map && m.color && (m.color.r + m.color.g + m.color.b) < 0.25) m.color.setHex(0xffffff);
     }
   } else {
     ['normalMap', 'roughnessMap', 'metalnessMap'].forEach((k) => {
       if (m[k]) downscaleTextureIfNeeded(m[k], Math.min(512, maxTexSize), false);
     });
     if (m.aoMap) { m.aoMap.dispose(); m.aoMap = null; }
+    if (m.metalness !== undefined && m.metalness > 0.35 && isArenaProp) m.metalness = 0.15;
     m.side = targetSide;
     m.transparent = isTransparent;
     m.alphaTest = targetAlphaTest;
-    if (!m.map && m.color && (m.color.r + m.color.g + m.color.b) < 0.08) m.color.setHex(0x6c7a96);
+    if (m.map && m.color && (m.color.r + m.color.g + m.color.b) < 0.25) m.color.setHex(0xffffff);
+    else if (!m.map && m.color && (m.color.r + m.color.g + m.color.b) < 0.08) m.color.setHex(0x8a95ad);
   }
   return m;
 }
 
-function optimizeSceneMemory(root, isArenaProp = false) {
+function optimizeSceneMemory(root, isArenaProp = false, forceDoubleSide = false) {
   const useFastLambert = (STATE.quality !== 'high') || STATE.lowEndMode || IS_MOBILE;
-  const maxTex = (STATE.quality === 'low' || STATE.lowEndMode) ? 384 : (IS_MOBILE ? 512 : (STATE.quality === 'med' ? 1024 : 2048));
+  const maxTex = (STATE.quality === 'low' || STATE.lowEndMode) ? 512 : (IS_MOBILE ? 768 : (STATE.quality === 'med' ? 1024 : 2048));
   root.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = !isArenaProp && !IS_MOBILE && STATE.quality === 'high';
@@ -1710,9 +1802,9 @@ function optimizeSceneMemory(root, isArenaProp = false) {
       if (!isArenaProp) child.frustumCulled = false;
       if (child.material) {
         if (Array.isArray(child.material)) {
-          child.material = child.material.map((m) => optimizeMaterialForDevice(m, maxTex, useFastLambert, isArenaProp));
+          child.material = child.material.map((m) => optimizeMaterialForDevice(m, maxTex, useFastLambert, isArenaProp, forceDoubleSide));
         } else {
-          child.material = optimizeMaterialForDevice(child.material, maxTex, useFastLambert, isArenaProp);
+          child.material = optimizeMaterialForDevice(child.material, maxTex, useFastLambert, isArenaProp, forceDoubleSide);
         }
       }
     }
@@ -1783,7 +1875,7 @@ async function loadModelWithDetails(f) {
       const mb = (buf.byteLength / 1048576).toFixed(1);
       const parsed = await parseBufferToObject(buf);
       buf = null;
-      optimizeSceneMemory(parsed.scene, false);
+      optimizeSceneMemory(parsed.scene, false, false);
       let boneCount = 0;
       parsed.scene.traverse(o => { if (o.isBone || o.type === 'Bone') boneCount++; });
       return { root: parsed.scene, builtinAnims: parsed.animations, boneCount, url, mb, fromCache };
@@ -1798,8 +1890,11 @@ async function loadModelWithDetails(f) {
 function is3DModelPath(url) {
   return /\.(glb|gltf|fbx)(\?.*)?$/i.test(String(url || '').trim());
 }
+function isImagePath(url) {
+  return /\.(png|jpe?g|webp)(\?.*)?$/i.test(String(url || '').trim());
+}
 
-async function loadCustomProp(url, isArenaProp = false, label = '') {
+async function loadCustomProp(url, isArenaProp = false, label = '', forceDoubleSide = false) {
   if (!url || !is3DModelPath(url)) return null;
   let { buf } = await streamFetchWithCache(url, (recv, tot) => {
     if (label && tot) {
@@ -1811,9 +1906,53 @@ async function loadCustomProp(url, isArenaProp = false, label = '') {
   try {
     const parsed = await parseBufferToObject(buf);
     buf = null;
-    optimizeSceneMemory(parsed.scene, isArenaProp);
+    optimizeSceneMemory(parsed.scene, isArenaProp, forceDoubleSide);
     return parsed.scene;
   } catch (_) { return null; }
+}
+
+function loadTextureAsync(url) {
+  return new Promise((resolve) => {
+    if (!url) return resolve(null);
+    texLoader.load(
+      encodeURI(url),
+      (tex) => resolve(tex),
+      undefined,
+      () => resolve(null)
+    );
+  });
+}
+
+/* Place PNG House / Temple Scenery cleanly in the 3D Arena Background */
+async function loadAndPlaceImageProp(url, placements) {
+  const tex = await loadTextureAsync(url);
+  if (!tex || !tex.image) return false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  downscaleTextureIfNeeded(tex, IS_MOBILE ? 768 : 1280, true);
+
+  const wImg = tex.image.width || 1;
+  const hImg = tex.image.height || 1;
+  const aspect = wImg / Math.max(1, hImg);
+
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex,
+    transparent: true,
+    alphaTest: 0.14,
+    side: THREE.DoubleSide
+  });
+
+  placements.forEach((p) => {
+    const h = p.height || 6.5;
+    const w = h * aspect;
+    const geo = new THREE.PlaneGeometry(w, h);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(p.x, h * 0.5 - 0.04, p.z);
+    mesh.rotation.y = p.rotY || 0;
+    if (p.flipX) mesh.scale.x = -1;
+    customArenaGroup.add(mesh);
+    freezeStaticTransforms(mesh);
+  });
+  return true;
 }
 
 async function loadAnimWithDetails(name, candidates) {
@@ -1917,22 +2056,30 @@ function prepareLoadedModel(model, targetHeight = 1.88) {
   }
 }
 
-/* Big, Perfectly Centered, Tiled Custom Floor (48 x 28) in 1 Instanced Draw Call! */
+/* Bulletproof Big Wooden Floor Placement (handles vertical/flat/off-center GLB floors!) */
 function placeCustomFloor(obj) {
   obj.position.set(0, 0, 0);
   obj.rotation.set(0, 0, 0);
   obj.scale.setScalar(1);
   obj.updateMatrixWorld(true);
 
-  const box = getAccurateMeshBox(obj);
-  const sz = new THREE.Vector3(); box.getSize(sz);
+  let box = getAccurateMeshBox(obj);
+  let sz = new THREE.Vector3(); box.getSize(sz);
 
-  // Normalize one crisp tile to 16 x 14, then tile 3 x 2 = 48 wide x 28 deep!
-  const tileW = 16;
-  const tileD = 14;
+  // If exported as a vertical wall quad (thin Z, tall Y), lay it flat on XZ!
+  if (sz.z < sz.y * 0.25 && sz.x > sz.z * 2) {
+    obj.rotation.x = -Math.PI / 2;
+    obj.updateMatrixWorld(true);
+    box = getAccurateMeshBox(obj);
+    box.getSize(sz);
+  }
+
+  // Normalize 1 tile to 18 x 16, then tile 3 x 2 = 54 wide x 32 deep
+  const tileW = 18;
+  const tileD = 16;
   const sx = tileW / Math.max(sz.x, 0.1);
   const szScale = tileD / Math.max(sz.z, 0.1);
-  const sy = Math.min(Math.max(sx, szScale), 2.5);
+  const sy = sz.y > 0.05 ? Math.min(Math.max(sx, szScale), 1.5) : 1;
   obj.scale.set(sx, sy, szScale);
 
   obj.updateMatrixWorld(true);
@@ -1942,8 +2089,8 @@ function placeCustomFloor(obj) {
   obj.updateMatrixWorld(true);
 
   const tileOffsets = [
-    [-16, -7], [0, -7], [16, -7],
-    [-16,  7], [0,  7], [16,  7]
+    [-18, -8], [0, -8], [18, -8],
+    [-18,  8], [0,  8], [18,  8]
   ];
 
   let instancedOk = true;
@@ -1962,6 +2109,7 @@ function placeCustomFloor(obj) {
       const im = new THREE.InstancedMesh(mesh.geometry, mesh.material, tileOffsets.length);
       im.castShadow = false;
       im.receiveShadow = false;
+      im.frustumCulled = false;
       for (let i = 0; i < tileOffsets.length; i++) {
         transMat.makeTranslation(tileOffsets[i][0], 0, tileOffsets[i][1]);
         finalMat.multiplyMatrices(transMat, mesh.matrixWorld);
@@ -1971,17 +2119,18 @@ function placeCustomFloor(obj) {
       customArenaGroup.add(im);
       freezeStaticTransforms(im);
     });
-  } else {
-    // Safe fallback: scale single mesh cleanly to 48 x 28 centered at (0, 0)
+    fallbackFloorMesh.visible = false;
+  } else if (meshes.length > 0) {
     obj.scale.set(sx * 3, sy, szScale * 2);
     obj.position.set(0, 0, 0);
     obj.updateMatrixWorld(true);
     const box3 = getAccurateMeshBox(obj);
     box3.getCenter(center);
     obj.position.set(-center.x, -box3.max.y, -center.z);
-    obj.traverse(c => { if (c.isMesh) { c.receiveShadow = false; c.castShadow = false; } });
+    obj.traverse(c => { if (c.isMesh) { c.receiveShadow = false; c.castShadow = false; c.frustumCulled = false; } });
     customArenaGroup.add(obj);
     freezeStaticTransforms(obj);
+    fallbackFloorMesh.visible = false;
   }
 }
 
@@ -2023,6 +2172,7 @@ function placeInstancedTrees(obj, placements) {
       const im = new THREE.InstancedMesh(mesh.geometry, mesh.material, placements.length);
       im.castShadow = false;
       im.receiveShadow = false;
+      im.frustumCulled = false;
       for (let i = 0; i < placements.length; i++) {
         const p = placements[i];
         pos.set(p.x, 0, p.z);
@@ -2082,89 +2232,112 @@ async function ensureFighterLoaded(fighter) {
 }
 
 let isStreaming = false;
-async function streamAllAssets() {
+async function streamAllAssets(onProgress) {
   if (isStreaming) return;
   isStreaming = true;
+  const report = (pct, msg) => {
+    if (onProgress) onProgress(pct, msg);
+    updateAssetPill(msg, false);
+  };
 
   sound.initBGM();
 
   if (location.protocol === 'file:') {
-    updateAssetPill('Open via GitHub Pages (HTTPS) to load FBX/GLB models', true);
+    report(100, 'Open via GitHub Pages (HTTPS) to load FBX/GLB models');
     DIAG.errors.push('file:// blocks fetch(). Use GitHub Pages / Netlify.');
     isStreaming = false; return;
   }
 
-  // 1. Load Custom Sky Image (Downscaled for fast mobile VRAM)
+  // 1. Load Custom Sky Image
+  report(8, 'Loading Bright Sky');
   if (ARENA_CONFIG.skyImage && !loadedSkyTex) {
-    texLoader.load(encodeURI(ARENA_CONFIG.skyImage), (t) => {
-      t.colorSpace = THREE.SRGBColorSpace;
-      downscaleTextureIfNeeded(t, IS_MOBILE ? 768 : 1536, true);
-      loadedSkyTex = t;
-      scene.background = t;
+    const skyTex = await loadTextureAsync(ARENA_CONFIG.skyImage);
+    if (skyTex && skyTex.image) {
+      skyTex.colorSpace = THREE.SRGBColorSpace;
+      downscaleTextureIfNeeded(skyTex, IS_MOBILE ? 768 : 1536, true);
+      loadedSkyTex = skyTex;
+      scene.background = skyTex;
       DIAG.arena.Sky = 'Custom Sky Loaded';
-    }, undefined, () => {});
+    }
   }
 
-  // 2. Load Full Custom 3D Arena (Floor + Maple Trees instanced + any optional 3D Temple/House)
+  // 2. Load Custom Arena (Floor GLB + Trees GLB + House PNG/GLB + Temple PNG/GLB)
   if (customArenaGroup.children.length === 0) {
     let loadedFloorObj = null;
     if (is3DModelPath(ARENA_CONFIG.floorFile)) {
-      const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, 'Floor');
+      report(15, 'Loading Wooden Floor');
+      const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, 'Floor', true);
       if (fl) {
         loadedFloorObj = fl;
-        STATE.builtinFloor = false; syncArenaVisibility();
         placeCustomFloor(fl);
         DIAG.arena.Floor = 'Custom Big Floor Loaded (6x Tiled)';
+      } else {
+        DIAG.arena.Floor = 'Failed to load floor GLB';
       }
       await yieldFrame();
     }
 
-    if (is3DModelPath(ARENA_CONFIG.templeFile)) {
-      const tp = (ARENA_CONFIG.templeFile === ARENA_CONFIG.floorFile && loadedFloorObj)
-        ? loadedFloorObj.clone()
-        : await loadCustomProp(ARENA_CONFIG.templeFile, true, 'Temple');
-      if (tp) {
-        STATE.builtinHouses = false; syncArenaVisibility();
-        placeCustomProp(tp, 0, -6.5, 7.5, 0, true);
-        DIAG.arena.Temple = 'Custom Loaded';
+    if (ARENA_CONFIG.templeFile) {
+      report(24, 'Loading Temple Background');
+      if (is3DModelPath(ARENA_CONFIG.templeFile)) {
+        const tp = (ARENA_CONFIG.templeFile === ARENA_CONFIG.floorFile && loadedFloorObj)
+          ? loadedFloorObj.clone()
+          : await loadCustomProp(ARENA_CONFIG.templeFile, true, 'Temple', true);
+        if (tp) {
+          placeCustomProp(tp, 0, -7.8, 7.8, 0, true);
+          DIAG.arena.Temple = '3D Temple Loaded';
+        }
+      } else if (isImagePath(ARENA_CONFIG.templeFile)) {
+        const ok = await loadAndPlaceImageProp(ARENA_CONFIG.templeFile, [
+          { x: 0, z: -9.5, height: 8.6, rotY: 0 }
+        ]);
+        DIAG.arena.Temple = ok ? 'Temple Image Placed' : 'Temple Image Not Found';
       }
       await yieldFrame();
     }
 
     if (is3DModelPath(ARENA_CONFIG.treeFile)) {
-      const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, 'Trees');
+      report(32, 'Loading Maple Trees');
+      const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, 'Trees', false);
       if (tr) {
-        STATE.builtinTrees = false; syncArenaVisibility();
         placeInstancedTrees(tr, [
-          { x: -7.2, z: -5.2, scaleMul: 0.96, rotY: 0.4 },
-          { x:  7.2, z: -5.4, scaleMul: 1.00, rotY: -0.6 },
-          { x: -10.2, z: -8.4, scaleMul: 1.08, rotY: 1.2 },
-          { x:  10.2, z: -8.8, scaleMul: 1.04, rotY: -1.1 }
+          { x: -6.8, z: -5.0, scaleMul: 0.96, rotY: 0.4 },
+          { x:  6.8, z: -5.2, scaleMul: 1.00, rotY: -0.6 },
+          { x: -10.5, z: -8.2, scaleMul: 1.08, rotY: 1.2 },
+          { x:  10.5, z: -8.6, scaleMul: 1.04, rotY: -1.1 }
         ]);
         DIAG.arena.Trees = 'Custom Instanced (4x)';
       }
       await yieldFrame();
     }
 
-    if (is3DModelPath(ARENA_CONFIG.houseFile)) {
-      const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, 'Houses');
-      if (hs) {
-        STATE.builtinHouses = false; syncArenaVisibility();
-        placeCustomProp(hs, -6.4, -11.5, 6.2, 0.2, false);
-        placeCustomProp(hs, 6.6, -12.0, 5.8, -0.2, true);
-        DIAG.arena.Houses = 'Custom Loaded (2x)';
+    if (ARENA_CONFIG.houseFile) {
+      report(40, 'Loading Arena Houses');
+      if (is3DModelPath(ARENA_CONFIG.houseFile)) {
+        const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, 'Houses', true);
+        if (hs) {
+          placeCustomProp(hs, -6.6, -10.8, 6.2, 0.2, false);
+          placeCustomProp(hs, 6.8, -11.2, 5.8, -0.2, true);
+          DIAG.arena.Houses = '3D Houses Loaded (2x)';
+        }
+      } else if (isImagePath(ARENA_CONFIG.houseFile)) {
+        const ok = await loadAndPlaceImageProp(ARENA_CONFIG.houseFile, [
+          { x: -8.5, z: -10.2, height: 6.4, rotY: 0.12 },
+          { x:  8.5, z: -10.4, height: 6.2, rotY: -0.12, flipX: true }
+        ]);
+        DIAG.arena.Houses = ok ? 'House Images Placed (2x)' : 'House Image Not Found';
       }
       await yieldFrame();
     }
   }
 
-  // 3. Load All 12 Animations smoothly (2 per batch with frame yield)
+  // 3. Load All 12 Animations smoothly
   let loadedAnims = 0;
   const animEntries = Object.entries(ANIM_CANDIDATES);
   const totalAnims = animEntries.length;
   for (let i = 0; i < animEntries.length; i += 2) {
     const batch = animEntries.slice(i, i + 2);
-    updateAssetPill(`Loading Animations (${loadedAnims}/${totalAnims})...`);
+    report(44 + (loadedAnims / totalAnims) * 24, `Loading Animations (${loadedAnims}/${totalAnims})`);
     await Promise.all(batch.map(async ([name, urls]) => {
       if (assetCache.animations[name]) { loadedAnims++; return; }
       const res = await loadAnimWithDetails(name, urls);
@@ -2176,7 +2349,7 @@ async function streamAllAssets() {
 
   // 4. Load Dragon Katana
   if (!assetCache.weapons.katana) {
-    updateAssetPill('Loading Katana Weapon...');
+    report(70, 'Loading Dragon Katana');
     const katRes = await loadCustomProp(WEAPON_CANDIDATES.katana[0], false) || await loadCustomProp(WEAPON_CANDIDATES.katana[1], false);
     if (katRes) {
       assetCache.weapons.katana = katRes;
@@ -2186,7 +2359,7 @@ async function streamAllAssets() {
     }
   }
 
-  // 5. On Mobile load active 2 fighters first (others load on-demand when picked)
+  // 5. Load Fighters (active 2 on mobile, all on desktop)
   const targetFighters = (IS_MOBILE || STATE.lowEndMode)
     ? [FIGHTERS[STATE.selectedHeroIdx], FIGHTERS[STATE.selectedRivalIdx]]
     : [
@@ -2196,7 +2369,9 @@ async function streamAllAssets() {
       ];
 
   let loadedModels = 0;
-  for (const f of targetFighters) {
+  for (let idx = 0; idx < targetFighters.length; idx++) {
+    const f = targetFighters[idx];
+    report(74 + (idx / targetFighters.length) * 18, `Loading ${f.shortName}`);
     await ensureFighterLoaded(f);
     if (assetCache.models[f.id]) loadedModels++;
     await yieldFrame();
@@ -2206,6 +2381,7 @@ async function streamAllAssets() {
   if (p1) { p1.bindAllAnimations(); p1.attachKatana(); }
   if (p2) { p2.bindAllAnimations(); p2.attachKatana(); }
 
+  report(94, 'Loading Audio & Music');
   await sound.preload();
   updateAssetPill(`Arena + ${loadedModels}/${targetFighters.length} Models • ${loadedAnims}/${totalAnims} Anims Ready`, true);
   isStreaming = false;
@@ -2235,7 +2411,7 @@ for (let i = 0; i < 5; i++) {
 const DUST_POOL = [];
 const dustGeo = new THREE.RingGeometry(0.24, 0.46, 14);
 for (let i = 0; i < 5; i++) {
-  const mesh = new THREE.Mesh(dustGeo, new THREE.MeshBasicMaterial({ color: 0xcbd5e1, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  const mesh = new THREE.Mesh(dustGeo, new THREE.MeshBasicMaterial({ color: 0xf1f5f9, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
   mesh.rotation.x = -Math.PI / 2;
   mesh.visible = false;
   scene.add(mesh);
@@ -2308,7 +2484,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (CACHED FLASH MATS + SMOOTH ANIMATION)
+   9. FIGHTER CONTROLLER (300 HP + CACHED MATS + SMOOTH ANIM)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -2353,7 +2529,7 @@ class Fighter {
   constructor(cfg, startX, isPlayer, isShowcase = false) {
     this.cfg = cfg; this.isPlayer = isPlayer; this.isShowcase = isShowcase;
     this.group = new THREE.Group(); this.group.position.set(startX, 0, 0);
-    this.maxHp = 250; this.hp = 250;
+    this.maxHp = 300; this.hp = 300;
     this.vy = 0; this.onGround = true; this.facing = isPlayer ? 1 : -1;
     this.state = 'idle'; this.stateTimer = 0; this.attackDuration = 0; this.attackApplied = false;
     this.blocking = false; this.blockElapsed = 0; this.crouching = false;
@@ -2542,7 +2718,7 @@ class Fighter {
   buildGroundAndHalo() {
     this.shadowBlob = new THREE.Mesh(
       new THREE.PlaneGeometry(1.45, 1.45),
-      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.78, depthWrite: false })
+      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.72, depthWrite: false })
     );
     this.shadowBlob.rotation.x = -Math.PI / 2;
     this.shadowBlob.position.y = 0.025;
@@ -2760,7 +2936,7 @@ class Fighter {
     const jumpH = Math.max(0, this.group.position.y);
     this.shadowBlob.position.y = 0.025 - jumpH;
     this.shadowBlob.scale.setScalar(this.state === 'knockdown' ? 1.35 : Math.max(0.45, 1.0 - jumpH * 0.2));
-    this.shadowBlob.material.opacity = Math.max(0.22, 0.78 - jumpH * 0.18);
+    this.shadowBlob.material.opacity = Math.max(0.22, 0.72 - jumpH * 0.18);
     this.floorHalo.position.y = 0.028 - jumpH;
     this.floorHalo.visible = this.state !== 'knockdown';
 
@@ -2861,7 +3037,9 @@ function shakeCamera(amount) { camShake = Math.max(camShake, amount); }
 
 let menuDragActive = false, menuLastX = 0, menuUserYaw = 0;
 canvas.addEventListener('pointerdown', (e) => {
-  if (STATE.screen === 'menu' && !STATE.splashActive) { menuDragActive = true; menuLastX = e.clientX; }
+  if (STATE.screen === 'menu' && !STATE.gtaLoadingActive && !STATE.splashActive) {
+    menuDragActive = true; menuLastX = e.clientX;
+  }
 });
 window.addEventListener('pointermove', (e) => {
   if (menuDragActive && STATE.screen === 'menu') {
@@ -3170,7 +3348,6 @@ function openModal(title, htmlBuilder) {
 
 document.getElementById('modal-close').onclick = () => document.getElementById('modal-panel').classList.remove('open');
 document.getElementById('btn-play').onclick = startMatch;
-document.getElementById('btn-time-toggle').onclick = () => applyTimeOfDay(STATE.timeOfDay === 'night' ? 'day' : 'night');
 
 document.getElementById('btn-character').onclick = () => {
   openModal('Select Hero & Rival', (body) => {
@@ -3242,25 +3419,6 @@ document.getElementById('btn-settings').onclick = () => {
         </div>
       </div>
       <div class="setting-row">
-        <span>Arena Time (Morning / Night)</span>
-        <div style="display:flex;gap:6px;">
-          <button class="pill-btn ${STATE.timeOfDay === 'day' ? 'active' : ''}" data-tod="day">MORNING</button>
-          <button class="pill-btn ${STATE.timeOfDay === 'night' ? 'active' : ''}" data-tod="night">NIGHT</button>
-        </div>
-      </div>
-      <div class="setting-row">
-        <span>Built-in 3D Floor</span>
-        <button class="pill-btn ${STATE.builtinFloor ? 'active' : ''}" id="tog-floor">${STATE.builtinFloor ? 'ON' : 'OFF'}</button>
-      </div>
-      <div class="setting-row">
-        <span>Built-in Trees</span>
-        <button class="pill-btn ${STATE.builtinTrees ? 'active' : ''}" id="tog-trees">${STATE.builtinTrees ? 'ON' : 'OFF'}</button>
-      </div>
-      <div class="setting-row">
-        <span>Built-in Temple &amp; Houses</span>
-        <button class="pill-btn ${STATE.builtinHouses ? 'active' : ''}" id="tog-houses">${STATE.builtinHouses ? 'ON' : 'OFF'}</button>
-      </div>
-      <div class="setting-row">
         <span>Background Music (BGM)</span>
         <button class="pill-btn ${STATE.bgmEnabled ? 'active' : ''}" id="tog-bgm">${STATE.bgmEnabled ? 'ON' : 'OFF'}</button>
       </div>
@@ -3293,10 +3451,6 @@ document.getElementById('btn-settings').onclick = () => {
       document.getElementById('btn-settings').click();
     };
     body.querySelectorAll('[data-qual]').forEach(b => b.onclick = () => { applyQuality(b.dataset.qual); document.getElementById('btn-settings').click(); });
-    body.querySelectorAll('[data-tod]').forEach(b => b.onclick = () => { applyTimeOfDay(b.dataset.tod); document.getElementById('btn-settings').click(); });
-    body.querySelector('#tog-floor').onclick = () => { STATE.builtinFloor = !STATE.builtinFloor; syncArenaVisibility(); document.getElementById('btn-settings').click(); };
-    body.querySelector('#tog-trees').onclick = () => { STATE.builtinTrees = !STATE.builtinTrees; syncArenaVisibility(); document.getElementById('btn-settings').click(); };
-    body.querySelector('#tog-houses').onclick = () => { STATE.builtinHouses = !STATE.builtinHouses; syncArenaVisibility(); document.getElementById('btn-settings').click(); };
     body.querySelector('#tog-bgm').onclick = () => { STATE.bgmEnabled = !STATE.bgmEnabled; if (STATE.bgmEnabled && (STATE.screen === 'menu' || STATE.matchOver)) sound.startBGM(); else sound.stopBGM(); document.getElementById('btn-settings').click(); };
     body.querySelector('#tog-sfx').onclick = () => { STATE.sfxEnabled = !STATE.sfxEnabled; document.getElementById('btn-settings').click(); };
     body.querySelectorAll('[data-diff]').forEach(b => b.onclick = () => { STATE.difficulty = b.dataset.diff; document.getElementById('btn-settings').click(); });
@@ -3334,13 +3488,6 @@ function animate() {
   requestAnimationFrame(animate);
   const rawDt = Math.min(clock.getDelta(), 0.05);
   const elapsed = clock.elapsedTime;
-
-  if (arenaRuneRing && builtinFloorGroup.visible) arenaRuneRing.rotation.z = elapsed * 0.25;
-  if (STATE.timeOfDay === 'night' && STATE.quality === 'high' && builtinHousesGroup.visible) {
-    for (let i = 0; i < lanternLights.length; i++) {
-      lanternLights[i].intensity = 2.1 + Math.sin(elapsed * 7 + i * 2.1) * 0.2;
-    }
-  }
 
   const posArr = petals.geometry.attributes.position.array;
   for (let i = 0; i < activePetals; i++) {
@@ -3451,6 +3598,7 @@ renderMenuFighterCards();
 updatePreviewInfo();
 spawnMenuShowcase();
 animate();
+startBootSequence();
 </script>
 </body>
 </html>
