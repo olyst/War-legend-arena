@@ -211,7 +211,7 @@
   .menu-left *, .menu-right .top-right-tools, .menu-right .menu-bottom-right { pointer-events: auto; }
 
   .menu-left {
-    width: clamp(210px, 27vw, 290px);
+    width: clamp(200px, 27vw, 290px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -299,7 +299,7 @@
   }
   .fighter-cards { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 56vw; }
   .fighter-card {
-    width: clamp(60px, 8vw, 82px); height: clamp(68px, 9vw, 92px);
+    width: clamp(58px, 8vw, 82px); height: clamp(66px, 9vw, 92px);
     border-radius: 10px; border: 2px solid rgba(255,255,255,0.22);
     background: rgba(15, 20, 36, 0.9); cursor: pointer; overflow: hidden;
     position: relative; transition: transform 0.15s ease, border-color 0.15s ease;
@@ -352,7 +352,7 @@
   .fighter-hud.right { flex-direction: row-reverse; text-align: right; }
 
   .portrait-frame {
-    width: clamp(42px, 6vw, 58px); height: clamp(42px, 6vw, 58px);
+    width: clamp(40px, 6vw, 58px); height: clamp(40px, 6vw, 58px);
     border-radius: 50%; border: 3px solid var(--gold); background: #14192d;
     overflow: hidden; flex-shrink: 0; box-shadow: 0 0 10px rgba(255, 184, 0, 0.45);
   }
@@ -458,7 +458,7 @@
     will-change: transform;
   }
 
-  .action-cluster { position: relative; width: clamp(174px, 23vw, 220px); height: clamp(140px, 19vw, 178px); pointer-events: auto; }
+  .action-cluster { position: relative; width: clamp(174px, 23vw, 220px); height: clamp(140px, 19vw, 178px); pointer-events: auto; touch-action: none; }
   .act-btn {
     position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,0.65);
     background: radial-gradient(circle at 30% 30%, rgba(38,48,82,0.92), rgba(12,16,30,0.92));
@@ -482,6 +482,21 @@
     padding: 3px 10px; border-radius: 12px; white-space: nowrap; pointer-events: none;
   }
   @media (pointer: coarse) { .pc-hint { display: none; } }
+
+  /* Compact Mobile Landscape Layout Fixes */
+  @media screen and (max-height: 440px) {
+    #menu-screen { padding: 8px 16px; }
+    .nav-btn { padding: 6px 11px; font-size: 12px; }
+    .fighter-preview-info { padding: 7px 11px; margin-bottom: 6px; }
+    .fighter-card { width: 54px; height: 60px; }
+    #hud-screen { padding: 6px 14px 8px; }
+    .dpad-area { width: 108px; height: 108px; }
+    .action-cluster { width: 170px; height: 132px; }
+    #btn-slash { width: 54px; height: 54px; right: 2px; top: 0; }
+    #btn-punch { width: 52px; height: 52px; right: 66px; top: 24px; }
+    #btn-kick  { width: 52px; height: 52px; right: 6px; bottom: 4px; }
+    #btn-block { width: 50px; height: 50px; left: 10px; bottom: 4px; }
+  }
 
   .overlay-card {
     background: rgba(12, 16, 30, 0.96); border: 2px solid var(--gold);
@@ -572,7 +587,7 @@
           </button>
         </nav>
 
-        <div style="font-size:11px;color:#8a96b8;">v8.5 • Full Custom Arena • Low-End Smooth</div>
+        <div style="font-size:11px;color:#8a96b8;">v9.0 • Mobile Smooth • Big Floor &amp; Earth</div>
       </div>
 
       <div class="menu-right">
@@ -809,12 +824,12 @@ const FIGHTERS = CHARACTER_LIST.map((c) => ({
   defenseMult: 0.9 + (c.defense / 100) * 0.18
 }));
 
-const CACHE_NAME = 'war-legend-cache-v8';
+const CACHE_NAME = 'war-legend-cache-v9';
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
 const DEVICE_MEM = navigator.deviceMemory || (IS_MOBILE ? 3 : 8);
 const CPU_CORES = navigator.hardwareConcurrency || 4;
 const IS_ANDROID_OLD = /Android\s(8|9|10|11)\b/i.test(navigator.userAgent);
-const IS_LOW_END = IS_MOBILE && (DEVICE_MEM <= 3 || CPU_CORES <= 4 || IS_ANDROID_OLD);
+const IS_LOW_END = IS_MOBILE && (DEVICE_MEM <= 4 || CPU_CORES <= 6 || IS_ANDROID_OLD);
 
 const WEAPON_CANDIDATES = {
   katana: [ARENA_CONFIG.katanaFile, './models/weapons/katana_with_dragon.glb', './katana.glb'].filter(Boolean)
@@ -1241,7 +1256,7 @@ function startSplashSequence() {
 startSplashSequence();
 
 /* ============================================================
-   6. THREE.JS SCENE (ANDROID 11 SAFE + FULL ARENA SUPPORT)
+   6. THREE.JS SCENE (MOBILE ULTRA-SMOOTH + BIG FLOOR & EARTH SOIL)
    ============================================================ */
 const canvas = document.getElementById('game-canvas');
 let renderer;
@@ -1266,7 +1281,7 @@ try {
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.type = THREE.BasicShadowMap;
-if (!STATE.lowEndMode) {
+if (!IS_MOBILE && !STATE.lowEndMode) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.24;
 }
@@ -1283,15 +1298,15 @@ canvas.addEventListener('webglcontextrestored', () => {
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x090d1f);
-scene.fog = new THREE.FogExp2(0x0c1126, 0.02);
+scene.fog = new THREE.FogExp2(0x0c1126, 0.018);
 
-const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 110);
+const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 120);
 camera.position.set(0, 2.2, 8.2);
 
-const hemiLight = new THREE.HemisphereLight(0x88a8ff, 0x2b1920, 1.5);
+const hemiLight = new THREE.HemisphereLight(0x88a8ff, 0x3b2618, IS_MOBILE ? 1.85 : 1.55);
 scene.add(hemiLight);
 
-const mainDirLight = new THREE.DirectionalLight(0xd0e2ff, 2.35);
+const mainDirLight = new THREE.DirectionalLight(0xd0e2ff, IS_MOBILE ? 2.45 : 2.35);
 mainDirLight.position.set(4, 12, 6);
 mainDirLight.castShadow = false;
 mainDirLight.shadow.mapSize.set(512, 512);
@@ -1300,8 +1315,8 @@ mainDirLight.shadow.camera.left = -9; mainDirLight.shadow.camera.right = 9;
 mainDirLight.shadow.camera.top = 7; mainDirLight.shadow.camera.bottom = -3;
 scene.add(mainDirLight);
 
-const warmRimLeft = new THREE.PointLight(0xff6622, 3.0, 18); warmRimLeft.position.set(-5.5, 2.8, 3.0); scene.add(warmRimLeft);
-const coolRimRight = new THREE.PointLight(0x00b7ff, 3.0, 18); coolRimRight.position.set(5.5, 2.8, 3.0); scene.add(coolRimRight);
+const warmRimLeft = new THREE.PointLight(0xff6622, 2.8, 18); warmRimLeft.position.set(-5.5, 2.8, 3.0); scene.add(warmRimLeft);
+const coolRimRight = new THREE.PointLight(0x00b7ff, 2.8, 18); coolRimRight.position.set(5.5, 2.8, 3.0); scene.add(coolRimRight);
 
 const shadowTex = (() => {
   const c = document.createElement('canvas');
@@ -1316,16 +1331,69 @@ const shadowTex = (() => {
   return new THREE.CanvasTexture(c);
 })();
 
+/* Procedural Earth / Soil (মাটি) Texture - Power of 2 (512x512) for 100% Mobile GPU Compatibility */
+function createSoilTexture() {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 512;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#4a3525';
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Subtle earthy soil grain, pebbles & natural variation
+  for (let i = 0; i < 3200; i++) {
+    const x = Math.random() * 512;
+    const y = Math.random() * 512;
+    const r = 1 + Math.random() * 3.5;
+    const shade = Math.random();
+    if (shade < 0.35) ctx.fillStyle = 'rgba(38, 25, 16, 0.35)';
+    else if (shade < 0.7) ctx.fillStyle = 'rgba(92, 66, 44, 0.32)';
+    else if (shade < 0.9) ctx.fillStyle = 'rgba(116, 86, 56, 0.25)';
+    else ctx.fillStyle = 'rgba(65, 78, 42, 0.22)'; // subtle moss/grass speck
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(16, 12);
+  tex.anisotropy = 1;
+  return tex;
+}
+
+const groundSoilGroup = new THREE.Group();
 const builtinFloorGroup = new THREE.Group();
 const builtinTreesGroup = new THREE.Group();
 const builtinHousesGroup = new THREE.Group();
 const customArenaGroup = new THREE.Group();
-scene.add(builtinFloorGroup, builtinTreesGroup, builtinHousesGroup, customArenaGroup);
+scene.add(groundSoilGroup, builtinFloorGroup, builtinTreesGroup, builtinHousesGroup, customArenaGroup);
 
+let soilGroundMat = null;
+let soilRimMat = null;
 let celestialOrb = null;
 let arenaRuneRing = null;
 let loadedSkyTex = null;
 const lanternLights = [];
+
+function buildPermanentSoilGround() {
+  const soilTex = createSoilTexture();
+  soilGroundMat = new THREE.MeshLambertMaterial({ color: 0xb89c80, map: soilTex });
+  // Huge continuous earth/soil ground extending far beyond the wooden floor
+  const earthPlane = new THREE.Mesh(new THREE.PlaneGeometry(140, 100), soilGroundMat);
+  earthPlane.rotation.x = -Math.PI / 2;
+  earthPlane.position.set(0, -0.08, -10);
+  groundSoilGroup.add(earthPlane);
+
+  // Raised earthen foundation under the big wooden stage so it sits naturally on soil
+  soilRimMat = new THREE.MeshLambertMaterial({ color: 0x543c29, map: soilTex });
+  const earthMound = new THREE.Mesh(new THREE.BoxGeometry(50, 0.36, 30), soilRimMat);
+  earthMound.position.set(0, -0.22, 0);
+  groundSoilGroup.add(earthMound);
+
+  freezeStaticTransforms(groundSoilGroup);
+}
+buildPermanentSoilGround();
 
 function createSakuraTree(x, z, scale = 1) {
   const tree = new THREE.Group();
@@ -1345,20 +1413,20 @@ function createSakuraTree(x, z, scale = 1) {
 
 function buildArenaEnvironment() {
   const floorMat = new THREE.MeshLambertMaterial({ color: 0x242b42 });
-  const floor = new THREE.Mesh(new THREE.BoxGeometry(24, 0.8, 12), floorMat);
-  floor.position.set(0, -0.4, 0); builtinFloorGroup.add(floor);
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(42, 0.14, 24), floorMat);
+  floor.position.set(0, -0.07, 0); builtinFloorGroup.add(floor);
 
   const stoneMat = new THREE.MeshLambertMaterial({ color: 0x313a56 });
-  const centerSlab = new THREE.Mesh(new THREE.BoxGeometry(17.5, 0.04, 5.4), stoneMat);
+  const centerSlab = new THREE.Mesh(new THREE.BoxGeometry(26, 0.04, 8), stoneMat);
   centerSlab.position.set(0, 0.005, 0); builtinFloorGroup.add(centerSlab);
 
   const borderMat = new THREE.MeshLambertMaterial({ color: 0x7a5e28 });
-  const frontTrim = new THREE.Mesh(new THREE.BoxGeometry(20, 0.16, 0.35), borderMat);
-  frontTrim.position.set(0, 0.04, 2.75); builtinFloorGroup.add(frontTrim);
+  const frontTrim = new THREE.Mesh(new THREE.BoxGeometry(36, 0.16, 0.4), borderMat);
+  frontTrim.position.set(0, 0.04, 4.2); builtinFloorGroup.add(frontTrim);
 
-  [-8.6, 8.6].forEach((px) => {
-    const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.42, 0.46), borderMat);
-    pillar.position.set(px, 0.21, 2.75);
+  [-14, 14].forEach((px) => {
+    const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.44, 0.5), borderMat);
+    pillar.position.set(px, 0.22, 4.2);
     builtinFloorGroup.add(pillar);
   });
 
@@ -1381,29 +1449,29 @@ function buildArenaEnvironment() {
   );
   innerRing.rotation.x = -Math.PI / 2; innerRing.position.y = 0.03; builtinFloorGroup.add(innerRing);
 
-  const grid = new THREE.GridHelper(22, 18, 0x525d7d, 0x343c54);
+  const grid = new THREE.GridHelper(38, 22, 0x525d7d, 0x343c54);
   grid.position.y = 0.022; builtinFloorGroup.add(grid);
 
   const trimMat = new THREE.MeshLambertMaterial({ color: 0x3c445e });
-  const backStep = new THREE.Mesh(new THREE.BoxGeometry(22, 0.36, 1.6), trimMat);
-  backStep.position.set(0, 0.18, -4.4); builtinHousesGroup.add(backStep);
+  const backStep = new THREE.Mesh(new THREE.BoxGeometry(24, 0.36, 1.6), trimMat);
+  backStep.position.set(0, 0.18, -5.2); builtinHousesGroup.add(backStep);
 
   const redMat = new THREE.MeshLambertMaterial({ color: 0xa61c22 });
   const darkRoofMat = new THREE.MeshLambertMaterial({ color: 0x161a26 });
-  const railBar = new THREE.Mesh(new THREE.BoxGeometry(19, 0.1, 0.12), redMat);
-  railBar.position.set(0, 0.95, -3.75); builtinHousesGroup.add(railBar);
-  for (let rx = -8; rx <= 8; rx += 2) {
+  const railBar = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 0.12), redMat);
+  railBar.position.set(0, 0.95, -4.55); builtinHousesGroup.add(railBar);
+  for (let rx = -9; rx <= 9; rx += 3) {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.85, 0.14), trimMat);
-    post.position.set(rx, 0.65, -3.75); builtinHousesGroup.add(post);
+    post.position.set(rx, 0.65, -4.55); builtinHousesGroup.add(post);
   }
 
-  const pL = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 5.4, 7), redMat); pL.position.set(-2.6, 2.7, -5.6);
+  const pL = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 5.4, 7), redMat); pL.position.set(-2.6, 2.7, -6.2);
   const pR = pL.clone(); pR.position.x = 2.6;
-  const basePedL = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.45, 0.7), darkRoofMat); basePedL.position.set(-2.6, 0.22, -5.6);
+  const basePedL = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.45, 0.7), darkRoofMat); basePedL.position.set(-2.6, 0.22, -6.2);
   const basePedR = basePedL.clone(); basePedR.position.x = 2.6;
-  const topBeam = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.44, 0.6), darkRoofMat); topBeam.position.set(0, 5.25, -5.6);
-  const subBeam = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.28, 0.4), redMat); subBeam.position.set(0, 4.3, -5.6);
-  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.16), borderMat); plaque.position.set(0, 4.78, -5.35);
+  const topBeam = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.44, 0.6), darkRoofMat); topBeam.position.set(0, 5.25, -6.2);
+  const subBeam = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.28, 0.4), redMat); subBeam.position.set(0, 4.3, -6.2);
+  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.16), borderMat); plaque.position.set(0, 4.78, -5.95);
   builtinHousesGroup.add(pL, pR, basePedL, basePedR, topBeam, subBeam, plaque);
 
   const pagoda = new THREE.Group();
@@ -1416,18 +1484,18 @@ function buildArenaEnvironment() {
     const roof = new THREE.Mesh(new THREE.ConeGeometry(w * 0.92, 0.95, 4), darkRoofMat); roof.position.y = yBase + 1.15; roof.rotation.y = Math.PI / 4;
     pagoda.add(body, win, roof);
   }
-  pagoda.position.set(-6.0, 0, -11.5); builtinHousesGroup.add(pagoda);
-  const pagoda2 = pagoda.clone(); pagoda2.scale.setScalar(0.84); pagoda2.position.set(6.4, 0, -12.2); builtinHousesGroup.add(pagoda2);
+  pagoda.position.set(-6.4, 0, -12.5); builtinHousesGroup.add(pagoda);
+  const pagoda2 = pagoda.clone(); pagoda2.scale.setScalar(0.84); pagoda2.position.set(6.8, 0, -13.2); builtinHousesGroup.add(pagoda2);
 
   const mtnMat = new THREE.MeshLambertMaterial({ color: 0x14192e });
-  [[-12, -20, 7, 10], [0, -24, 9, 12], [13, -21, 7.5, 11]].forEach(([mx, mz, mr, mh]) => {
+  [[-12, -22, 7, 10], [0, -26, 9, 12], [13, -23, 7.5, 11]].forEach(([mx, mz, mr, mh]) => {
     const mtn = new THREE.Mesh(new THREE.ConeGeometry(mr, mh, 5), mtnMat);
     mtn.position.set(mx, mh * 0.42, mz);
     builtinHousesGroup.add(mtn);
   });
 
   [-4.6, 4.6, -7.5, 7.5].forEach((lx, idx) => {
-    const lz = idx < 2 ? -3.5 : -2.6;
+    const lz = idx < 2 ? -4.1 : -3.2;
     const base = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.44, 1.4, 6), trimMat); base.position.set(lx, 0.7, lz);
     const flame = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.48, 0.42), new THREE.MeshBasicMaterial({ color: 0xffaa33 })); flame.position.set(lx, 1.65, lz);
     const roof = new THREE.Mesh(new THREE.ConeGeometry(0.64, 0.46, 6), darkRoofMat); roof.position.set(lx, 2.1, lz);
@@ -1438,19 +1506,19 @@ function buildArenaEnvironment() {
     }
   });
 
-  createSakuraTree(-6.8, -4.8, 1.15);
-  createSakuraTree(6.8, -5.0, 1.2);
-  createSakuraTree(-9.2, -7.8, 1.35);
-  createSakuraTree(9.2, -8.2, 1.3);
+  createSakuraTree(-7.2, -5.2, 1.15);
+  createSakuraTree(7.2, -5.4, 1.2);
+  createSakuraTree(-10.0, -8.5, 1.35);
+  createSakuraTree(10.0, -8.8, 1.3);
 
   celestialOrb = new THREE.Mesh(new THREE.CircleGeometry(3.6, 22), new THREE.MeshBasicMaterial({ color: 0xdce8ff, fog: false }));
-  celestialOrb.position.set(2.4, 7.2, -26);
+  celestialOrb.position.set(2.4, 7.2, -28);
   scene.add(celestialOrb);
 }
 buildArenaEnvironment();
 
 const PETAL_COUNT = 50;
-let activePetals = 18;
+let activePetals = 14;
 const petalGeo = new THREE.BufferGeometry();
 const petalPos = new Float32Array(PETAL_COUNT * 3);
 for (let i = 0; i < PETAL_COUNT; i++) {
@@ -1466,31 +1534,31 @@ function applyQuality(q) {
   STATE.quality = q;
   const dpr = window.devicePixelRatio || 1;
   if (q === 'low') {
-    renderer.setPixelRatio(IS_MOBILE ? 0.85 : 1);
+    renderer.setPixelRatio(IS_MOBILE ? 0.72 : 0.9);
     renderer.shadowMap.enabled = false;
     mainDirLight.castShadow = false;
     warmRimLeft.visible = false;
     coolRimRight.visible = false;
     lanternLights.forEach(l => l.visible = false);
-    activePetals = 12;
+    activePetals = IS_MOBILE ? 8 : 14;
   } else if (q === 'med') {
-    renderer.setPixelRatio(Math.min(dpr, IS_MOBILE ? 1.0 : 1.35));
-    renderer.shadowMap.enabled = !IS_MOBILE;
-    mainDirLight.castShadow = !IS_MOBILE;
-    warmRimLeft.visible = !STATE.lowEndMode;
+    renderer.setPixelRatio(IS_MOBILE ? Math.min(dpr, 0.88) : Math.min(dpr, 1.3));
+    renderer.shadowMap.enabled = false;
+    mainDirLight.castShadow = false;
+    warmRimLeft.visible = !IS_MOBILE && !STATE.lowEndMode;
     coolRimRight.visible = !IS_MOBILE;
     lanternLights.forEach(l => l.visible = !IS_MOBILE);
-    activePetals = IS_MOBILE ? 24 : 36;
+    activePetals = IS_MOBILE ? 14 : 32;
   } else {
-    renderer.setPixelRatio(Math.min(dpr, IS_MOBILE ? 1.25 : 1.75));
-    renderer.shadowMap.enabled = true;
-    mainDirLight.castShadow = true;
+    renderer.setPixelRatio(Math.min(dpr, IS_MOBILE ? 1.15 : 1.75));
+    renderer.shadowMap.enabled = !IS_MOBILE;
+    mainDirLight.castShadow = !IS_MOBILE;
     mainDirLight.shadow.mapSize.set(IS_MOBILE ? 512 : 1024, IS_MOBILE ? 512 : 1024);
     if (mainDirLight.shadow.map) { mainDirLight.shadow.map.dispose(); mainDirLight.shadow.map = null; }
     warmRimLeft.visible = true;
     coolRimRight.visible = true;
     lanternLights.forEach(l => l.visible = true);
-    activePetals = PETAL_COUNT;
+    activePetals = IS_MOBILE ? 24 : PETAL_COUNT;
   }
   petalGeo.setDrawRange(0, activePetals);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1508,22 +1576,26 @@ function applyTimeOfDay(mode) {
   const isDay = mode === 'day';
   if (isDay) {
     scene.background = loadedSkyTex ? loadedSkyTex : new THREE.Color(0x8bc9ff);
-    scene.fog.color.setHex(0xcbe6ff); scene.fog.density = 0.014;
-    hemiLight.color.setHex(0xe8f4ff); hemiLight.groundColor.setHex(0x6e5e4d); hemiLight.intensity = 1.95;
-    mainDirLight.color.setHex(0xfff1d0); mainDirLight.intensity = 2.85; mainDirLight.position.set(-5, 14, 8);
+    scene.fog.color.setHex(0xcbe6ff); scene.fog.density = 0.012;
+    hemiLight.color.setHex(0xe8f4ff); hemiLight.groundColor.setHex(0x6e5e4d); hemiLight.intensity = IS_MOBILE ? 2.1 : 1.95;
+    mainDirLight.color.setHex(0xfff1d0); mainDirLight.intensity = IS_MOBILE ? 2.6 : 2.85; mainDirLight.position.set(-5, 14, 8);
     warmRimLeft.intensity = 1.4; coolRimRight.intensity = 1.2;
-    celestialOrb.material.color.setHex(0xffe885); celestialOrb.position.set(-3.5, 7.6, -26);
+    celestialOrb.material.color.setHex(0xffe885); celestialOrb.position.set(-3.5, 7.6, -28);
     petals.material.color.setHex(0xff9ec7);
     lanternLights.forEach(l => l.intensity = 0.4);
+    if (soilGroundMat) soilGroundMat.color.setHex(0xd4b696);
+    if (soilRimMat) soilRimMat.color.setHex(0x876749);
   } else {
     scene.background = loadedSkyTex ? loadedSkyTex : new THREE.Color(0x090d1f);
-    scene.fog.color.setHex(0x0c1126); scene.fog.density = 0.02;
-    hemiLight.color.setHex(0x88a8ff); hemiLight.groundColor.setHex(0x2b1920); hemiLight.intensity = 1.5;
-    mainDirLight.color.setHex(0xd0e2ff); mainDirLight.intensity = 2.35; mainDirLight.position.set(4, 12, 6);
-    warmRimLeft.intensity = 3.0; coolRimRight.intensity = 3.0;
-    celestialOrb.material.color.setHex(0xdce8ff); celestialOrb.position.set(2.4, 7.2, -26);
+    scene.fog.color.setHex(0x0c1126); scene.fog.density = 0.018;
+    hemiLight.color.setHex(0x88a8ff); hemiLight.groundColor.setHex(0x3b2618); hemiLight.intensity = IS_MOBILE ? 1.85 : 1.55;
+    mainDirLight.color.setHex(0xd0e2ff); mainDirLight.intensity = IS_MOBILE ? 2.45 : 2.35; mainDirLight.position.set(4, 12, 6);
+    warmRimLeft.intensity = 2.8; coolRimRight.intensity = 2.8;
+    celestialOrb.material.color.setHex(0xdce8ff); celestialOrb.position.set(2.4, 7.2, -28);
     petals.material.color.setHex(0xffb8d9);
     lanternLights.forEach(l => l.intensity = 2.2);
+    if (soilGroundMat) soilGroundMat.color.setHex(0x8c735a);
+    if (soilRimMat) soilRimMat.color.setHex(0x523b28);
   }
   const sunSVG = `<svg class="svg-ico" style="color:#ffb800;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
   const moonSVG = `<svg class="svg-ico" style="color:#9ec5ff;" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
@@ -1533,7 +1605,7 @@ function applyTimeOfDay(mode) {
 applyTimeOfDay('night');
 
 /* ============================================================
-   7. TEXTURE DOWNSCALER, FULL ARENA LOADER & LOW-RAM CACHE
+   7. TEXTURE DOWNSCALER, INSTANCED ARENA LOADER & LOW-RAM CACHE
    ============================================================ */
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
@@ -1587,9 +1659,11 @@ function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = 
   if (m.emissiveMap) downscaleTextureIfNeeded(m.emissiveMap, maxTexSize, useFastLambert);
   if (m.alphaMap) downscaleTextureIfNeeded(m.alphaMap, maxTexSize, useFastLambert);
 
-  // Preserve DoubleSide / alphaTest / transparency on Maple Trees & Houses!
   const targetSide = isArenaProp ? (m.side !== undefined ? m.side : THREE.FrontSide) : THREE.FrontSide;
-  const isTransparent = isArenaProp ? !!m.transparent : (m.transparent && m.opacity < 1);
+  // Convert expensive alpha blending on tree leaves into fast alphaTest cutout on mobile
+  const useCutout = isArenaProp && m.transparent && m.opacity >= 0.95 && (m.map || m.alphaMap);
+  const isTransparent = useCutout ? false : (isArenaProp ? !!m.transparent : (m.transparent && m.opacity < 1));
+  const targetAlphaTest = useCutout ? Math.max(m.alphaTest || 0, 0.38) : (m.alphaTest || 0);
 
   if (useFastLambert) {
     ['normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'bumpMap', 'displacementMap'].forEach((k) => {
@@ -1606,7 +1680,7 @@ function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = 
         emissiveMap: m.emissiveMap || null,
         transparent: isTransparent,
         opacity: m.opacity !== undefined ? m.opacity : 1,
-        alphaTest: m.alphaTest || 0,
+        alphaTest: targetAlphaTest,
         vertexColors: !!m.vertexColors,
         side: targetSide
       });
@@ -1619,16 +1693,16 @@ function optimizeMaterialForDevice(m, maxTexSize, useFastLambert, isArenaProp = 
     });
     if (m.aoMap) { m.aoMap.dispose(); m.aoMap = null; }
     m.side = targetSide;
-    if (!isArenaProp && m.opacity === 1) m.transparent = false;
-    if (m.shininess !== undefined && m.shininess > 30) m.shininess = 20;
+    m.transparent = isTransparent;
+    m.alphaTest = targetAlphaTest;
     if (!m.map && m.color && (m.color.r + m.color.g + m.color.b) < 0.08) m.color.setHex(0x6c7a96);
   }
   return m;
 }
 
 function optimizeSceneMemory(root, isArenaProp = false) {
-  const useFastLambert = STATE.quality === 'low' || STATE.lowEndMode;
-  const maxTex = (STATE.quality === 'low' || STATE.lowEndMode) ? 512 : (STATE.quality === 'med' ? 1024 : 2048);
+  const useFastLambert = (STATE.quality !== 'high') || STATE.lowEndMode || IS_MOBILE;
+  const maxTex = (STATE.quality === 'low' || STATE.lowEndMode) ? 384 : (IS_MOBILE ? 512 : (STATE.quality === 'med' ? 1024 : 2048));
   root.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = !isArenaProp && !IS_MOBILE && STATE.quality === 'high';
@@ -1654,7 +1728,7 @@ function freezeStaticTransforms(obj) {
 }
 
 function pruneUnusedModels() {
-  if (!STATE.lowEndMode && Object.keys(assetCache.models).length <= 3) return;
+  if (!IS_MOBILE && !STATE.lowEndMode && Object.keys(assetCache.models).length <= 3) return;
   const activeIds = new Set([
     FIGHTERS[STATE.selectedHeroIdx]?.id,
     FIGHTERS[STATE.selectedRivalIdx]?.id,
@@ -1721,8 +1795,12 @@ async function loadModelWithDetails(f) {
   return { root: null, reason: reasons.join(' | ') };
 }
 
+function is3DModelPath(url) {
+  return /\.(glb|gltf|fbx)(\?.*)?$/i.test(String(url || '').trim());
+}
+
 async function loadCustomProp(url, isArenaProp = false, label = '') {
-  if (!url) return null;
+  if (!url || !is3DModelPath(url)) return null;
   let { buf } = await streamFetchWithCache(url, (recv, tot) => {
     if (label && tot) {
       updateAssetPill(`Arena ${label}: ${(recv / 1048576).toFixed(1)}/${(tot / 1048576).toFixed(1)} MB`);
@@ -1770,6 +1848,7 @@ const BONE_ALIASES = {
 };
 
 const KEY_KNOCKDOWN_BONES = new Set(['hips', 'spine2', 'head', 'leftfoot', 'rightfoot']);
+const MOBILE_SKIP_BONE_RE = /(thumb|index|middle|ring|pinky|toebase)/;
 
 function canonicalBoneKey(name) {
   let k = name.toLowerCase()
@@ -1795,6 +1874,7 @@ function retargetClipToModel(clip, model) {
     const key = canonicalBoneKey(track.name.slice(0, dotIdx));
     const prop = track.name.slice(dotIdx + 1);
     if (key === 'hips' && prop === 'position') continue;
+    if (IS_MOBILE && MOBILE_SKIP_BONE_RE.test(key)) continue;
     const targetBone = boneMap[key];
     if (targetBone) { track.name = `${targetBone}.${prop}`; newTracks.push(track); }
   }
@@ -1837,17 +1917,136 @@ function prepareLoadedModel(model, targetHeight = 1.88) {
   }
 }
 
+/* Big, Perfectly Centered, Tiled Custom Floor (48 x 28) in 1 Instanced Draw Call! */
 function placeCustomFloor(obj) {
+  obj.position.set(0, 0, 0);
+  obj.rotation.set(0, 0, 0);
+  obj.scale.setScalar(1);
   obj.updateMatrixWorld(true);
+
   const box = getAccurateMeshBox(obj);
   const sz = new THREE.Vector3(); box.getSize(sz);
-  const maxXZ = Math.max(sz.x, sz.z, 0.1);
-  obj.scale.multiplyScalar(22 / maxXZ);
+
+  // Normalize one crisp tile to 16 x 14, then tile 3 x 2 = 48 wide x 28 deep!
+  const tileW = 16;
+  const tileD = 14;
+  const sx = tileW / Math.max(sz.x, 0.1);
+  const szScale = tileD / Math.max(sz.z, 0.1);
+  const sy = Math.min(Math.max(sx, szScale), 2.5);
+  obj.scale.set(sx, sy, szScale);
+
+  obj.updateMatrixWorld(true);
   const box2 = getAccurateMeshBox(obj);
-  obj.position.y -= box2.max.y;
-  obj.traverse(c => { if (c.isMesh) { c.receiveShadow = false; c.castShadow = false; } });
-  customArenaGroup.add(obj);
-  freezeStaticTransforms(obj);
+  const center = new THREE.Vector3(); box2.getCenter(center);
+  obj.position.set(-center.x, -box2.max.y, -center.z);
+  obj.updateMatrixWorld(true);
+
+  const tileOffsets = [
+    [-16, -7], [0, -7], [16, -7],
+    [-16,  7], [0,  7], [16,  7]
+  ];
+
+  let instancedOk = true;
+  const meshes = [];
+  obj.traverse((c) => {
+    if (c.isMesh) {
+      if (c.isSkinnedMesh || !c.geometry) instancedOk = false;
+      meshes.push(c);
+    }
+  });
+
+  if (instancedOk && meshes.length > 0) {
+    const transMat = new THREE.Matrix4();
+    const finalMat = new THREE.Matrix4();
+    meshes.forEach((mesh) => {
+      const im = new THREE.InstancedMesh(mesh.geometry, mesh.material, tileOffsets.length);
+      im.castShadow = false;
+      im.receiveShadow = false;
+      for (let i = 0; i < tileOffsets.length; i++) {
+        transMat.makeTranslation(tileOffsets[i][0], 0, tileOffsets[i][1]);
+        finalMat.multiplyMatrices(transMat, mesh.matrixWorld);
+        im.setMatrixAt(i, finalMat);
+      }
+      im.instanceMatrix.needsUpdate = true;
+      customArenaGroup.add(im);
+      freezeStaticTransforms(im);
+    });
+  } else {
+    // Safe fallback: scale single mesh cleanly to 48 x 28 centered at (0, 0)
+    obj.scale.set(sx * 3, sy, szScale * 2);
+    obj.position.set(0, 0, 0);
+    obj.updateMatrixWorld(true);
+    const box3 = getAccurateMeshBox(obj);
+    box3.getCenter(center);
+    obj.position.set(-center.x, -box3.max.y, -center.z);
+    obj.traverse(c => { if (c.isMesh) { c.receiveShadow = false; c.castShadow = false; } });
+    customArenaGroup.add(obj);
+    freezeStaticTransforms(obj);
+  }
+}
+
+/* Instanced Trees: Renders all 4 Japanese Maple Trees in minimal draw calls! */
+function placeInstancedTrees(obj, placements) {
+  obj.position.set(0, 0, 0);
+  obj.rotation.set(0, 0, 0);
+  obj.scale.setScalar(1);
+  obj.updateMatrixWorld(true);
+
+  const box = getAccurateMeshBox(obj);
+  const sz = new THREE.Vector3(); box.getSize(sz);
+  if (sz.y > 0.05) obj.scale.setScalar(5.0 / sz.y);
+
+  obj.updateMatrixWorld(true);
+  const box2 = getAccurateMeshBox(obj);
+  const center = new THREE.Vector3(); box2.getCenter(center);
+  obj.position.set(-center.x, -box2.min.y, -center.z);
+  obj.updateMatrixWorld(true);
+
+  const meshes = [];
+  let canInstance = true;
+  obj.traverse((c) => {
+    if (c.isMesh) {
+      if (c.isSkinnedMesh || !c.geometry) canInstance = false;
+      meshes.push(c);
+    }
+  });
+
+  if (canInstance && meshes.length > 0) {
+    const placeMat = new THREE.Matrix4();
+    const finalMat = new THREE.Matrix4();
+    const pos = new THREE.Vector3();
+    const quat = new THREE.Quaternion();
+    const euler = new THREE.Euler();
+    const scl = new THREE.Vector3();
+
+    meshes.forEach((mesh) => {
+      const im = new THREE.InstancedMesh(mesh.geometry, mesh.material, placements.length);
+      im.castShadow = false;
+      im.receiveShadow = false;
+      for (let i = 0; i < placements.length; i++) {
+        const p = placements[i];
+        pos.set(p.x, 0, p.z);
+        euler.set(0, p.rotY, 0);
+        quat.setFromEuler(euler);
+        scl.setScalar(p.scaleMul);
+        placeMat.compose(pos, quat, scl);
+        finalMat.multiplyMatrices(placeMat, mesh.matrixWorld);
+        im.setMatrixAt(i, finalMat);
+      }
+      im.instanceMatrix.needsUpdate = true;
+      customArenaGroup.add(im);
+      freezeStaticTransforms(im);
+    });
+  } else {
+    placements.forEach((p, idx) => {
+      const clone = idx === placements.length - 1 ? obj : obj.clone();
+      clone.position.set(p.x, -box2.min.y, p.z);
+      clone.rotation.y = p.rotY;
+      clone.scale.multiplyScalar(p.scaleMul);
+      customArenaGroup.add(clone);
+      freezeStaticTransforms(clone);
+    });
+  }
 }
 
 function placeCustomProp(obj, x, z, targetHeight, rotY = 0, reuseOriginal = false) {
@@ -1895,65 +2094,64 @@ async function streamAllAssets() {
     isStreaming = false; return;
   }
 
-  // 1. Load Custom Sky Image (Optimized for Android 11 WebGL!)
+  // 1. Load Custom Sky Image (Downscaled for fast mobile VRAM)
   if (ARENA_CONFIG.skyImage && !loadedSkyTex) {
     texLoader.load(encodeURI(ARENA_CONFIG.skyImage), (t) => {
       t.colorSpace = THREE.SRGBColorSpace;
-      t.generateMipmaps = false;
-      t.minFilter = THREE.LinearFilter;
-      t.magFilter = THREE.LinearFilter;
+      downscaleTextureIfNeeded(t, IS_MOBILE ? 768 : 1536, true);
       loadedSkyTex = t;
       scene.background = t;
       DIAG.arena.Sky = 'Custom Sky Loaded';
     }, undefined, () => {});
   }
 
-  // 2. Load Full Custom 3D Arena (Always loaded on ALL devices, optimized for Low-End!)
+  // 2. Load Full Custom 3D Arena (Floor + Maple Trees instanced + any optional 3D Temple/House)
   if (customArenaGroup.children.length === 0) {
     let loadedFloorObj = null;
-    if (ARENA_CONFIG.floorFile) {
+    if (is3DModelPath(ARENA_CONFIG.floorFile)) {
       const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, 'Floor');
       if (fl) {
         loadedFloorObj = fl;
         STATE.builtinFloor = false; syncArenaVisibility();
         placeCustomFloor(fl);
-        DIAG.arena.Floor = 'Custom Loaded';
+        DIAG.arena.Floor = 'Custom Big Floor Loaded (6x Tiled)';
       }
       await yieldFrame();
     }
 
-    if (ARENA_CONFIG.templeFile) {
-      // If templeFile points to same GLB as floorFile, clone without re-downloading or re-parsing!
+    if (is3DModelPath(ARENA_CONFIG.templeFile)) {
       const tp = (ARENA_CONFIG.templeFile === ARENA_CONFIG.floorFile && loadedFloorObj)
         ? loadedFloorObj.clone()
         : await loadCustomProp(ARENA_CONFIG.templeFile, true, 'Temple');
       if (tp) {
-        STATE.builtinHouses = false; STATE.builtinTrees = false; syncArenaVisibility();
-        placeCustomProp(tp, 0, -6.0, 7.5, 0, true);
+        STATE.builtinHouses = false; syncArenaVisibility();
+        placeCustomProp(tp, 0, -6.5, 7.5, 0, true);
         DIAG.arena.Temple = 'Custom Loaded';
       }
       await yieldFrame();
     }
 
-    if (ARENA_CONFIG.treeFile) {
+    if (is3DModelPath(ARENA_CONFIG.treeFile)) {
       const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, 'Trees');
       if (tr) {
         STATE.builtinTrees = false; syncArenaVisibility();
-        placeCustomProp(tr, -6.8, -4.8, 4.8, 0.4, false);
-        placeCustomProp(tr, 6.8, -5.0, 5.0, -0.6, false);
-        placeCustomProp(tr, -9.2, -7.8, 5.4, 1.2, false);
-        placeCustomProp(tr, 9.2, -8.2, 5.2, -1.1, true);
-        DIAG.arena.Trees = 'Custom Loaded (4x)';
+        placeInstancedTrees(tr, [
+          { x: -7.2, z: -5.2, scaleMul: 0.96, rotY: 0.4 },
+          { x:  7.2, z: -5.4, scaleMul: 1.00, rotY: -0.6 },
+          { x: -10.2, z: -8.4, scaleMul: 1.08, rotY: 1.2 },
+          { x:  10.2, z: -8.8, scaleMul: 1.04, rotY: -1.1 }
+        ]);
+        DIAG.arena.Trees = 'Custom Instanced (4x)';
       }
       await yieldFrame();
     }
 
-    if (ARENA_CONFIG.houseFile) {
+    if (is3DModelPath(ARENA_CONFIG.houseFile)) {
       const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, 'Houses');
       if (hs) {
         STATE.builtinHouses = false; syncArenaVisibility();
-        placeCustomProp(hs, -5.8, -10.5, 6.2, 0.2, false);
-        placeCustomProp(hs, 6.0, -11.0, 5.8, -0.2, true);
+        placeCustomProp(hs, -6.4, -11.5, 6.2, 0.2, false);
+        placeCustomProp(hs, 6.6, -12.0, 5.8, -0.2, true);
         DIAG.arena.Houses = 'Custom Loaded (2x)';
       }
       await yieldFrame();
@@ -1988,8 +2186,8 @@ async function streamAllAssets() {
     }
   }
 
-  // 5. Load Active Fighters first (and all others if enough RAM)
-  const targetFighters = STATE.lowEndMode
+  // 5. On Mobile load active 2 fighters first (others load on-demand when picked)
+  const targetFighters = (IS_MOBILE || STATE.lowEndMode)
     ? [FIGHTERS[STATE.selectedHeroIdx], FIGHTERS[STATE.selectedRivalIdx]]
     : [
         FIGHTERS[STATE.selectedHeroIdx],
@@ -2110,7 +2308,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (LOW-CPU GROUNDING + SMOOTH ANIMATION)
+   9. FIGHTER CONTROLLER (CACHED FLASH MATS + SMOOTH ANIMATION)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -2170,15 +2368,35 @@ class Fighter {
     this.restFootY = 0.08;
     this.katanaAttached = null;
     this.builtinAnims = [];
+    this._flashMats = [];
 
     this.buildVisual(); this.buildGroundAndHalo();
     scene.add(this.group);
+  }
+
+  cacheFlashMaterials() {
+    this._flashMats = [];
+    if (!this.modelRoot) return;
+    const seen = new Set();
+    this.modelRoot.traverse((child) => {
+      if (child.isMesh && child.material) {
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        for (const m of mats) {
+          if (m && m.emissive && !seen.has(m)) {
+            seen.add(m);
+            if (!m.userData.origEmissive) m.userData.origEmissive = m.emissive.clone();
+            this._flashMats.push(m);
+          }
+        }
+      }
+    });
   }
 
   buildVisual() {
     if (this.modelRoot) { this.group.remove(this.modelRoot); this.modelRoot = null; }
     this.mixer = null; this.actions = {}; this.currentAction = null;
     this.katanaAttached = null; this.footBones = []; this.knockdownBones = [];
+    this._flashMats = [];
 
     const cached = assetCache.models[this.cfg.id];
     if (cached && cached.scene) {
@@ -2212,6 +2430,7 @@ class Fighter {
 
       this.mixer = new THREE.AnimationMixer(clone);
       this.mixer.timeScale = 0.88;
+      this.cacheFlashMaterials();
       this.bindAllAnimations();
       this.attachKatana();
     } else {
@@ -2219,6 +2438,7 @@ class Fighter {
       this.baseModelY = 0;
       this.modelRoot = buildProceduralFighter(this.cfg);
       this.group.add(this.modelRoot);
+      this.cacheFlashMaterials();
     }
   }
 
@@ -2350,23 +2570,16 @@ class Fighter {
   }
 
   setHitFlash(active) {
-    if (!this.modelRoot) return;
-    this.modelRoot.traverse((child) => {
-      if (child.isMesh && child.material) {
-        const mats = Array.isArray(child.material) ? child.material : [child.material];
-        mats.forEach((m) => {
-          if (!m.emissive) return;
-          if (active) {
-            if (!m.userData.origEmissive) m.userData.origEmissive = m.emissive.clone();
-            m.emissive.setHex(0xff3b22);
-            if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 1.4;
-          } else if (m.userData.origEmissive) {
-            m.emissive.copy(m.userData.origEmissive);
-            if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 1.0;
-          }
-        });
+    for (let i = 0; i < this._flashMats.length; i++) {
+      const m = this._flashMats[i];
+      if (active) {
+        m.emissive.setHex(0xff3b22);
+        if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 1.4;
+      } else if (m.userData.origEmissive) {
+        m.emissive.copy(m.userData.origEmissive);
+        if (m.emissiveIntensity !== undefined) m.emissiveIntensity = 1.0;
       }
-    });
+    }
   }
 
   triggerAction(type) {
@@ -2536,7 +2749,7 @@ class Fighter {
       }
     }
 
-    this.group.position.x = THREE.MathUtils.clamp(this.group.position.x, -7.8, 7.8);
+    this.group.position.x = THREE.MathUtils.clamp(this.group.position.x, -8.5, 8.5);
     if (opponent && this.hp > 0 && opponent.hp > 0) {
       const dx = this.group.position.x - opponent.group.position.x;
       if (Math.abs(dx) < 0.88 && Math.abs(this.group.position.y - opponent.group.position.y) < 1.1) {
@@ -2591,7 +2804,7 @@ class Fighter {
       this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, 0, 1 - Math.exp(-16 * dt));
     }
 
-    if (!STATE.lowEndMode && this.footBones.length > 0 && this.onGround) {
+    if (!IS_MOBILE && !STATE.lowEndMode && STATE.quality === 'high' && this.footBones.length > 0 && this.onGround) {
       let minFootWorldY = Infinity;
       for (let i = 0; i < this.footBones.length; i++) {
         const fy = this.footBones[i].matrixWorld.elements[13];
@@ -2606,7 +2819,9 @@ class Fighter {
       }
     } else {
       const targetY = (this.state === 'crouch' && !this.actions.crouch) ? (this.baseModelY - 0.36) : this.baseModelY;
-      this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-16 * dt));
+      if (Math.abs(this.modelRoot.position.y - targetY) > 0.002) {
+        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-16 * dt));
+      }
     }
   }
 
@@ -2679,7 +2894,7 @@ function handleJoystick(clientX, clientY) {
   if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
   joyKnob.style.transform = `translate3d(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px), 0)`;
   const nx = dx / maxR, ny = dy / maxR;
-  touchInput.moveX = Math.abs(nx) > 0.18 ? nx : 0; touchInput.jump = ny < -0.5; touchInput.down = ny > 0.5;
+  touchInput.moveX = Math.abs(nx) > 0.16 ? nx : 0; touchInput.jump = ny < -0.48; touchInput.down = ny > 0.48;
 }
 joyZone.addEventListener('pointerdown', (e) => { e.preventDefault(); joyActiveId = e.pointerId; joyZone.setPointerCapture(e.pointerId); handleJoystick(e.clientX, e.clientY); });
 joyZone.addEventListener('pointermove', (e) => { if (e.pointerId === joyActiveId) handleJoystick(e.clientX, e.clientY); });
@@ -3120,8 +3335,8 @@ function animate() {
   const rawDt = Math.min(clock.getDelta(), 0.05);
   const elapsed = clock.elapsedTime;
 
-  if (arenaRuneRing) arenaRuneRing.rotation.z = elapsed * 0.25;
-  if (STATE.timeOfDay === 'night' && STATE.quality === 'high') {
+  if (arenaRuneRing && builtinFloorGroup.visible) arenaRuneRing.rotation.z = elapsed * 0.25;
+  if (STATE.timeOfDay === 'night' && STATE.quality === 'high' && builtinHousesGroup.visible) {
     for (let i = 0; i < lanternLights.length; i++) {
       lanternLights[i].intensity = 2.1 + Math.sin(elapsed * 7 + i * 2.1) * 0.2;
     }
