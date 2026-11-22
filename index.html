@@ -36,7 +36,7 @@
   }
 
   /* =========================================================
-     GTA V STYLE LOADING SCREEN
+     GTA V STYLE LOADING SCREEN (FULL SCREEN CRISP ARTWORK)
      ========================================================= */
   #gta-loading-screen {
     position: fixed;
@@ -62,33 +62,20 @@
     overflow: hidden;
     background: radial-gradient(circle at 65% 35%, #2b143b 0%, #0d1633 52%, #05070e 100%);
   }
-  #gta-slide-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: blur(18px) brightness(0.45) saturate(1.25);
-    transform: scale(1.12);
-    opacity: 0;
-    transition: opacity 0.55s ease;
-    pointer-events: none;
-  }
   #gta-slide-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: center center;
+    object-fit: cover;
+    object-position: center 22%;
     opacity: 0;
     transition: opacity 0.55s ease;
-    animation: gtaKenBurns 10s ease-in-out infinite alternate;
-    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.72));
+    animation: gtaKenBurns 11s ease-in-out infinite alternate;
   }
   @keyframes gtaKenBurns {
     0% { transform: scale(1.0) translate(0%, 0%); }
-    100% { transform: scale(1.04) translate(-0.8%, -0.5%); }
+    100% { transform: scale(1.035) translate(-0.6%, -0.4%); }
   }
   .gta-fallback-art {
     position: absolute;
@@ -119,7 +106,7 @@
   .gta-vignette {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(4,6,14,0.62) 0%, rgba(4,6,14,0.0) 22%, rgba(4,6,14,0.0) 68%, rgba(4,6,14,0.90) 100%);
+    background: linear-gradient(180deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0.0) 18%, rgba(0,0,0,0.0) 72%, rgba(0,0,0,0.82) 100%);
     pointer-events: none;
   }
   .gta-top-bar {
@@ -131,8 +118,8 @@
     align-items: center;
   }
   .gta-badge {
-    background: rgba(255, 184, 0, 0.16);
-    border: 1px solid rgba(255, 184, 0, 0.7);
+    background: rgba(10, 14, 28, 0.72);
+    border: 1px solid rgba(255, 184, 0, 0.75);
     color: var(--gold);
     padding: 5px 14px;
     border-radius: 4px;
@@ -154,7 +141,7 @@
     max-width: min(560px, 62vw);
     border-left: 4px solid var(--gold);
     padding-left: 14px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
   }
   .gta-tip-title {
     font-size: clamp(15px, 2.1vw, 22px);
@@ -166,7 +153,7 @@
   }
   .gta-tip-text {
     font-size: clamp(12px, 1.45vw, 15px);
-    color: #f1f5f9;
+    color: #f8fafc;
     line-height: 1.4;
   }
   .gta-progress-box {
@@ -183,6 +170,7 @@
     font-size: clamp(12px, 1.4vw, 14px);
     font-weight: 700;
     color: #fff;
+    text-shadow: 0 1px 4px #000;
   }
   .gta-spinner {
     width: 18px;
@@ -196,7 +184,7 @@
   .gta-track {
     width: 100%;
     height: 7px;
-    background: rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.2);
     border-radius: 99px;
     overflow: hidden;
   }
@@ -348,35 +336,6 @@
   .screen { position: absolute; inset: 0; display: none; pointer-events: auto; }
   .screen.active { display: flex; }
 
-  /* Live Streaming Pill */
-  #asset-pill {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 40;
-    background: rgba(10, 14, 28, 0.92);
-    border: 1px solid rgba(255, 184, 0, 0.6);
-    padding: 5px 14px;
-    border-radius: 99px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #e4ecff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.45s ease;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
-  }
-  .spin-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--gold);
-    animation: blink 0.7s infinite alternate;
-  }
-  @keyframes blink { from { opacity: 0.25; } to { opacity: 1; } }
-
   /* MAIN MENU */
   #menu-screen {
     background: linear-gradient(90deg, rgba(6,8,18,0.82) 0%, rgba(6,8,18,0.3) 42%, rgba(6,8,18,0.02) 100%);
@@ -410,12 +369,12 @@
   }
   .fallback-logo .l3 { font-size: clamp(15px, 1.9vw, 21px); color: #ff474c; letter-spacing: 5px; margin-top: 2px; }
 
-  .coin-badge {
+  .unlock-badge {
     margin-top: 8px;
     background: rgba(15, 20, 36, 0.85);
-    border: 1px solid rgba(255, 184, 0, 0.65);
+    border: 1px solid rgba(0, 212, 255, 0.6);
     padding: 4px 12px; border-radius: 20px;
-    font-size: 12px; font-weight: 700; color: var(--gold);
+    font-size: 11px; font-weight: 700; color: var(--cyan);
     display: inline-flex; align-items: center; gap: 6px;
   }
 
@@ -449,7 +408,7 @@
   .fighter-preview-info {
     background: var(--glass);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px; padding: 10px 15px; margin-bottom: 10px;
+    border-radius: 12px; padding: 10px 15px; margin-bottom: 8px;
     width: min(295px, 38vw);
     box-shadow: 0 8px 24px rgba(0,0,0,0.45);
   }
@@ -459,6 +418,28 @@
   .stat-row span { width: 54px; color: #9aa7cc; font-weight: 600; }
   .stat-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
   .stat-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width 0.25s ease; }
+
+  .opponent-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: rgba(15, 22, 42, 0.9);
+    border: 1px solid rgba(0, 212, 255, 0.45);
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+    width: min(295px, 38vw);
+    font-size: 11px;
+  }
+  .opponent-bar strong { color: var(--cyan); }
+  .opponent-bar button {
+    background: rgba(0, 212, 255, 0.18);
+    border: 1px solid var(--cyan);
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
   .select-strip-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
   .select-banner {
@@ -475,6 +456,13 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
   .fighter-card.selected { border-color: var(--gold); box-shadow: 0 0 14px rgba(255, 184, 0, 0.6); transform: translateY(-4px); }
+  .fighter-card.locked { filter: grayscale(0.75); opacity: 0.78; border-color: rgba(255,255,255,0.14); }
+  .fighter-card .lock-badge {
+    position: absolute; top: 4px; right: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(0,0,0,0.82); border: 1px solid var(--gold);
+    display: grid; place-items: center; z-index: 2;
+  }
   .fighter-card img, .fighter-card svg { width: 100%; height: 76%; object-fit: cover; }
   .fighter-card .card-name {
     width: 100%; height: 24%; background: rgba(0,0,0,0.85);
@@ -489,7 +477,7 @@
   }
   .modal-overlay.open { display: flex; }
   .modal-box {
-    width: min(580px, 94vw); max-height: 88vh; overflow-y: auto;
+    width: min(620px, 94vw); max-height: 88vh; overflow-y: auto;
     background: #101526; border: 1px solid rgba(255, 184, 0, 0.45);
     border-radius: 14px; padding: 18px 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.85);
   }
@@ -513,6 +501,37 @@
     color: #fff; cursor: pointer; font-weight: 600; font-size: 11.5px;
   }
   .pill-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+  .pill-btn.locked-btn { background: rgba(255,255,255,0.04); color: #94a3b8; border-color: rgba(255,255,255,0.12); }
+
+  /* ARENA MISSION CARDS */
+  .mission-card {
+    background: rgba(18, 25, 48, 0.9);
+    border: 1px solid rgba(255, 184, 0, 0.35);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .mission-card.done { border-color: rgba(66, 230, 77, 0.6); background: rgba(15, 34, 28, 0.72); }
+  .mission-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .mission-avatar {
+    width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--gold); flex-shrink: 0;
+  }
+  .mission-avatar img, .mission-avatar svg { width: 100%; height: 100%; object-fit: cover; }
+  .mission-status {
+    font-size: 10.5px; font-weight: 800; padding: 3px 10px; border-radius: 99px;
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .mission-status.locked { background: rgba(255, 184, 0, 0.16); color: var(--gold); border: 1px solid var(--gold); }
+  .mission-status.unlocked { background: rgba(66, 230, 77, 0.18); color: #42e64d; border: 1px solid #42e64d; }
+  .mission-target {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 6px 8px; background: rgba(0, 0, 0, 0.32); border-radius: 8px;
+    margin-top: 6px; font-size: 12px;
+  }
 
   /* FIGHT HUD */
   #hud-screen { flex-direction: column; justify-content: space-between; padding: 10px 18px 12px; pointer-events: none; }
@@ -678,7 +697,8 @@
   @media screen and (max-height: 440px) {
     #menu-screen { padding: 8px 16px; }
     .nav-btn { padding: 6px 11px; font-size: 12px; }
-    .fighter-preview-info { padding: 7px 11px; margin-bottom: 6px; }
+    .fighter-preview-info { padding: 7px 11px; margin-bottom: 5px; }
+    .opponent-bar { padding: 4px 8px; margin-bottom: 5px; }
     .fighter-card { width: 54px; height: 60px; }
     #hud-screen { padding: 6px 14px 8px; }
     .dpad-area { width: 108px; height: 108px; }
@@ -694,7 +714,7 @@
   .overlay-card {
     background: rgba(12, 16, 30, 0.96); border: 2px solid var(--gold);
     border-radius: 16px; padding: 24px 32px; text-align: center;
-    width: min(380px, 86vw); display: flex; flex-direction: column; gap: 12px;
+    width: min(390px, 86vw); display: flex; flex-direction: column; gap: 12px;
   }
   .overlay-card h2 { font-size: 28px; color: var(--gold); text-transform: uppercase; }
 </style>
@@ -722,14 +742,13 @@
           <div class="g3">ARENA</div>
         </div>
       </div>
-      <img id="gta-slide-bg" alt="" />
       <img id="gta-slide-img" alt="Loading Slide" />
       <div class="gta-vignette"></div>
     </div>
 
     <div class="gta-top-bar">
       <div class="gta-badge">WAR LEGEND ARENA • STORY &amp; COMBAT</div>
-      <div style="font-size:12px;color:#b7c4e0;font-weight:700;">TAP SCREEN TO ENABLE AUDIO</div>
+      <div style="font-size:12px;color:#e2e8f0;font-weight:700;text-shadow:0 1px 4px #000;">TAP SCREEN TO ENABLE AUDIO</div>
     </div>
 
     <div class="gta-bottom-bar">
@@ -778,8 +797,6 @@
   <div id="damage-vignette"></div>
   <div id="dmg-layer"></div>
 
-  <div id="asset-pill"><span class="spin-dot"></span><span id="asset-pill-text">Ready</span></div>
-
   <div class="ui-layer">
     <!-- MAIN MENU -->
     <section id="menu-screen" class="screen active">
@@ -791,9 +808,9 @@
             <div class="l2">LEGEND</div>
             <div class="l3">ARENA</div>
           </div>
-          <div class="coin-badge">
-            <svg class="svg-ico" style="width:15px;height:15px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb800"/><circle cx="12" cy="12" r="7" fill="none" stroke="#8c5a00" stroke-width="1.5"/><path d="M12 7v10M9.5 10h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4" stroke="#5c3800" stroke-width="1.8" fill="none"/></svg>
-            <span id="coin-count">500</span> COINS
+          <div class="unlock-badge">
+            <svg class="svg-ico" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3L22 9.2l-5 4.8 1.2 6.8L12 17.5 5.8 20.8 7 14 2 9.2l7.1-.9z"/></svg>
+            <span id="unlocked-count">1 / 4 UNLOCKED</span>
           </div>
         </div>
 
@@ -804,11 +821,11 @@
           </button>
           <button class="nav-btn" id="btn-character">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/></svg>
-            <span id="lbl-fighters-count">Fighters (4)</span>
+            <span id="lbl-fighters-count">Fighters &amp; Opponent</span>
           </button>
-          <button class="nav-btn" id="btn-shop">
-            <svg class="svg-ico" viewBox="0 0 24 24"><path d="M7 18a2 2 0 1 0 2 2 2 2 0 0 0-2-2zm10 0a2 2 0 1 0 2 2 2 2 0 0 0-2-2zM7.2 14.6l.1-.1L8.1 13h7.5a2 2 0 0 0 1.7-1l3.6-6.5-1.7-1L15.6 11H8.5L4.3 2H1v2h2l3.6 7.6-1.4 2.5A2 2 0 0 0 7 17h12v-2H7.4a.3.3 0 0 1-.2-.4z"/></svg>
-            Arena Shop
+          <button class="nav-btn" id="btn-mission">
+            <svg class="svg-ico" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8.5 14l-4-4 1.4-1.4 2.6 2.6 5.6-5.6L17.5 10l-7 7z"/></svg>
+            Arena Mission
           </button>
           <button class="nav-btn" id="btn-settings">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M19.4 13a7.7 7.7 0 0 0 .1-1 7.7 7.7 0 0 0-.1-1l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0-.1 1 7.7 7.7 0 0 0 .1 1l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5a.5.5 0 0 0 .6.2l2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6a.5.5 0 0 0 .5.4h4a.5.5 0 0 0 .5-.4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1a.5.5 0 0 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/></svg>
@@ -816,7 +833,7 @@
           </button>
         </nav>
 
-        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v10.1 • Sunny Arena • 300 HP</div>
+        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v11.0 • Sunny Arena • 300 HP</div>
       </div>
 
       <div class="menu-right">
@@ -827,6 +844,11 @@
             <div class="stat-row"><span>POWER</span><div class="stat-bar"><div class="stat-fill" id="stat-pwr" style="width:88%"></div></div></div>
             <div class="stat-row"><span>SPEED</span><div class="stat-bar"><div class="stat-fill" id="stat-spd" style="width:92%"></div></div></div>
             <div class="stat-row"><span>DEFENSE</span><div class="stat-bar"><div class="stat-fill" id="stat-def" style="width:78%"></div></div></div>
+          </div>
+
+          <div class="opponent-bar">
+            <span>VS Opponent: <strong id="menu-opponent-name">Paladin</strong></span>
+            <button id="btn-select-opponent">Change</button>
           </div>
 
           <div class="select-strip-wrap">
@@ -947,8 +969,6 @@
       if (gta) gta.style.display = 'none';
       var sp = document.getElementById('splash-screen');
       if (sp) sp.style.display = 'none';
-      var pill = document.getElementById('asset-pill-text');
-      if (pill) pill.textContent = 'Engine Loading Slow (Check Internet / WebGL)';
     }
   }, 14000);
 </script>
@@ -1043,13 +1063,13 @@ const GTA_LOADING_CONFIG = {
     },
     {
       image: './20261122_003612.png',
-      title: 'RISE OF THE WAR LEGEND',
-      tip: 'Chain Punch → Kick → Slash in rapid succession to build unstoppable arena combos!'
+      title: 'CONQUER ARENA MISSIONS',
+      tip: 'Defeat rival champions in Arena Missions to unlock every warrior in the roster!'
     },
     {
       image: './20261122_004026.png',
       title: 'CHAMPION OF THE SUNNY DOJO',
-      tip: 'Every fighter enters with 300 HP. Win 2 out of 3 rounds to claim victory and earn Coins!'
+      tip: 'Every warrior enters with 300 HP. Win 2 out of 3 rounds to claim match victory!'
     }
   ]
 };
@@ -1081,6 +1101,41 @@ const ACTION_BUTTON_IMAGES = {
   block: ''  // Guard button image (e.g. './guard_btn.png')
 };
 
+/* ============================================================================
+   [EASY EDIT 6] ARENA MISSIONS (প্রথমে ১টি ক্যারেক্টার ফ্রি, বাকিগুলো মিশন করে আনলক)
+   ============================================================================ */
+const ARENA_MISSIONS = [
+  {
+    unlockId: 'rival',
+    title: 'Unlock Paladin Nordstrom',
+    desc: 'Prove your honor by defeating Paladin twice and Ganfaul once.',
+    targets: [
+      { targetId: 'rival', needed: 2 },
+      { targetId: 'hero', needed: 1 }
+    ]
+  },
+  {
+    unlockId: 'fighter3',
+    title: 'Unlock Vampire A. Lusth',
+    desc: 'Conquer three arena warriors to unlock the Blood Lord.',
+    targets: [
+      { targetId: 'fighter3', needed: 2 },
+      { targetId: 'rival', needed: 2 },
+      { targetId: 'hero', needed: 1 }
+    ]
+  },
+  {
+    unlockId: 'venom',
+    title: 'Unlock Venom Symbiote',
+    desc: 'Defeat the strongest legends to unleash Venom.',
+    targets: [
+      { targetId: 'venom', needed: 3 },
+      { targetId: 'fighter3', needed: 2 },
+      { targetId: 'rival', needed: 1 }
+    ]
+  }
+];
+
 const FIGHTERS = CHARACTER_LIST.map((c) => ({
   ...c,
   candidates: [c.file, ...(c.extraFiles || [])].filter(Boolean),
@@ -1090,7 +1145,8 @@ const FIGHTERS = CHARACTER_LIST.map((c) => ({
   defenseMult: 0.9 + (c.defense / 100) * 0.18
 }));
 
-const CACHE_NAME = 'war-legend-cache-v10';
+const CACHE_NAME = 'war-legend-cache-v11';
+const PROGRESS_KEY = 'war_legend_mission_progress_v1';
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
 const DEVICE_MEM = navigator.deviceMemory || (IS_MOBILE ? 3 : 8);
 const CPU_CORES = navigator.hardwareConcurrency || 4;
@@ -1124,6 +1180,64 @@ const ANIM_CANDIDATES = {
   ]
 };
 
+function loadProgress() {
+  const base = { unlocked: ['hero'], kills: {} };
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.unlocked)) {
+        base.unlocked = Array.from(new Set(['hero', ...parsed.unlocked]));
+      }
+      if (parsed.kills && typeof parsed.kills === 'object') {
+        base.kills = parsed.kills;
+      }
+    }
+  } catch (_) {}
+  return base;
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(PROGRESS));
+  } catch (_) {}
+}
+
+const PROGRESS = loadProgress();
+function isFighterUnlocked(id) {
+  return PROGRESS.unlocked.includes(id);
+}
+
+function recordMissionVictory(opponentId) {
+  const newlyUnlocked = [];
+  for (const m of ARENA_MISSIONS) {
+    if (isFighterUnlocked(m.unlockId)) continue;
+    if (!PROGRESS.kills[m.unlockId]) PROGRESS.kills[m.unlockId] = {};
+    const mKills = PROGRESS.kills[m.unlockId];
+    for (const t of m.targets) {
+      if (t.targetId === opponentId) {
+        const cur = mKills[t.targetId] || 0;
+        if (cur < t.needed) mKills[t.targetId] = cur + 1;
+      }
+    }
+    const complete = m.targets.every((t) => (mKills[t.targetId] || 0) >= t.needed);
+    if (complete) {
+      PROGRESS.unlocked.push(m.unlockId);
+      const fighter = FIGHTERS.find((f) => f.id === m.unlockId);
+      if (fighter) newlyUnlocked.push(fighter.name);
+    }
+  }
+  saveProgress();
+  updateUnlockedBadge();
+  renderMenuFighterCards();
+  return newlyUnlocked;
+}
+
+function updateUnlockedBadge() {
+  const el = document.getElementById('unlocked-count');
+  if (el) el.textContent = `${PROGRESS.unlocked.length} / ${FIGHTERS.length} UNLOCKED`;
+}
+
 const STATE = {
   screen: 'menu',
   quality: IS_LOW_END ? 'low' : (IS_MOBILE ? 'med' : 'high'),
@@ -1133,9 +1247,6 @@ const STATE = {
   difficulty: 'normal',
   bgmEnabled: true,
   sfxEnabled: true,
-  coins: 500,
-  auraBoost: false,
-  speedBoots: false,
   paused: false,
   matchOver: false,
   round: 1,
@@ -1556,13 +1667,11 @@ function startWelcomeSplash() {
 
 async function startBootSequence() {
   const gtaEl = document.getElementById('gta-loading-screen');
-  const slideBg = document.getElementById('gta-slide-bg');
   const slideImg = document.getElementById('gta-slide-img');
   const fallbackArt = document.getElementById('gta-fallback-art');
   const tipTitle = document.getElementById('gta-tip-title');
   const tipText = document.getElementById('gta-tip-text');
 
-  // Pre-load openImage cleanly during GTA Loading
   if (SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage) {
     const pre = new Image();
     pre.src = encodeURI(SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage);
@@ -1587,14 +1696,9 @@ async function startBootSequence() {
     const applySlideImg = () => {
       const delay = firstShown ? 140 : 0;
       firstShown = true;
-      if (delay > 0) {
-        slideImg.style.opacity = '0';
-        slideBg.style.opacity = '0';
-      }
+      if (delay > 0) slideImg.style.opacity = '0';
       setTimeout(() => {
-        slideBg.src = tester.src;
         slideImg.src = tester.src;
-        slideBg.style.opacity = '1';
         slideImg.style.opacity = '1';
         fallbackArt.style.display = 'none';
       }, delay);
@@ -1607,7 +1711,6 @@ async function startBootSequence() {
         tester.onload = applySlideImg;
         tester.onerror = () => {
           slideImg.style.opacity = '0';
-          slideBg.style.opacity = '0';
           fallbackArt.style.display = 'flex';
         };
       }
@@ -1623,7 +1726,6 @@ async function startBootSequence() {
   const bootStart = performance.now();
   setGtaProgress(4, 'Starting 3D Arena');
 
-  // Load ALL 3D models, animations, images & audio while GTA loading screen plays!
   await Promise.race([
     streamAllAssets((pct, label) => setGtaProgress(pct, label)),
     new Promise((res) => setTimeout(res, 22000))
@@ -1644,7 +1746,6 @@ async function startBootSequence() {
   gtaEl.classList.add('fade-out');
   setTimeout(() => { gtaEl.style.display = 'none'; }, 460);
 
-  // Immediately play the 5-second Welcome Image & Audio Splash
   startWelcomeSplash();
 }
 
@@ -1667,7 +1768,6 @@ try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, precision: 'mediump' });
   } catch (err2) {
     DIAG.errors.push('WebGL unsupported: ' + err2.message);
-    document.getElementById('asset-pill-text').textContent = 'WebGL Not Supported on this Device';
     throw err2;
   }
 }
@@ -1682,11 +1782,9 @@ if (!IS_MOBILE && !STATE.lowEndMode) {
 canvas.addEventListener('webglcontextlost', (e) => {
   e.preventDefault();
   STATE.paused = true;
-  updateAssetPill('GPU Memory Resetting... Please Wait', false);
 }, false);
 canvas.addEventListener('webglcontextrestored', () => {
   STATE.paused = false;
-  updateAssetPill('Graphics Restored!', true);
 }, false);
 
 const scene = new THREE.Scene();
@@ -1696,7 +1794,6 @@ scene.fog = new THREE.FogExp2(0xd8eeff, 0.0065);
 const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 130);
 camera.position.set(0, 2.2, 8.2);
 
-// Bright, vibrant & colourful daytime lighting (fast on mobile!)
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffeed8, IS_MOBILE ? 2.25 : 2.05);
 scene.add(hemiLight);
 
@@ -1729,7 +1826,6 @@ const shadowTex = (() => {
 const customArenaGroup = new THREE.Group();
 scene.add(customArenaGroup);
 
-// Simple minimal floor placeholder ONLY while floor GLB hasn't loaded (hidden automatically once custom floor loads)
 const fallbackFloorMesh = new THREE.Mesh(
   new THREE.PlaneGeometry(54, 32),
   new THREE.MeshLambertMaterial({ color: 0x7c5836, side: THREE.DoubleSide })
@@ -1783,29 +1879,12 @@ function applyQuality(q) {
 applyQuality(STATE.quality);
 
 /* ============================================================
-   7. TEXTURE DOWNSCALER, FULL ARENA LOADER (3D + PNG SCENERY)
+   7. TEXTURE DOWNSCALER, FULL ARENA LOADER (SILENT STREAMING)
    ============================================================ */
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const texLoader = new THREE.TextureLoader();
 const assetCache = { models: {}, weapons: {}, animations: {} };
-
-function updateAssetPill(text, done = false) {
-  const pill = document.getElementById('asset-pill');
-  if (STATE.gtaLoadingActive) {
-    pill.style.opacity = '0';
-    return;
-  }
-  pill.style.opacity = '1';
-  document.getElementById('asset-pill-text').textContent = text;
-  const dot = pill.querySelector('.spin-dot');
-  if (done) {
-    dot.style.background = '#42e64d'; dot.style.animation = 'none';
-    setTimeout(() => { pill.style.opacity = '0'; }, 3000);
-  } else {
-    dot.style.background = 'var(--gold)'; dot.style.animation = 'blink 0.7s infinite alternate';
-  }
-}
 
 function downscaleTextureIfNeeded(tex, maxDim, disableMipmaps = false) {
   if (!tex || !tex.image) return;
@@ -1958,13 +2037,8 @@ async function parseBufferToObject(buf) {
 async function loadModelWithDetails(f) {
   const reasons = [];
   for (const url of f.candidates) {
-    let { err, buf, fromCache } = await streamFetchWithCache(url, (recv, tot) => {
-      const rMB = (recv / 1048576).toFixed(1);
-      const tMB = tot ? ` / ${(tot / 1048576).toFixed(1)} MB` : ' MB';
-      updateAssetPill(`Loading ${f.shortName}: ${rMB}${tMB}`);
-    });
+    let { err, buf, fromCache } = await streamFetchWithCache(url);
     if (!buf) { reasons.push(`${url}: ${err}`); continue; }
-    updateAssetPill(`Optimizing ${f.shortName}...`);
     await yieldFrame();
     try {
       const mb = (buf.byteLength / 1048576).toFixed(1);
@@ -1989,13 +2063,9 @@ function isImagePath(url) {
   return /\.(png|jpe?g|webp)(\?.*)?$/i.test(String(url || '').trim());
 }
 
-async function loadCustomProp(url, isArenaProp = false, label = '', forceDoubleSide = false) {
+async function loadCustomProp(url, isArenaProp = false, forceDoubleSide = false) {
   if (!url || !is3DModelPath(url)) return null;
-  let { buf } = await streamFetchWithCache(url, (recv, tot) => {
-    if (label && tot) {
-      updateAssetPill(`Arena ${label}: ${(recv / 1048576).toFixed(1)}/${(tot / 1048576).toFixed(1)} MB`);
-    }
-  });
+  let { buf } = await streamFetchWithCache(url);
   if (!buf) return null;
   await yieldFrame();
   try {
@@ -2018,7 +2088,6 @@ function loadTextureAsync(url) {
   });
 }
 
-/* Place PNG House / Temple Scenery cleanly in the 3D Arena Background */
 async function loadAndPlaceImageProp(url, placements) {
   const tex = await loadTextureAsync(url);
   if (!tex || !tex.image) return false;
@@ -2151,7 +2220,6 @@ function prepareLoadedModel(model, targetHeight = 1.88) {
   }
 }
 
-/* Bulletproof Big Wooden Floor Placement (handles vertical/flat/off-center GLB floors!) */
 function placeCustomFloor(obj) {
   obj.position.set(0, 0, 0);
   obj.rotation.set(0, 0, 0);
@@ -2161,7 +2229,6 @@ function placeCustomFloor(obj) {
   let box = getAccurateMeshBox(obj);
   let sz = new THREE.Vector3(); box.getSize(sz);
 
-  // If exported as a vertical wall quad (thin Z, tall Y), lay it flat on XZ!
   if (sz.z < sz.y * 0.25 && sz.x > sz.z * 2) {
     obj.rotation.x = -Math.PI / 2;
     obj.updateMatrixWorld(true);
@@ -2169,7 +2236,6 @@ function placeCustomFloor(obj) {
     box.getSize(sz);
   }
 
-  // Normalize 1 tile to 18 x 16, then tile 3 x 2 = 54 wide x 32 deep
   const tileW = 18;
   const tileD = 16;
   const sx = tileW / Math.max(sz.x, 0.1);
@@ -2229,7 +2295,6 @@ function placeCustomFloor(obj) {
   }
 }
 
-/* Instanced Trees: Renders all 4 Japanese Maple Trees in minimal draw calls! */
 function placeInstancedTrees(obj, placements) {
   obj.position.set(0, 0, 0);
   obj.rotation.set(0, 0, 0);
@@ -2332,19 +2397,17 @@ async function streamAllAssets(onProgress) {
   isStreaming = true;
   const report = (pct, msg) => {
     if (onProgress) onProgress(pct, msg);
-    updateAssetPill(msg, false);
   };
 
   sound.initBGM();
 
   if (location.protocol === 'file:') {
-    report(100, 'Open via GitHub Pages (HTTPS) to load FBX/GLB models');
+    report(100, 'Ready');
     DIAG.errors.push('file:// blocks fetch(). Use GitHub Pages / Netlify.');
     isStreaming = false; return;
   }
 
-  // 1. Load Custom Sky Image
-  report(8, 'Loading Bright Sky');
+  report(8, 'Preparing Arena Sky');
   if (ARENA_CONFIG.skyImage && !loadedSkyTex) {
     const skyTex = await loadTextureAsync(ARENA_CONFIG.skyImage);
     if (skyTex && skyTex.image) {
@@ -2356,12 +2419,11 @@ async function streamAllAssets(onProgress) {
     }
   }
 
-  // 2. Load Custom Arena (Floor GLB + Trees GLB + House PNG/GLB + Temple PNG/GLB)
   if (customArenaGroup.children.length === 0) {
     let loadedFloorObj = null;
     if (is3DModelPath(ARENA_CONFIG.floorFile)) {
-      report(15, 'Loading Wooden Floor');
-      const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, 'Floor', true);
+      report(15, 'Building Wooden Arena');
+      const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, true);
       if (fl) {
         loadedFloorObj = fl;
         placeCustomFloor(fl);
@@ -2373,11 +2435,11 @@ async function streamAllAssets(onProgress) {
     }
 
     if (ARENA_CONFIG.templeFile) {
-      report(24, 'Loading Temple Background');
+      report(24, 'Building Temple');
       if (is3DModelPath(ARENA_CONFIG.templeFile)) {
         const tp = (ARENA_CONFIG.templeFile === ARENA_CONFIG.floorFile && loadedFloorObj)
           ? loadedFloorObj.clone()
-          : await loadCustomProp(ARENA_CONFIG.templeFile, true, 'Temple', true);
+          : await loadCustomProp(ARENA_CONFIG.templeFile, true, true);
         if (tp) {
           placeCustomProp(tp, 0, -7.8, 7.8, 0, true);
           DIAG.arena.Temple = '3D Temple Loaded';
@@ -2392,8 +2454,8 @@ async function streamAllAssets(onProgress) {
     }
 
     if (is3DModelPath(ARENA_CONFIG.treeFile)) {
-      report(32, 'Loading Maple Trees');
-      const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, 'Trees', false);
+      report(32, 'Planting Maple Trees');
+      const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, false);
       if (tr) {
         placeInstancedTrees(tr, [
           { x: -6.8, z: -5.0, scaleMul: 0.96, rotY: 0.4 },
@@ -2407,9 +2469,9 @@ async function streamAllAssets(onProgress) {
     }
 
     if (ARENA_CONFIG.houseFile) {
-      report(40, 'Loading Arena Houses');
+      report(40, 'Setting Scenery');
       if (is3DModelPath(ARENA_CONFIG.houseFile)) {
-        const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, 'Houses', true);
+        const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, true);
         if (hs) {
           placeCustomProp(hs, -6.6, -10.8, 6.2, 0.2, false);
           placeCustomProp(hs, 6.8, -11.2, 5.8, -0.2, true);
@@ -2426,13 +2488,12 @@ async function streamAllAssets(onProgress) {
     }
   }
 
-  // 3. Load All Animations smoothly
   let loadedAnims = 0;
   const animEntries = Object.entries(ANIM_CANDIDATES);
   const totalAnims = animEntries.length;
   for (let i = 0; i < animEntries.length; i += 2) {
     const batch = animEntries.slice(i, i + 2);
-    report(44 + (loadedAnims / totalAnims) * 24, `Loading Animations (${loadedAnims}/${totalAnims})`);
+    report(44 + (loadedAnims / totalAnims) * 24, 'Preparing Combat Moves');
     await Promise.all(batch.map(async ([name, urls]) => {
       if (assetCache.animations[name]) { loadedAnims++; return; }
       const res = await loadAnimWithDetails(name, urls);
@@ -2442,9 +2503,8 @@ async function streamAllAssets(onProgress) {
     await yieldFrame();
   }
 
-  // 4. Load Dragon Katana
   if (!assetCache.weapons.katana) {
-    report(70, 'Loading Dragon Katana');
+    report(70, 'Forging Dragon Katana');
     const katRes = await loadCustomProp(WEAPON_CANDIDATES.katana[0], false) || await loadCustomProp(WEAPON_CANDIDATES.katana[1], false);
     if (katRes) {
       assetCache.weapons.katana = katRes;
@@ -2454,7 +2514,6 @@ async function streamAllAssets(onProgress) {
     }
   }
 
-  // 5. Load Fighters (active 2 on mobile, all on desktop)
   const targetFighters = (IS_MOBILE || STATE.lowEndMode)
     ? [FIGHTERS[STATE.selectedHeroIdx], FIGHTERS[STATE.selectedRivalIdx]]
     : [
@@ -2463,12 +2522,10 @@ async function streamAllAssets(onProgress) {
         ...FIGHTERS.filter((_, idx) => idx !== STATE.selectedHeroIdx && idx !== STATE.selectedRivalIdx)
       ];
 
-  let loadedModels = 0;
   for (let idx = 0; idx < targetFighters.length; idx++) {
     const f = targetFighters[idx];
-    report(74 + (idx / targetFighters.length) * 18, `Loading ${f.shortName}`);
+    report(74 + (idx / targetFighters.length) * 18, `Summoning Warriors`);
     await ensureFighterLoaded(f);
-    if (assetCache.models[f.id]) loadedModels++;
     await yieldFrame();
   }
 
@@ -2476,9 +2533,8 @@ async function streamAllAssets(onProgress) {
   if (p1) { p1.bindAllAnimations(); p1.attachKatana(); }
   if (p2) { p2.bindAllAnimations(); p2.attachKatana(); }
 
-  report(94, 'Loading Audio & Music');
+  report(94, 'Tuning Audio');
   await sound.preload();
-  updateAssetPill(`Arena + ${loadedModels}/${targetFighters.length} Models • ${loadedAnims}/${totalAnims} Anims Ready`, true);
   isStreaming = false;
 }
 
@@ -2579,7 +2635,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (300 HP + CROUCH GROUNDING + KATANA COOLDOWN)
+   9. FIGHTER CONTROLLER (FULL ANIMS + CROUCH/KATANA GROUNDING)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -2627,6 +2683,8 @@ class Fighter {
     this.maxHp = 300; this.hp = 300;
     this.vy = 0; this.onGround = true; this.facing = isPlayer ? 1 : -1;
     this.state = 'idle'; this.stateTimer = 0; this.attackDuration = 0; this.attackApplied = false;
+    this.hitAnimType = 'hit';
+    this.knockbackVx = 0;
     this.blocking = false; this.blockElapsed = 0; this.crouching = false;
     this.hitFlashTimer = 0;
     this.comboCount = 0; this.comboResetTimer = 0;
@@ -2645,6 +2703,13 @@ class Fighter {
 
     this.buildVisual(); this.buildGroundAndHalo();
     scene.add(this.group);
+  }
+
+  getClipDuration(name, fallback = 0.6) {
+    const act = this.actions[name];
+    if (!act) return fallback;
+    const tScale = this.mixer ? Math.max(0.1, this.mixer.timeScale) : 1;
+    return Math.max(0.25, act.getClip().duration / tScale);
   }
 
   cacheFlashMaterials() {
@@ -2772,7 +2837,7 @@ class Fighter {
         const res = retargetClipToModel(rawClip, this.modelRoot);
         if (res.matchedTracks > 0) totalMatched += res.matchedTracks;
         const action = this.mixer.clipAction(res.clip);
-        if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'katana_hit', 'jump'].includes(name)) {
+        if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'katana_hit', 'jump', 'crouch'].includes(name)) {
           action.setLoop(THREE.LoopOnce);
           action.clampWhenFinished = (name === 'knockdown' || name === 'victory' || name === 'crouch');
         }
@@ -2796,9 +2861,9 @@ class Fighter {
         if (mapKey && !this.actions[mapKey]) {
           try {
             const act = this.mixer.clipAction(clip);
-            if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'jump'].includes(mapKey)) {
+            if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'jump', 'crouch'].includes(mapKey)) {
               act.setLoop(THREE.LoopOnce);
-              act.clampWhenFinished = (mapKey === 'knockdown' || mapKey === 'victory');
+              act.clampWhenFinished = (mapKey === 'knockdown' || mapKey === 'victory' || mapKey === 'crouch');
             }
             this.actions[mapKey] = act;
           } catch (_) {}
@@ -2835,9 +2900,9 @@ class Fighter {
     if (this.isProcedural || !this.mixer) return;
     const next = this.actions[name] || (name === 'katana_hit' ? this.actions['hit'] : null) || this.actions['idle'];
     if (!next) return;
-    const isOneShot = ['hit', 'katana_hit', 'punch', 'kick', 'slash'].includes(name);
-    if (next === this.currentAction && !isOneShot) return;
-    const fade = isOneShot ? 0.04 : 0.1;
+    const isOneShot = ['hit', 'katana_hit', 'punch', 'kick', 'slash', 'knockdown', 'victory', 'jump'].includes(name);
+    if (next === this.currentAction && !['hit', 'katana_hit', 'punch', 'kick', 'slash'].includes(name)) return;
+    const fade = isOneShot ? 0.05 : 0.1;
     if (this.currentAction && this.currentAction !== next) this.currentAction.fadeOut(fade);
     next.reset().fadeIn(fade).play();
     this.currentAction = next;
@@ -2862,7 +2927,7 @@ class Fighter {
     if (['punch', 'kick', 'slash', 'hit', 'knockdown'].includes(this.state)) {
       if (this.state !== 'hit' && this.state !== 'knockdown') {
         this.queuedAction = type;
-        this.queueTimer = 0.3;
+        this.queueTimer = 0.35;
       }
       return;
     }
@@ -2879,15 +2944,22 @@ class Fighter {
     this.state = type; this.attackApplied = false; this.blocking = false;
     this.queuedAction = null; this.queueTimer = 0;
 
-    if (type === 'punch') { this.attackDuration = 0.38; sound.play('punch'); }
-    else if (type === 'kick') { this.attackDuration = 0.50; sound.play('punch'); }
-    else if (type === 'slash') { this.attackDuration = 0.54; sound.play('sword'); }
+    if (type === 'punch') {
+      this.attackDuration = this.getClipDuration('punch', 0.48);
+      sound.play('punch');
+    } else if (type === 'kick') {
+      this.attackDuration = this.getClipDuration('kick', 0.58);
+      sound.play('punch');
+    } else if (type === 'slash') {
+      this.attackDuration = this.getClipDuration('slash', 0.65);
+      sound.play('sword');
+    }
 
     this.stateTimer = this.attackDuration;
     this.playAnim(type);
   }
 
-  takeDamage(amount, isPerfect = false, contactX = null, hitY = 1.15, attackType = 'punch') {
+  takeDamage(amount, isPerfect = false, contactX = null, hitY = 1.15, attackType = 'punch', attackerFacing = 1) {
     if (this.hp <= 0) return false;
     const sparkX = contactX !== null ? contactX : this.group.position.x;
     const finalAmt = Math.max(1, Math.round(amount / (this.cfg.defenseMult || 1)));
@@ -2919,18 +2991,23 @@ class Fighter {
     this.queuedAction = null;
     if (this.hp <= 0) {
       this.state = 'knockdown';
-      this.stateTimer = 3.0;
+      this.hitAnimType = 'hit';
+      this.knockbackVx = (attackerFacing || -this.facing) * (attackType === 'slash' ? 2.2 : 1.2);
+      this.stateTimer = this.getClipDuration('knockdown', 2.4);
       this.playAnim('knockdown');
       spawnDustRing(this.group.position.x, 1.1);
     } else if (attackType === 'slash' && this.actions.katana_hit) {
-      const kHitDur = Math.min(this.actions.katana_hit.getClip().duration, 0.85);
       this.state = 'hit';
-      this.stateTimer = Math.max(0.45, kHitDur);
+      this.hitAnimType = 'katana_hit';
+      this.knockbackVx = (attackerFacing || -this.facing) * 2.1; // Slight knockback so character falls back slightly
+      this.stateTimer = this.getClipDuration('katana_hit', 1.4); // Plays Flying Back Death.fbx completely
       this.playAnim('katana_hit');
+      spawnDustRing(this.group.position.x, 0.85);
     } else {
-      const hitClipDur = this.actions.hit ? Math.min(this.actions.hit.getClip().duration, 0.5) : 0.4;
       this.state = 'hit';
-      this.stateTimer = Math.max(0.35, hitClipDur);
+      this.hitAnimType = 'hit';
+      this.knockbackVx = (attackerFacing || -this.facing) * 0.9;
+      this.stateTimer = this.getClipDuration('hit', 0.55); // Plays hit.fbx completely
       this.playAnim('hit');
     }
     return true;
@@ -2948,6 +3025,14 @@ class Fighter {
         this.slashCharges = 2;
         this.slashCooldown = 0;
       }
+    }
+
+    // Smooth knockback slide (for katana hit & heavy strikes)
+    if (Math.abs(this.knockbackVx) > 0.03) {
+      this.group.position.x += this.knockbackVx * dt;
+      this.knockbackVx *= Math.exp(-4.8 * dt);
+    } else {
+      this.knockbackVx = 0;
     }
 
     if (this.hitFlashTimer > 0) {
@@ -2980,8 +3065,8 @@ class Fighter {
     if (this.stateTimer > 0) {
       this.stateTimer -= dt;
       if (!this.attackApplied && ['punch', 'kick', 'slash'].includes(this.state)) {
-        const winStart = this.attackDuration * 0.68;
-        const winEnd = this.attackDuration * 0.30;
+        const winStart = this.attackDuration * 0.72;
+        const winEnd = this.attackDuration * 0.28;
         const peakTime = this.attackDuration * 0.50;
 
         if (this.stateTimer <= winStart && this.stateTimer >= winEnd && opponent && opponent.hp > 0) {
@@ -2993,7 +3078,7 @@ class Fighter {
 
           if (isFacingTarget && dist <= reach && dy < 1.38) {
             const isCounter = ['punch', 'kick', 'slash'].includes(opponent.state) && !opponent.attackApplied;
-            const isSweetTiming = Math.abs(this.stateTimer - peakTime) < 0.06 && dist <= reach * 0.86;
+            const isSweetTiming = Math.abs(this.stateTimer - peakTime) < 0.08 && dist <= reach * 0.86;
             const isPerfect = !opponent.blocking && (isCounter || isSweetTiming);
 
             const baseDmg = this.state === 'slash' ? 30 : this.state === 'kick' ? 20 : 14;
@@ -3001,12 +3086,12 @@ class Fighter {
             const hitY = this.state === 'kick' ? 0.78 : (this.state === 'slash' ? 1.18 : 1.22);
             const contactX = this.group.position.x + this.facing * Math.min(dist * 0.72, reach * 0.65);
 
-            const landed = opponent.takeDamage(dmg, isPerfect, contactX, hitY, this.state);
+            const landed = opponent.takeDamage(dmg, isPerfect, contactX, hitY, this.state, this.facing);
             if (landed) {
               this.comboCount++;
               this.comboResetTimer = 2.2;
-              const knockback = (this.state === 'slash' ? 0.62 : 0.44) * (isPerfect ? 1.25 : 1.0);
-              opponent.group.position.x += this.facing * knockback;
+              const instantPush = (this.state === 'slash' ? 0.35 : 0.38) * (isPerfect ? 1.2 : 1.0);
+              opponent.group.position.x += this.facing * instantPush;
             } else {
               opponent.group.position.x += this.facing * 0.22;
             }
@@ -3016,6 +3101,7 @@ class Fighter {
       }
       if (this.stateTimer <= 0 && !['knockdown', 'victory'].includes(this.state)) {
         this.state = 'idle';
+        this.hitAnimType = 'hit';
         if (this.queuedAction && STATE.roundFreeze <= 0 && this.hp > 0) {
           const nextAct = this.queuedAction;
           if (nextAct !== 'slash' || this.slashCharges > 0) {
@@ -3038,8 +3124,7 @@ class Fighter {
       } else if (this.crouching) {
         this.state = 'crouch'; this.playAnim('crouch');
       } else if (Math.abs(input.moveX) > 0.15) {
-        const spdBoost = (this.isPlayer && STATE.speedBoots) ? 1.2 : 1.0;
-        this.group.position.x += input.moveX * (3.45 * this.cfg.speedMult * spdBoost) * dt;
+        this.group.position.x += input.moveX * (3.45 * this.cfg.speedMult) * dt;
         this.state = (input.moveX * this.facing) > 0 ? 'walk_f' : 'walk_b';
         this.playAnim(this.state);
       } else {
@@ -3057,11 +3142,12 @@ class Fighter {
     }
 
     const jumpH = Math.max(0, this.group.position.y);
+    const isFallingOnFloor = this.state === 'knockdown' || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
     this.shadowBlob.position.y = 0.025 - jumpH;
-    this.shadowBlob.scale.setScalar(this.state === 'knockdown' ? 1.35 : Math.max(0.45, 1.0 - jumpH * 0.2));
+    this.shadowBlob.scale.setScalar(isFallingOnFloor ? 1.35 : Math.max(0.45, 1.0 - jumpH * 0.2));
     this.shadowBlob.material.opacity = Math.max(0.22, 0.72 - jumpH * 0.18);
     this.floorHalo.position.y = 0.028 - jumpH;
-    this.floorHalo.visible = this.state !== 'knockdown';
+    this.floorHalo.visible = !isFallingOnFloor;
 
     const drawKatana = (this.state === 'slash');
     if (this.katanaAttached) this.katanaAttached.visible = drawKatana;
@@ -3080,8 +3166,12 @@ class Fighter {
   groundCharacterByBones(dt) {
     if (!this.modelRoot) return;
 
-    if (this.state === 'knockdown') {
-      if (this.knockdownBones.length > 0 && this.actions.knockdown) {
+    // Ground BOTH knockdown AND katana_hit (Flying Back Death.fbx) so body falls onto the floor, never in the sky
+    const isFallingBody = (this.state === 'knockdown') || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
+    if (isFallingBody) {
+      const hasClip = (this.state === 'knockdown') ? !!this.actions.knockdown : !!this.actions.katana_hit;
+      if (this.knockdownBones.length > 0 && hasClip) {
+        this.modelRoot.updateMatrixWorld(true);
         let minBoneY = Infinity;
         for (let i = 0; i < this.knockdownBones.length; i++) {
           const by = this.knockdownBones[i].matrixWorld.elements[13];
@@ -3089,10 +3179,10 @@ class Fighter {
         }
         if (Number.isFinite(minBoneY)) {
           const minOffsetWithoutModelY = (minBoneY - this.group.position.y) - this.modelRoot.position.y;
-          const targetY = THREE.MathUtils.clamp(0.11 - minOffsetWithoutModelY, this.baseModelY - 1.25, this.baseModelY + 0.65);
-          this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-14 * dt));
+          const targetY = THREE.MathUtils.clamp(0.08 - minOffsetWithoutModelY, this.baseModelY - 1.45, this.baseModelY + 0.65);
+          this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-22 * dt));
         }
-      } else {
+      } else if (this.state === 'knockdown') {
         this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, -Math.PI / 2, 1 - Math.exp(-10 * dt));
         this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, 0.22, 1 - Math.exp(-10 * dt));
       }
@@ -3103,7 +3193,7 @@ class Fighter {
       this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, 0, 1 - Math.exp(-16 * dt));
     }
 
-    // Crouch grounding on ALL devices so player sits firmly on the arena floor, never floating in the sky
+    // Crouch grounding on ALL devices so player sits firmly on the floor
     if (this.state === 'crouch' && this.onGround) {
       if (this.footBones.length > 0 && this.actions.crouch) {
         this.modelRoot.updateMatrixWorld(true);
@@ -3168,7 +3258,10 @@ class Fighter {
     else if (this.state === 'kick') { r.legR.rotation.x = -1.45; r.torso.rotation.x = -0.25; }
     else if (this.state === 'slash') { r.armR.rotation.x = -1.7 + Math.sin(t * 22) * 0.6; r.torso.rotation.x = 0.2; }
     else if (this.state === 'block') { r.armL.rotation.x = -1.1; r.armR.rotation.x = -1.1; }
-    else if (this.state === 'hit') { r.torso.rotation.x = -0.4; }
+    else if (this.state === 'hit') {
+      if (this.hitAnimType === 'katana_hit') { this.modelRoot.rotation.x = -Math.PI / 2.2; this.modelRoot.position.y = 0.22; }
+      else r.torso.rotation.x = -0.4;
+    }
     else if (this.state === 'knockdown') { this.modelRoot.rotation.x = -Math.PI / 2; this.modelRoot.position.y = 0.22; }
     else if (this.state === 'victory') { r.armR.rotation.x = -2.8; r.armL.rotation.x = -2.8; }
   }
@@ -3279,7 +3372,7 @@ function updateAI(dt, ai, target) {
 }
 
 /* ============================================================
-   11. MATCH MANAGEMENT, ANNOUNCEMENTS & ON-DEMAND LOADING
+   11. MATCH MANAGEMENT, ANNOUNCEMENTS & ARENA MISSION
    ============================================================ */
 let p1 = null, p2 = null, menuShowcase = null;
 
@@ -3311,6 +3404,7 @@ function updateRoundDots() {
 
 function spawnFightersForRound() {
   if (p1) p1.destroy(); if (p2) p2.destroy();
+  if (!isFighterUnlocked(FIGHTERS[STATE.selectedHeroIdx].id)) STATE.selectedHeroIdx = 0;
   const c1 = FIGHTERS[STATE.selectedHeroIdx], c2 = FIGHTERS[STATE.selectedRivalIdx];
   p1 = new Fighter(c1, -2.5, true); p2 = new Fighter(c2, 2.5, false);
   document.getElementById('p1-name').textContent = c1.shortName;
@@ -3338,6 +3432,7 @@ function spawnFightersForRound() {
 
 function startMatch() {
   trySafeFullscreen();
+  if (!isFighterUnlocked(FIGHTERS[STATE.selectedHeroIdx].id)) STATE.selectedHeroIdx = 0;
   if (menuShowcase) { menuShowcase.destroy(); menuShowcase = null; }
   STATE.sessionId++;
   STATE.screen = 'fight'; STATE.paused = false; STATE.matchOver = false;
@@ -3358,6 +3453,8 @@ function returnToMenu() {
   document.getElementById('hud-screen').classList.remove('active');
   document.getElementById('pause-modal').classList.remove('open');
   document.getElementById('menu-screen').classList.add('active');
+  renderMenuFighterCards();
+  updatePreviewInfo();
   spawnMenuShowcase();
   sound.startBGM();
 }
@@ -3365,6 +3462,7 @@ function returnToMenu() {
 function spawnMenuShowcase() {
   if (menuShowcase) menuShowcase.destroy();
   menuUserYaw = 0;
+  if (!isFighterUnlocked(FIGHTERS[STATE.selectedHeroIdx].id)) STATE.selectedHeroIdx = 0;
   const hero = FIGHTERS[STATE.selectedHeroIdx];
   menuShowcase = new Fighter(hero, 0.85, true, true);
   menuShowcase.group.rotation.y = -0.35;
@@ -3375,18 +3473,19 @@ function spawnMenuShowcase() {
 
 function beginRoundEnd(winner) {
   if (STATE.roundEndPhase || STATE.matchOver) return;
-  STATE.roundFreeze = 5.0;
+  STATE.roundFreeze = 6.0;
   STATE.roundWinnerIdx = winner;
   STATE.roundEndPhase = 'loser';
-  STATE.roundEndTimer = 1.95;
 
   if (winner === 1) {
     if (p2.state !== 'knockdown') { p2.state = 'knockdown'; p2.playAnim('knockdown'); }
     p1.state = 'idle'; p1.playAnim('idle');
+    STATE.roundEndTimer = Math.max(2.0, p2.getClipDuration('knockdown', 2.2) + 0.35);
     showAnnounce(STATE.timer <= 0 ? 'TIME UP!' : 'K.O.!', 1.5);
   } else if (winner === 2) {
     if (p1.state !== 'knockdown') { p1.state = 'knockdown'; p1.playAnim('knockdown'); }
     p2.state = 'idle'; p2.playAnim('idle');
+    STATE.roundEndTimer = Math.max(2.0, p1.getClipDuration('knockdown', 2.2) + 0.35);
     showAnnounce(STATE.timer <= 0 ? 'TIME UP!' : 'K.O.!', 1.5);
   } else {
     STATE.roundEndPhase = 'winner';
@@ -3402,14 +3501,15 @@ function advanceRoundEnd(dt) {
 
   if (STATE.roundEndPhase === 'loser') {
     STATE.roundEndPhase = 'winner';
-    STATE.roundEndTimer = 2.45;
     if (STATE.roundWinnerIdx === 1) {
       STATE.p1Wins++;
       p1.state = 'victory'; p1.playAnim('victory');
+      STATE.roundEndTimer = Math.max(2.4, p1.getClipDuration('victory', 2.4) + 0.35);
       showAnnounce(`${p1.cfg.shortName}<br><span style="color:var(--gold)">WINS ROUND!</span>`, 2.0);
     } else if (STATE.roundWinnerIdx === 2) {
       STATE.p2Wins++;
       p2.state = 'victory'; p2.playAnim('victory');
+      STATE.roundEndTimer = Math.max(2.4, p2.getClipDuration('victory', 2.4) + 0.35);
       showAnnounce(`${p2.cfg.shortName}<br><span style="color:var(--gold)">WINS ROUND!</span>`, 2.0);
     }
     updateRoundDots();
@@ -3418,15 +3518,19 @@ function advanceRoundEnd(dt) {
     if (STATE.p1Wins >= 2 || STATE.p2Wins >= 2) {
       STATE.matchOver = true;
       const won = STATE.p1Wins >= 2;
+      let unlockedNames = [];
       if (won) {
-        STATE.coins += 150;
-        document.getElementById('coin-count').textContent = STATE.coins;
+        unlockedNames = recordMissionVictory(p2.cfg.id);
         sound.playAnnouncement('youWin');
       } else {
         sound.playAnnouncement('youLose');
       }
       document.getElementById('overlay-title').textContent = won ? 'VICTORY!' : 'DEFEAT';
-      document.getElementById('overlay-sub').textContent = won ? '+150 Coins Earned! Ready for next battle?' : 'Train harder and challenge again!';
+      document.getElementById('overlay-sub').innerHTML = won
+        ? (unlockedNames.length
+            ? `<strong style="color:#42e64d;">NEW FIGHTER UNLOCKED: ${unlockedNames.join(', ')}!</strong>`
+            : 'Victory recorded in Arena Missions! Ready for the next fight?')
+        : 'Train harder and challenge again!';
       document.getElementById('pause-modal').classList.add('open');
       sound.startBGM();
     } else {
@@ -3469,12 +3573,23 @@ function syncHUD() {
 }
 
 function renderMenuFighterCards() {
-  document.getElementById('lbl-fighters-count').textContent = `Fighters (${FIGHTERS.length})`;
+  updateUnlockedBadge();
+  const opp = FIGHTERS[STATE.selectedRivalIdx];
+  const oppEl = document.getElementById('menu-opponent-name');
+  if (oppEl && opp) oppEl.textContent = opp.shortName;
+
   const wrap = document.getElementById('menu-fighter-cards');
   wrap.innerHTML = '';
   FIGHTERS.forEach((f, idx) => {
+    const unlocked = isFighterUnlocked(f.id);
     const card = document.createElement('div');
-    card.className = `fighter-card ${idx === STATE.selectedHeroIdx ? 'selected' : ''}`;
+    card.className = `fighter-card ${idx === STATE.selectedHeroIdx ? 'selected' : ''} ${unlocked ? '' : 'locked'}`;
+    if (!unlocked) {
+      const lock = document.createElement('div');
+      lock.className = 'lock-badge';
+      lock.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:#ffb800;"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7z"/></svg>`;
+      card.appendChild(lock);
+    }
     const thumb = document.createElement('div');
     thumb.style.cssText = 'width:100%;height:76%;';
     setPortrait(thumb, f);
@@ -3482,7 +3597,11 @@ function renderMenuFighterCards() {
     lbl.className = 'card-name'; lbl.textContent = f.shortName;
     card.append(thumb, lbl);
     card.addEventListener('click', () => {
-      STATE.selectedHeroIdx = idx; STATE.selectedRivalIdx = (idx + 1) % FIGHTERS.length;
+      if (!unlocked) {
+        document.getElementById('btn-mission').click();
+        return;
+      }
+      STATE.selectedHeroIdx = idx;
       updatePreviewInfo(); renderMenuFighterCards(); spawnMenuShowcase();
     });
     wrap.appendChild(card);
@@ -3508,52 +3627,109 @@ function openModal(title, htmlBuilder) {
 document.getElementById('modal-close').onclick = () => document.getElementById('modal-panel').classList.remove('open');
 document.getElementById('btn-play').onclick = startMatch;
 
-document.getElementById('btn-character').onclick = () => {
-  openModal('Select Hero & Rival', (body) => {
+function openFightersAndOpponentModal(focusOpponent = false) {
+  openModal(focusOpponent ? 'Select Your Opponent' : 'Fighters & Select Opponent', (body) => {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:12px;color:#9aa7cc;margin-bottom:8px;';
+    note.textContent = 'Select any unlocked Fighter as your Player, and choose ANY Opponent to fight!';
+    body.appendChild(note);
+
     FIGHTERS.forEach((f, i) => {
+      const unlocked = isFighterUnlocked(f.id);
       const row = document.createElement('div'); row.className = 'setting-row';
       row.innerHTML = `
-        <div><strong style="color:${f.accent}">${f.name}</strong><br><small style="color:#9aa7cc">${f.desc}</small></div>
-        <div style="display:flex;gap:6px;">
-          <button class="pill-btn ${STATE.selectedHeroIdx === i ? 'active' : ''}" data-role="hero" data-i="${i}">Player</button>
-          <button class="pill-btn ${STATE.selectedRivalIdx === i ? 'active' : ''}" data-role="rival" data-i="${i}">Rival</button>
+        <div><strong style="color:${f.accent}">${f.name}</strong> ${unlocked ? '' : '<small style="color:#ffb800;">(LOCKED)</small>'}<br><small style="color:#9aa7cc">${f.desc}</small></div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          ${unlocked
+            ? `<button class="pill-btn ${STATE.selectedHeroIdx === i ? 'active' : ''}" data-role="hero" data-i="${i}">Player</button>`
+            : `<button class="pill-btn locked-btn" data-role="unlock" data-i="${i}">Mission</button>`
+          }
+          <button class="pill-btn ${STATE.selectedRivalIdx === i ? 'active' : ''}" data-role="rival" data-i="${i}">Opponent</button>
         </div>`;
       body.appendChild(row);
     });
     body.querySelectorAll('button').forEach((btn) => {
       btn.onclick = () => {
         const i = Number(btn.dataset.i);
-        if (btn.dataset.role === 'hero') STATE.selectedHeroIdx = i; else STATE.selectedRivalIdx = i;
+        if (btn.dataset.role === 'unlock') {
+          document.getElementById('btn-mission').click();
+          return;
+        }
+        if (btn.dataset.role === 'hero') STATE.selectedHeroIdx = i;
+        else STATE.selectedRivalIdx = i;
         renderMenuFighterCards(); updatePreviewInfo(); spawnMenuShowcase();
-        document.getElementById('btn-character').click();
+        openFightersAndOpponentModal(focusOpponent);
       };
     });
   });
-};
+}
 
-document.getElementById('btn-shop').onclick = () => {
-  openModal('Arena Shop', (body) => {
-    body.innerHTML = `
-      <div class="setting-row">
-        <div><strong>Golden Attack Mastery</strong><br><small style="color:#9aa7cc">+15% Attack Damage for all strikes</small></div>
-        <button class="pill-btn ${STATE.auraBoost ? 'active' : ''}" id="buy-aura">${STATE.auraBoost ? 'EQUIPPED' : '250 COINS'}</button>
-      </div>
-      <div class="setting-row">
-        <div><strong>Shadow Speed Boots</strong><br><small style="color:#9aa7cc">+20% Faster Movement in Arena</small></div>
-        <button class="pill-btn ${STATE.speedBoots ? 'active' : ''}" id="buy-speed">${STATE.speedBoots ? 'EQUIPPED' : '200 COINS'}</button>
-      </div>`;
-    body.querySelector('#buy-aura').onclick = () => {
-      if (!STATE.auraBoost && STATE.coins >= 250) {
-        STATE.coins -= 250; STATE.auraBoost = true; FIGHTERS.forEach(f => f.damageMult += 0.15);
-        document.getElementById('coin-count').textContent = STATE.coins; document.getElementById('btn-shop').click();
-      }
-    };
-    body.querySelector('#buy-speed').onclick = () => {
-      if (!STATE.speedBoots && STATE.coins >= 200) {
-        STATE.coins -= 200; STATE.speedBoots = true;
-        document.getElementById('coin-count').textContent = STATE.coins; document.getElementById('btn-shop').click();
-      }
-    };
+document.getElementById('btn-character').onclick = () => openFightersAndOpponentModal(false);
+document.getElementById('btn-select-opponent').onclick = () => openFightersAndOpponentModal(true);
+
+document.getElementById('btn-mission').onclick = () => {
+  openModal('Arena Mission — Unlock Fighters', (body) => {
+    const info = document.createElement('div');
+    info.style.cssText = 'font-size:12px;color:#b8c2df;margin-bottom:12px;line-height:1.45;';
+    info.textContent = 'Defeat the required arena opponents in 3-round matches to unlock locked characters!';
+    body.appendChild(info);
+
+    ARENA_MISSIONS.forEach((m) => {
+      const reward = FIGHTERS.find((f) => f.id === m.unlockId);
+      if (!reward) return;
+      const unlocked = isFighterUnlocked(m.unlockId);
+      const mKills = PROGRESS.kills[m.unlockId] || {};
+
+      const card = document.createElement('div');
+      card.className = `mission-card ${unlocked ? 'done' : ''}`;
+
+      const head = document.createElement('div');
+      head.className = 'mission-head';
+
+      const leftWrap = document.createElement('div');
+      leftWrap.style.cssText = 'display:flex;align-items:center;gap:10px;';
+      const ava = document.createElement('div');
+      ava.className = 'mission-avatar';
+      setPortrait(ava, reward);
+      const txtWrap = document.createElement('div');
+      txtWrap.innerHTML = `<strong style="color:${reward.accent};font-size:14px;">${m.title}</strong><br><small style="color:#9aa7cc;">${m.desc}</small>`;
+      leftWrap.append(ava, txtWrap);
+
+      const badge = document.createElement('span');
+      badge.className = `mission-status ${unlocked ? 'unlocked' : 'locked'}`;
+      badge.textContent = unlocked ? 'UNLOCKED' : 'LOCKED';
+      head.append(leftWrap, badge);
+      card.appendChild(head);
+
+      m.targets.forEach((t) => {
+        const tgtFighter = FIGHTERS.find((f) => f.id === t.targetId);
+        const tgtIdx = FIGHTERS.findIndex((f) => f.id === t.targetId);
+        if (!tgtFighter) return;
+        const cur = unlocked ? t.needed : Math.min(t.needed, mKills[t.targetId] || 0);
+        const targetDone = cur >= t.needed;
+
+        const row = document.createElement('div');
+        row.className = 'mission-target';
+        row.innerHTML = `
+          <span>Defeat <strong style="color:${tgtFighter.accent};">${tgtFighter.shortName}</strong> (${cur} / ${t.needed})</span>
+          ${targetDone
+            ? '<span style="color:#42e64d;font-weight:800;font-size:11px;">COMPLETED</span>'
+            : `<button class="pill-btn active" data-opp="${tgtIdx}">Fight Now</button>`
+          }`;
+        const fightBtn = row.querySelector('button');
+        if (fightBtn) {
+          fightBtn.onclick = () => {
+            STATE.selectedRivalIdx = Number(fightBtn.dataset.opp);
+            renderMenuFighterCards();
+            document.getElementById('modal-panel').classList.remove('open');
+            startMatch();
+          };
+        }
+        card.appendChild(row);
+      });
+
+      body.appendChild(card);
+    });
   });
 };
 
