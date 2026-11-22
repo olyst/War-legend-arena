@@ -833,7 +833,7 @@
           </button>
         </nav>
 
-        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v11.0 • Sunny Arena • 300 HP</div>
+        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v11.1 • Sunny Arena • Offline Ready</div>
       </div>
 
       <div class="menu-right">
@@ -1145,7 +1145,7 @@ const FIGHTERS = CHARACTER_LIST.map((c) => ({
   defenseMult: 0.9 + (c.defense / 100) * 0.18
 }));
 
-const CACHE_NAME = 'war-legend-cache-v11';
+const CACHE_NAME = 'war-legend-offline-v12';
 const PROGRESS_KEY = 'war_legend_mission_progress_v1';
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
 const DEVICE_MEM = navigator.deviceMemory || (IS_MOBILE ? 3 : 8);
@@ -1266,7 +1266,7 @@ const STATE = {
 const DIAG = {
   protocol: location.protocol,
   deviceInfo: `${IS_LOW_END ? 'Low-End' : (IS_MOBILE ? 'Mobile' : 'Desktop')} • RAM~${DEVICE_MEM}GB • ${CPU_CORES} Cores`,
-  models: {}, weapons: {}, arena: {}, anims: {}, audio: {}, errors: []
+  models: {}, weapons: {}, arena: {}, anims: {}, audio: {}, offlineCached: 0, errors: []
 };
 
 const yieldFrame = () => new Promise((r) => setTimeout(r, 16));
@@ -1279,8 +1279,63 @@ window.addEventListener('unhandledrejection', (e) => {
 });
 
 /* ============================================================
-   2. SAFE FULLSCREEN & CUSTOM ACTION BUTTON IMAGES
+   2. OFFLINE CACHE & SERVICE WORKER SUPPORT
    ============================================================ */
+function registerOfflineSW() {
+  try {
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  } catch (_) {}
+}
+registerOfflineSW();
+
+const offlineBlobUrls = {};
+async function getOfflineMediaSrc(rawUrl) {
+  if (!rawUrl) return rawUrl;
+  const url = encodeURI(rawUrl);
+  if (offlineBlobUrls[url]) return offlineBlobUrls[url];
+  try {
+    if ('caches' in window) {
+      const cache = await caches.open(CACHE_NAME);
+      const match = await cache.match(url);
+      if (match) {
+        const blob = await match.blob();
+        if (blob.size > 100) {
+          offlineBlobUrls[url] = URL.createObjectURL(blob);
+          return offlineBlobUrls[url];
+        }
+      }
+      if (navigator.onLine) {
+        const res = await fetch(url);
+        if (res.ok) {
+          await cache.put(url, res.clone());
+          DIAG.offlineCached++;
+        }
+      }
+    }
+  } catch (_) {}
+  return url;
+}
+
+async function cacheUrlSilently(rawUrl) {
+  if (!rawUrl || !('caches' in window)) return false;
+  const url = encodeURI(rawUrl);
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const existing = await cache.match(url);
+    if (existing) { DIAG.offlineCached++; return true; }
+    if (!navigator.onLine) return false;
+    const res = await fetch(url);
+    if (res.ok) {
+      await cache.put(url, res);
+      DIAG.offlineCached++;
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
 function trySafeFullscreen() {
   try {
     if (IS_MOBILE && !document.fullscreenElement && document.documentElement.requestFullscreen) {
@@ -1303,21 +1358,23 @@ function applyActionButtonImages() {
   for (const [key, btn] of Object.entries(btnMap)) {
     const src = ACTION_BUTTON_IMAGES[key];
     if (!btn || !src) continue;
-    const img = new Image();
-    img.className = 'btn-custom-img';
-    img.alt = key;
-    img.src = encodeURI(src);
-    img.onload = () => {
-      const svg = btn.querySelector('svg');
-      if (svg) svg.style.display = 'none';
-      btn.classList.add('has-img');
-      btn.insertBefore(img, btn.firstChild);
-    };
+    getOfflineMediaSrc(src).then((resolved) => {
+      const img = new Image();
+      img.className = 'btn-custom-img';
+      img.alt = key;
+      img.src = resolved;
+      img.onload = () => {
+        const svg = btn.querySelector('svg');
+        if (svg) svg.style.display = 'none';
+        btn.classList.add('has-img');
+        btn.insertBefore(img, btn.firstChild);
+      };
+    });
   }
 }
 
 /* ============================================================
-   3. AVATAR SVGs & OPTIONAL IMAGES
+   3. AVATAR SVGs & OPTIONAL IMAGES (OFFLINE CACHED)
    ============================================================ */
 function createAvatarSVG(color, accent, label) {
   return `
@@ -1341,22 +1398,26 @@ function createAvatarSVG(color, accent, label) {
 function setPortrait(containerEl, fighter) {
   containerEl.innerHTML = createAvatarSVG(fighter.color, fighter.accent, fighter.id);
   fighter.iconCandidates.forEach((src) => {
-    const img = new Image();
-    img.src = encodeURI(src);
-    img.alt = fighter.name;
-    img.onload = () => { containerEl.innerHTML = ''; containerEl.appendChild(img); };
+    getOfflineMediaSrc(src).then((resolved) => {
+      const img = new Image();
+      img.src = resolved;
+      img.alt = fighter.name;
+      img.onload = () => { containerEl.innerHTML = ''; containerEl.appendChild(img); };
+    });
   });
 }
 
 function checkOptionalLogo() {
   ['./logo.png', './assets/images/logo.png'].forEach((src) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      const logoImg = document.getElementById('menu-logo-img');
-      logoImg.src = src; logoImg.style.display = 'block';
-      document.getElementById('fallback-logo').style.display = 'none';
-    };
+    getOfflineMediaSrc(src).then((resolved) => {
+      const img = new Image();
+      img.src = resolved;
+      img.onload = () => {
+        const logoImg = document.getElementById('menu-logo-img');
+        logoImg.src = resolved; logoImg.style.display = 'block';
+        document.getElementById('fallback-logo').style.display = 'none';
+      };
+    });
   });
 }
 
@@ -1372,10 +1433,17 @@ async function streamFetchWithCache(rawUrl, onProgress) {
       const cachedRes = await cache.match(url);
       if (cachedRes) {
         const buf = await cachedRes.arrayBuffer();
-        if (buf.byteLength > 500) return { err: null, buf, fromCache: true };
+        if (buf.byteLength > 500) {
+          DIAG.offlineCached++;
+          return { err: null, buf, fromCache: true };
+        }
       }
     }
   } catch (_) {}
+
+  if (!navigator.onLine) {
+    return { err: 'Offline (Not Cached)', buf: null };
+  }
 
   const ctrl = new AbortController();
   let stallTimer = setTimeout(() => ctrl.abort(), 25000);
@@ -1422,14 +1490,13 @@ async function streamFetchWithCache(rawUrl, onProgress) {
       return { err: `Too small (${buf.byteLength}B)`, buf: null };
     }
 
-    if (!STATE.lowEndMode || buf.byteLength <= 26214400) {
-      try {
-        if ('caches' in window) {
-          const cache = await caches.open(CACHE_NAME);
-          await cache.put(url, new Response(buf.slice(0), { headers: { 'Content-Type': 'application/octet-stream' } }));
-        }
-      } catch (_) {}
-    }
+    try {
+      if ('caches' in window) {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(url, new Response(buf.slice(0), { headers: { 'Content-Type': 'application/octet-stream' } }));
+        DIAG.offlineCached++;
+      }
+    } catch (_) {}
 
     return { err: null, buf, fromCache: false };
   } catch (e) {
@@ -1439,7 +1506,7 @@ async function streamFetchWithCache(rawUrl, onProgress) {
 }
 
 /* ============================================================
-   5. AUDIO SYSTEM (BGM + SFX + ANNOUNCEMENT VOICE SYSTEM)
+   5. AUDIO SYSTEM (OFFLINE-CACHED BGM + SFX + ANNOUNCEMENTS)
    ============================================================ */
 class SoundManager {
   constructor() {
@@ -1468,12 +1535,13 @@ class SoundManager {
     }
   }
 
-  initAnnouncements() {
+  async initAnnouncements() {
     const map = SPLASH_AND_ANNOUNCEMENT_CONFIG.announcements || {};
     for (const [key, url] of Object.entries(map)) {
       if (!url || this.announcements[key]) continue;
       try {
-        const audio = new Audio(encodeURI(url));
+        const resolved = await getOfflineMediaSrc(url);
+        const audio = new Audio(resolved);
         audio.preload = 'auto';
         audio.volume = 0.94;
         this.announcements[key] = audio;
@@ -1518,15 +1586,31 @@ class SoundManager {
     ];
     for (const url of candidates) {
       try {
-        const res = await fetch(encodeURI(url), { method: 'HEAD' });
-        if (res.ok) {
-          const audio = new Audio(encodeURI(url));
+        const enc = encodeURI(url);
+        let found = false;
+        if ('caches' in window) {
+          const cache = await caches.open(CACHE_NAME);
+          if (await cache.match(enc)) found = true;
+        }
+        if (!found && navigator.onLine) {
+          const res = await fetch(enc);
+          if (res.ok) {
+            found = true;
+            if ('caches' in window) {
+              const cache = await caches.open(CACHE_NAME);
+              await cache.put(enc, res);
+            }
+          }
+        }
+        if (found) {
+          const resolved = await getOfflineMediaSrc(url);
+          const audio = new Audio(resolved);
           audio.loop = true;
           audio.volume = 0.28;
           audio.preload = 'auto';
           this.bgmAudio = audio;
           this.bgmReady = true;
-          DIAG.audio.BGM = `Loaded (${url})`;
+          DIAG.audio.BGM = `Offline Ready (${url})`;
           if (!STATE.gtaLoadingActive && !STATE.splashActive && (STATE.screen === 'menu' || STATE.matchOver)) this.startBGM();
           return;
         }
@@ -1536,7 +1620,7 @@ class SoundManager {
   }
 
   async preload() {
-    this.initAnnouncements();
+    await this.initAnnouncements();
     await this.initBGM();
     const sfxMap = { punch: './punch.mp3', sword: './sword.mp3', hit: './hit.mp3' };
     for (const [k, url] of Object.entries(sfxMap)) {
@@ -1640,17 +1724,18 @@ function finishSplash() {
   if (STATE.screen === 'menu') sound.startBGM();
 }
 
-function startWelcomeSplash() {
+async function startWelcomeSplash() {
   const splashEl = document.getElementById('splash-screen');
   const splashImg = document.getElementById('splash-img');
   const splashFallback = document.getElementById('splash-fallback');
 
   STATE.splashActive = true;
-  sound.initAnnouncements();
+  await sound.initAnnouncements();
 
   const imgPath = SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage;
   if (imgPath) {
-    splashImg.src = encodeURI(imgPath);
+    const resolved = await getOfflineMediaSrc(imgPath);
+    splashImg.src = resolved;
     splashImg.onload = () => {
       splashImg.style.display = 'block';
       splashFallback.style.display = 'none';
@@ -1665,6 +1750,25 @@ function startWelcomeSplash() {
   setTimeout(finishSplash, dur);
 }
 
+async function precacheRemainingForOffline() {
+  if (!navigator.onLine || !('caches' in window)) return;
+  // Silently store remaining fighter models & extra UI files in Cache API without touching GPU RAM
+  for (const f of FIGHTERS) {
+    for (const url of f.candidates) {
+      if (await cacheUrlSilently(url)) break;
+    }
+    for (const ic of f.iconCandidates) {
+      if (await cacheUrlSilently(ic)) break;
+    }
+  }
+  for (const s of (GTA_LOADING_CONFIG.slides || [])) {
+    if (s.image) await cacheUrlSilently(s.image);
+  }
+  for (const val of Object.values(ACTION_BUTTON_IMAGES)) {
+    if (val) await cacheUrlSilently(val);
+  }
+}
+
 async function startBootSequence() {
   const gtaEl = document.getElementById('gta-loading-screen');
   const slideImg = document.getElementById('gta-slide-img');
@@ -1673,15 +1777,17 @@ async function startBootSequence() {
   const tipText = document.getElementById('gta-tip-text');
 
   if (SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage) {
-    const pre = new Image();
-    pre.src = encodeURI(SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage);
+    getOfflineMediaSrc(SPLASH_AND_ANNOUNCEMENT_CONFIG.openImage);
   }
 
   const slides = GTA_LOADING_CONFIG.slides || [];
-  const preloadedSlides = slides.map((s) => {
-    const im = new Image();
-    if (s.image) im.src = encodeURI(s.image);
-    return im;
+  const preloadedSlides = slides.map(() => new Image());
+  slides.forEach((s, idx) => {
+    if (s.image) {
+      getOfflineMediaSrc(s.image).then((resolved) => {
+        preloadedSlides[idx].src = resolved;
+      });
+    }
   });
 
   let slideIdx = 0;
@@ -1705,7 +1811,7 @@ async function startBootSequence() {
     };
 
     if (s.image) {
-      if (tester.complete && tester.naturalWidth > 0) {
+      if (tester.src && tester.complete && tester.naturalWidth > 0) {
         applySlideImg();
       } else {
         tester.onload = applySlideImg;
@@ -1747,6 +1853,7 @@ async function startBootSequence() {
   setTimeout(() => { gtaEl.style.display = 'none'; }, 460);
 
   startWelcomeSplash();
+  setTimeout(precacheRemainingForOffline, 5500);
 }
 
 /* ============================================================
@@ -1879,7 +1986,7 @@ function applyQuality(q) {
 applyQuality(STATE.quality);
 
 /* ============================================================
-   7. TEXTURE DOWNSCALER, FULL ARENA LOADER (SILENT STREAMING)
+   7. TEXTURE DOWNSCALER, FULL ARENA LOADER (OFFLINE CACHED)
    ============================================================ */
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
@@ -2076,11 +2183,12 @@ async function loadCustomProp(url, isArenaProp = false, forceDoubleSide = false)
   } catch (_) { return null; }
 }
 
-function loadTextureAsync(url) {
+async function loadTextureAsync(url) {
+  if (!url) return null;
+  const resolved = await getOfflineMediaSrc(url);
   return new Promise((resolve) => {
-    if (!url) return resolve(null);
     texLoader.load(
-      encodeURI(url),
+      resolved,
       (tex) => resolve(tex),
       undefined,
       () => resolve(null)
@@ -2150,7 +2258,11 @@ const BONE_ALIASES = {
   footr: 'rightfoot', ankler: 'rightfoot', toer: 'righttoebase', ballr: 'righttoebase'
 };
 
-const KEY_KNOCKDOWN_BONES = new Set(['hips', 'spine2', 'head', 'leftfoot', 'rightfoot']);
+const KEY_KNOCKDOWN_BONES = new Set([
+  'hips', 'spine', 'spine2', 'head',
+  'leftforearm', 'rightforearm', 'leftleg', 'rightleg',
+  'leftfoot', 'rightfoot'
+]);
 const MOBILE_SKIP_BONE_RE = /(thumb|index|middle|ring|pinky|toebase)/;
 
 function canonicalBoneKey(name) {
@@ -2635,7 +2747,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (FULL ANIMS + CROUCH/KATANA GROUNDING)
+   9. FIGHTER CONTROLLER (BULLETPROOF HIT.FBX + FLOOR GROUNDING)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -2684,6 +2796,7 @@ class Fighter {
     this.vy = 0; this.onGround = true; this.facing = isPlayer ? 1 : -1;
     this.state = 'idle'; this.stateTimer = 0; this.attackDuration = 0; this.attackApplied = false;
     this.hitAnimType = 'hit';
+    this.hitRecoilTimer = 0;
     this.knockbackVx = 0;
     this.blocking = false; this.blockElapsed = 0; this.crouching = false;
     this.hitFlashTimer = 0;
@@ -2763,7 +2876,7 @@ class Fighter {
           }
         }
       });
-      if (this.knockdownBones.length === 0) this.knockdownBones = fallbackBones.slice(0, 6);
+      if (this.knockdownBones.length === 0) this.knockdownBones = fallbackBones.slice(0, 8);
       this.restFootY = Number.isFinite(minFootY) ? Math.max(0.02, minFootY) : 0.08;
 
       this.mixer = new THREE.AnimationMixer(clone);
@@ -2835,13 +2948,15 @@ class Fighter {
       if (this.actions[name]) continue;
       try {
         const res = retargetClipToModel(rawClip, this.modelRoot);
-        if (res.matchedTracks > 0) totalMatched += res.matchedTracks;
-        const action = this.mixer.clipAction(res.clip);
-        if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'katana_hit', 'jump', 'crouch'].includes(name)) {
-          action.setLoop(THREE.LoopOnce);
-          action.clampWhenFinished = (name === 'knockdown' || name === 'victory' || name === 'crouch');
+        if (res.matchedTracks > 0) {
+          totalMatched += res.matchedTracks;
+          const action = this.mixer.clipAction(res.clip);
+          if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'katana_hit', 'jump', 'crouch'].includes(name)) {
+            action.setLoop(THREE.LoopOnce);
+            action.clampWhenFinished = (name === 'knockdown' || name === 'victory' || name === 'crouch');
+          }
+          this.actions[name] = action;
         }
-        this.actions[name] = action;
       } catch (_) {}
     }
 
@@ -2901,10 +3016,24 @@ class Fighter {
     const next = this.actions[name] || (name === 'katana_hit' ? this.actions['hit'] : null) || this.actions['idle'];
     if (!next) return;
     const isOneShot = ['hit', 'katana_hit', 'punch', 'kick', 'slash', 'knockdown', 'victory', 'jump'].includes(name);
-    if (next === this.currentAction && !['hit', 'katana_hit', 'punch', 'kick', 'slash'].includes(name)) return;
-    const fade = isOneShot ? 0.05 : 0.1;
-    if (this.currentAction && this.currentAction !== next) this.currentAction.fadeOut(fade);
-    next.reset().fadeIn(fade).play();
+
+    // Fix: If repeating the same one-shot animation (like consecutive hits), restart cleanly at full weight
+    if (next === this.currentAction) {
+      if (['hit', 'katana_hit', 'punch', 'kick', 'slash'].includes(name)) {
+        next.stop();
+        next.enabled = true;
+        next.setEffectiveWeight(1);
+        next.play();
+      }
+      return;
+    }
+
+    const fade = isOneShot ? 0.04 : 0.1;
+    if (this.currentAction) this.currentAction.fadeOut(fade);
+    next.reset();
+    next.enabled = true;
+    next.setEffectiveWeight(1);
+    next.fadeIn(fade).play();
     this.currentAction = next;
   }
 
@@ -2999,15 +3128,16 @@ class Fighter {
     } else if (attackType === 'slash' && this.actions.katana_hit) {
       this.state = 'hit';
       this.hitAnimType = 'katana_hit';
-      this.knockbackVx = (attackerFacing || -this.facing) * 2.1; // Slight knockback so character falls back slightly
-      this.stateTimer = this.getClipDuration('katana_hit', 1.4); // Plays Flying Back Death.fbx completely
+      this.knockbackVx = (attackerFacing || -this.facing) * 2.1;
+      this.stateTimer = this.getClipDuration('katana_hit', 1.4);
       this.playAnim('katana_hit');
       spawnDustRing(this.group.position.x, 0.85);
     } else {
       this.state = 'hit';
       this.hitAnimType = 'hit';
       this.knockbackVx = (attackerFacing || -this.facing) * 0.9;
-      this.stateTimer = this.getClipDuration('hit', 0.55); // Plays hit.fbx completely
+      if (!this.actions.hit) this.hitRecoilTimer = 0.35;
+      this.stateTimer = this.getClipDuration('hit', 0.52);
       this.playAnim('hit');
     }
     return true;
@@ -3017,8 +3147,8 @@ class Fighter {
     this.animClock += dt;
     if (this.comboResetTimer > 0) { this.comboResetTimer -= dt; if (this.comboResetTimer <= 0) this.comboCount = 0; }
     if (this.queueTimer > 0) { this.queueTimer -= dt; if (this.queueTimer <= 0) this.queuedAction = null; }
+    if (this.hitRecoilTimer > 0) this.hitRecoilTimer = Math.max(0, this.hitRecoilTimer - dt);
 
-    // Katana 4-second recharge for 2 strikes
     if (this.slashCharges < 2) {
       this.slashCooldown -= dt;
       if (this.slashCooldown <= 0) {
@@ -3027,7 +3157,6 @@ class Fighter {
       }
     }
 
-    // Smooth knockback slide (for katana hit & heavy strikes)
     if (Math.abs(this.knockbackVx) > 0.03) {
       this.group.position.x += this.knockbackVx * dt;
       this.knockbackVx *= Math.exp(-4.8 * dt);
@@ -3166,12 +3295,12 @@ class Fighter {
   groundCharacterByBones(dt) {
     if (!this.modelRoot) return;
 
-    // Ground BOTH knockdown AND katana_hit (Flying Back Death.fbx) so body falls onto the floor, never in the sky
+    // 1. Falling body (knockdown or katana_hit): ALWAYS keep lowest body bone pinned to the floor
     const isFallingBody = (this.state === 'knockdown') || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
     if (isFallingBody) {
       const hasClip = (this.state === 'knockdown') ? !!this.actions.knockdown : !!this.actions.katana_hit;
       if (this.knockdownBones.length > 0 && hasClip) {
-        this.modelRoot.updateMatrixWorld(true);
+        this.group.updateMatrixWorld(true);
         let minBoneY = Infinity;
         for (let i = 0; i < this.knockdownBones.length; i++) {
           const by = this.knockdownBones[i].matrixWorld.elements[13];
@@ -3179,7 +3308,7 @@ class Fighter {
         }
         if (Number.isFinite(minBoneY)) {
           const minOffsetWithoutModelY = (minBoneY - this.group.position.y) - this.modelRoot.position.y;
-          const targetY = THREE.MathUtils.clamp(0.08 - minOffsetWithoutModelY, this.baseModelY - 1.45, this.baseModelY + 0.65);
+          const targetY = THREE.MathUtils.clamp(0.08 - minOffsetWithoutModelY, this.baseModelY - 1.5, this.baseModelY + 0.05);
           this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-22 * dt));
         }
       } else if (this.state === 'knockdown') {
@@ -3189,14 +3318,16 @@ class Fighter {
       return;
     }
 
-    if (this.modelRoot.rotation.x !== 0) {
-      this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, 0, 1 - Math.exp(-16 * dt));
+    // Visual recoil fallback if a model didn't bind hit.fbx
+    const targetRotX = this.hitRecoilTimer > 0 ? -0.32 : 0;
+    if (Math.abs(this.modelRoot.rotation.x - targetRotX) > 0.002) {
+      this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, targetRotX, 1 - Math.exp(-18 * dt));
     }
 
-    // Crouch grounding on ALL devices so player sits firmly on the floor
-    if (this.state === 'crouch' && this.onGround) {
-      if (this.footBones.length > 0 && this.actions.crouch) {
-        this.modelRoot.updateMatrixWorld(true);
+    // 2. Grounded Crouch & Hit (punch/kick react): NEVER float in the sky on ANY device
+    if ((this.state === 'crouch' || this.state === 'hit') && this.onGround) {
+      if (this.footBones.length > 0 && (this.state === 'hit' ? this.actions.hit : this.actions.crouch)) {
+        this.group.updateMatrixWorld(true);
         let minFootWorldY = Infinity;
         for (let i = 0; i < this.footBones.length; i++) {
           const fy = this.footBones[i].matrixWorld.elements[13];
@@ -3204,21 +3335,25 @@ class Fighter {
         }
         if (Number.isFinite(minFootWorldY)) {
           const footOffsetWithoutModelY = (minFootWorldY - this.group.position.y) - this.modelRoot.position.y;
+          const floorRef = this.state === 'crouch' ? (this.restFootY - 0.03) : this.restFootY;
           const targetY = THREE.MathUtils.clamp(
-            (this.restFootY - 0.03) - footOffsetWithoutModelY,
+            floorRef - footOffsetWithoutModelY,
             this.baseModelY - 0.95,
-            this.baseModelY + 0.2
+            this.baseModelY + 0.05
           );
           this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-22 * dt));
           return;
         }
       }
-      const crouchFallbackY = this.baseModelY - 0.42;
-      this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, crouchFallbackY, 1 - Math.exp(-20 * dt));
-      return;
+      if (this.state === 'crouch') {
+        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, this.baseModelY - 0.42, 1 - Math.exp(-20 * dt));
+        return;
+      }
     }
 
+    // 3. Normal grounded states
     if (!IS_MOBILE && !STATE.lowEndMode && STATE.quality === 'high' && this.footBones.length > 0 && this.onGround) {
+      this.group.updateMatrixWorld(true);
       let minFootWorldY = Infinity;
       for (let i = 0; i < this.footBones.length; i++) {
         const fy = this.footBones[i].matrixWorld.elements[13];
@@ -3226,8 +3361,7 @@ class Fighter {
       }
       if (Number.isFinite(minFootWorldY)) {
         const footOffsetWithoutModelY = (minFootWorldY - this.group.position.y) - this.modelRoot.position.y;
-        let targetY = this.restFootY - footOffsetWithoutModelY;
-        targetY = THREE.MathUtils.clamp(targetY, this.baseModelY - 0.65, this.baseModelY + 0.35);
+        const targetY = THREE.MathUtils.clamp(this.restFootY - footOffsetWithoutModelY, this.baseModelY - 0.65, this.baseModelY + 0.05);
         this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-18 * dt));
       }
     } else {
@@ -3769,6 +3903,7 @@ document.getElementById('btn-settings').onclick = () => {
       </div>
       <div style="margin-top:12px;padding:10px;background:rgba(0,0,0,0.35);border-radius:8px;font-size:11.5px;color:#b8c2df;line-height:1.5;">
         <div style="color:var(--gold);font-weight:700;margin-bottom:5px;">Diagnostics (${DIAG.deviceInfo})</div>
+        <div>Offline Mode: <strong style="color:#42e64d">${DIAG.offlineCached > 0 ? 'Saved & Ready' : 'Syncing'}</strong></div>
         ${arenaLines}
         ${modelLines || '<div>Streaming active models...</div>'}
         ${weaponLines}
@@ -3776,7 +3911,7 @@ document.getElementById('btn-settings').onclick = () => {
         <div>Animations Loaded: <strong style="color:#00d4ff">${animLoaded} / ${totalAnimCount}</strong> ${missingAnims.length ? `(Missing: ${missingAnims.join(', ')})` : ''}</div>
         ${DIAG.errors.length ? `<div style="color:#ff6b6b;margin-top:4px;">Errors: ${DIAG.errors.slice(-2).join(' | ')}</div>` : ''}
         <div style="display:flex;gap:8px;margin-top:8px;">
-          <button class="pill-btn active" id="btn-retry-dl">Retry Download</button>
+          <button class="pill-btn active" id="btn-retry-dl">Sync Offline Assets</button>
           <button class="pill-btn" id="btn-clear-cache">Clear Offline Cache</button>
         </div>
       </div>`;
@@ -3789,7 +3924,7 @@ document.getElementById('btn-settings').onclick = () => {
     body.querySelector('#tog-bgm').onclick = () => { STATE.bgmEnabled = !STATE.bgmEnabled; if (STATE.bgmEnabled && (STATE.screen === 'menu' || STATE.matchOver)) sound.startBGM(); else sound.stopBGM(); document.getElementById('btn-settings').click(); };
     body.querySelector('#tog-sfx').onclick = () => { STATE.sfxEnabled = !STATE.sfxEnabled; document.getElementById('btn-settings').click(); };
     body.querySelectorAll('[data-diff]').forEach(b => b.onclick = () => { STATE.difficulty = b.dataset.diff; document.getElementById('btn-settings').click(); });
-    body.querySelector('#btn-retry-dl').onclick = () => { document.getElementById('modal-panel').classList.remove('open'); streamAllAssets(); };
+    body.querySelector('#btn-retry-dl').onclick = () => { document.getElementById('modal-panel').classList.remove('open'); streamAllAssets(); precacheRemainingForOffline(); };
     body.querySelector('#btn-clear-cache').onclick = async () => {
       if ('caches' in window) await caches.delete(CACHE_NAME);
       alert('Offline Cache Cleared!');
