@@ -947,7 +947,7 @@
           <div id="joystick-knob"></div>
         </div>
 
-        <div class="pc-hint">PC: A/D Move • W Jump • S Crouch • J Punch • K Kick • L Slash (Katana) • Shift Guard</div>
+        <div class="pc-hint">PC: A/D Move (Double-Tap Dash) • W Jump • S Crouch • J Punch • K Kick • L Slash (Katana) • Shift Guard</div>
 
         <div class="action-cluster">
           <button class="act-btn" id="btn-slash">
@@ -1132,11 +1132,12 @@ const ARENA_MISSIONS = [
 /* ============================================================================
    [EASY EDIT 4] ANIMATION FILES (.fbx অথবা .glb ফাইল)
    ----------------------------------------------------------------------------
-   পরবর্তীতে যেকোনো অ্যানিমেশন (punch, kick, slash, hit, katana_hit, jump,
-   crouch, knockdown, victory ইত্যাদি) উন্নত করতে শুধু ফাইল আপলোড করে
-   প্রথম নাম হিসেবে আপনার নতুন ফাইলের নাম বসিয়ে দেবেন (যেমন: './punch_v2.fbx')।
+   পরবর্তীতে যেকোনো নতুন অ্যানিমেশন ডাউনলোড করলে নিচের ফাঁকা [] ব্র্যাকেটের ভেতরে
+   ফাইলের নাম বসিয়ে দেবেন (যেমন: punch_2: ['./Hook Punch.fbx'], )।
+   ফাঁকা [] থাকলে গেম অটোমেটিক বেসিক অ্যানিমেশন দিয়ে চলবে—কিছুই নষ্ট হবে না!
    ============================================================================ */
 const ANIM_CANDIDATES = {
+  // --- মূল বেসিক অ্যানিমেশন (আগেরগুলো) ---
   idle:       ['./Idle.fbx', './idle.fbx', './animations/Idle.fbx'],
   walk_f:     ['./walk_f.fbx', './animations/walk_f.fbx'],
   walk_b:     ['./walk_b.fbx', './animations/walk_b.fbx'],
@@ -1156,7 +1157,29 @@ const ANIM_CANDIDATES = {
     './Golf Pott Victory.fbx',
     './victory.fbx',
     './animations/victory.fbx'
-  ]
+  ],
+
+  // --- নতুন অ্যানিমেশন স্লট (এখানে আপনার ফাইলের নাম বসাবেন, যেমন: ['./file.fbx']) ---
+  punch_2:      ['./Hook.fbx', './animations/Hook.fbx'],
+  punch_3:      ['./Uppercut.fbx', './animations/Uppercut.fbx'],
+  kick_2:       ['./Mma Kick.fbx', './animations/Mma Kick.fbx'],
+  kick_3:       ['./Drop Kick.fbx', './animations/Drop Kick.fbx'],
+  slash_2:      ['./Sword And Shield Slash.fbx', './animations/Sword And Shield Slash.fbx'],
+
+  air_punch:    ['./Flying Knee Punch Combo.fbx', './animations/Flying Knee Punch Combo.fbx'],
+  air_kick:     ['./Jumping.fbx', './animations/Jumping.fbx'],
+  air_slash:    ['./Sword And Shield Slash (1).fbx', './animations/Sword And Shield Slash (1).fbx'],
+  crouch_punch: ['./Female Crouch Pose.fbx', './animations/Female Crouch Pose.fbx'],
+  crouch_kick:  ['./Leg Sweep.fbx', './animations/Leg Sweep.fbx'],
+
+  dash_f:       ['./Fast Run.fbx', './animations/Fast Run.fbx'],
+  dodge_b:      ['./Step Backward.fbx', './animations/Step Backward.fbx'],
+
+  block_hit:    ['./Sword And Shield Impact.fbx', './animations/Sword And Shield Impact.fbx'],
+  parry:        ['./Sword And Shield Impact.fbx', './animations/Sword And Shield Impact.fbx'],
+  stagger:      ['./Big Hit To Head.fbx', './animations/Big Hit To Head.fbx'],
+  stand_up:     ['./Kip Up.fbx', './animations/Kip Up.fbx'],
+  intro:        ['./Standing Taunt Battlecry.fbx', './animations/Standing Taunt Battlecry.fbx']
 };
 
 /* ============================================================================
@@ -1215,6 +1238,37 @@ const ACTION_BUTTON_IMAGES = {
   punch: '', // Punch button image (e.g. './punch_btn.png')
   kick:  '', // Kick button image (e.g. './kick_btn.png')
   block: ''  // Guard button image (e.g. './guard_btn.png')
+};
+
+const ONE_SHOT_ANIMS = new Set([
+  'hit', 'katana_hit', 'stagger', 'stand_up', 'block_hit', 'parry',
+  'punch', 'punch_2', 'punch_3', 'crouch_punch', 'air_punch',
+  'kick', 'kick_2', 'kick_3', 'crouch_kick', 'air_kick',
+  'slash', 'slash_2', 'air_slash',
+  'dash_f', 'dodge_b', 'intro', 'knockdown', 'victory', 'jump', 'crouch'
+]);
+
+const CLAMP_FINISH_ANIMS = new Set(['knockdown', 'victory', 'crouch']);
+
+const ANIM_FALLBACKS = {
+  punch_2: 'punch',
+  punch_3: 'punch',
+  crouch_punch: 'punch',
+  air_punch: 'punch',
+  kick_2: 'kick',
+  kick_3: 'kick',
+  crouch_kick: 'kick',
+  air_kick: 'kick',
+  slash_2: 'slash',
+  air_slash: 'slash',
+  katana_hit: 'hit',
+  stagger: 'hit',
+  block_hit: 'block',
+  parry: 'block',
+  dash_f: 'walk_f',
+  dodge_b: 'walk_b',
+  intro: 'idle',
+  stand_up: 'idle'
 };
 
 const FIGHTERS = CHARACTER_LIST.map((c) => ({
@@ -2375,7 +2429,11 @@ async function loadAndPlaceImageProp(url, placements) {
 }
 
 async function loadAnimWithDetails(name, candidates) {
+  if (!Array.isArray(candidates) || candidates.length === 0) return { skipped: true };
+  let hasValidUrl = false;
   for (const url of candidates) {
+    if (!url || typeof url !== 'string' || !url.trim()) continue;
+    hasValidUrl = true;
     let { buf } = await streamFetchWithCache(url);
     if (!buf) continue;
     try {
@@ -2388,7 +2446,7 @@ async function loadAnimWithDetails(name, candidates) {
       DIAG.errors.push(`${url}: ${e.message}`);
     }
   }
-  return null;
+  return hasValidUrl ? null : { skipped: true };
 }
 
 const BONE_ALIASES = {
@@ -2747,17 +2805,24 @@ async function streamAllAssets(onProgress) {
     }
   }
 
-  let loadedAnims = 0;
+  let processedAnims = 0;
   const animEntries = Object.entries(ANIM_CANDIDATES);
-  const totalAnims = animEntries.length;
+  const totalAnims = Math.max(1, animEntries.length);
   for (let i = 0; i < animEntries.length; i += 2) {
     const batch = animEntries.slice(i, i + 2);
-    report(34 + (loadedAnims / totalAnims) * 20, 'Preparing Combat Moves');
+    report(34 + (processedAnims / totalAnims) * 20, 'Preparing Combat Moves');
     await Promise.all(batch.map(async ([name, urls]) => {
-      if (assetCache.animations[name]) { loadedAnims++; return; }
+      processedAnims++;
+      if (assetCache.animations[name]) return;
       const res = await loadAnimWithDetails(name, urls);
-      if (res) { assetCache.animations[name] = res.clip; DIAG.anims[name] = 'Loaded'; loadedAnims++; }
-      else DIAG.anims[name] = 'Missing';
+      if (res && res.skipped) {
+        DIAG.anims[name] = 'Optional';
+      } else if (res && res.clip) {
+        assetCache.animations[name] = res.clip;
+        DIAG.anims[name] = 'Loaded';
+      } else {
+        DIAG.anims[name] = 'Missing';
+      }
     }));
     await yieldFrame();
   }
@@ -2904,7 +2969,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (BULLETPROOF HIT.FBX + FLOOR GROUNDING)
+   9. FIGHTER CONTROLLER (COMBO + CONTEXTUAL + DASH + FLOOR GROUNDING)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -2952,9 +3017,16 @@ class Fighter {
     this.maxHp = 300; this.hp = 300;
     this.vy = 0; this.onGround = true; this.facing = isPlayer ? 1 : -1;
     this.state = 'idle'; this.stateTimer = 0; this.attackDuration = 0; this.attackApplied = false;
+    this.currentAttackAnim = 'punch';
+    this.punchComboStep = 0;
+    this.kickComboStep = 0;
+    this.slashComboStep = 0;
+    this.comboChainTimer = 0;
     this.hitAnimType = 'hit';
     this.hitRecoilTimer = 0;
     this.knockbackVx = 0;
+    this.dashVx = 0;
+    this.dashCooldown = 0;
     this.blocking = false; this.blockElapsed = 0; this.crouching = false;
     this.hitFlashTimer = 0;
     this.comboCount = 0; this.comboResetTimer = 0;
@@ -2975,8 +3047,17 @@ class Fighter {
     scene.add(this.group);
   }
 
+  resolveAnimKey(name) {
+    if (this.actions[name]) return name;
+    const fb = ANIM_FALLBACKS[name];
+    if (fb && this.actions[fb]) return fb;
+    if (this.actions['idle']) return 'idle';
+    return name;
+  }
+
   getClipDuration(name, fallback = 0.6) {
-    const act = this.actions[name];
+    const resolved = this.resolveAnimKey(name);
+    const act = this.actions[resolved];
     if (!act) return fallback;
     const tScale = this.mixer ? Math.max(0.1, this.mixer.timeScale) : 1;
     return Math.max(0.25, act.getClip().duration / tScale);
@@ -3108,9 +3189,9 @@ class Fighter {
         if (res.matchedTracks > 0) {
           totalMatched += res.matchedTracks;
           const action = this.mixer.clipAction(res.clip);
-          if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'katana_hit', 'jump', 'crouch'].includes(name)) {
+          if (ONE_SHOT_ANIMS.has(name)) {
             action.setLoop(THREE.LoopOnce);
-            action.clampWhenFinished = (name === 'knockdown' || name === 'victory' || name === 'crouch');
+            action.clampWhenFinished = CLAMP_FINISH_ANIMS.has(name);
           }
           this.actions[name] = action;
         }
@@ -3133,9 +3214,9 @@ class Fighter {
         if (mapKey && !this.actions[mapKey]) {
           try {
             const act = this.mixer.clipAction(clip);
-            if (['knockdown', 'victory', 'punch', 'kick', 'slash', 'hit', 'jump', 'crouch'].includes(mapKey)) {
+            if (ONE_SHOT_ANIMS.has(mapKey)) {
               act.setLoop(THREE.LoopOnce);
-              act.clampWhenFinished = (mapKey === 'knockdown' || mapKey === 'victory' || mapKey === 'crouch');
+              act.clampWhenFinished = CLAMP_FINISH_ANIMS.has(mapKey);
             }
             this.actions[mapKey] = act;
           } catch (_) {}
@@ -3170,12 +3251,13 @@ class Fighter {
 
   playAnim(name) {
     if (this.isProcedural || !this.mixer) return;
-    const next = this.actions[name] || (name === 'katana_hit' ? this.actions['hit'] : null) || this.actions['idle'];
+    const resolved = this.resolveAnimKey(name);
+    const next = this.actions[resolved];
     if (!next) return;
-    const isOneShot = ['hit', 'katana_hit', 'punch', 'kick', 'slash', 'knockdown', 'victory', 'jump'].includes(name);
+    const isOneShot = ONE_SHOT_ANIMS.has(resolved) && resolved !== 'crouch';
 
     if (next === this.currentAction) {
-      if (['hit', 'katana_hit', 'punch', 'kick', 'slash'].includes(name)) {
+      if (isOneShot && resolved !== 'knockdown' && resolved !== 'victory' && resolved !== 'jump') {
         next.stop();
         next.enabled = true;
         next.setEffectiveWeight(1);
@@ -3206,11 +3288,24 @@ class Fighter {
     }
   }
 
+  triggerDash(dir) {
+    if (this.hp <= 0 || STATE.roundFreeze > 0 || !this.onGround || this.blocking || this.dashCooldown > 0) return;
+    if (['punch', 'kick', 'slash', 'hit', 'stand_up', 'knockdown', 'victory', 'dash_f', 'dodge_b', 'block_hit', 'parry', 'intro'].includes(this.state)) return;
+    const isForward = (dir * this.facing) > 0;
+    const dashKey = isForward ? 'dash_f' : 'dodge_b';
+    this.state = dashKey;
+    this.dashVx = dir * (isForward ? 7.6 : 6.8);
+    this.stateTimer = Math.min(0.36, this.getClipDuration(dashKey, 0.30));
+    this.dashCooldown = 0.65;
+    this.playAnim(dashKey);
+    spawnDustRing(this.group.position.x, 0.65);
+  }
+
   triggerAction(type) {
     if (this.hp <= 0 || STATE.roundFreeze > 0) return;
     if (type === 'slash' && this.slashCharges <= 0) return;
-    if (['punch', 'kick', 'slash', 'hit', 'knockdown'].includes(this.state)) {
-      if (this.state !== 'hit' && this.state !== 'knockdown') {
+    if (['punch', 'kick', 'slash', 'hit', 'stand_up', 'knockdown', 'dash_f', 'dodge_b', 'block_hit', 'parry', 'intro'].includes(this.state)) {
+      if (!['hit', 'stand_up', 'knockdown', 'block_hit'].includes(this.state)) {
         this.queuedAction = type;
         this.queueTimer = 0.35;
       }
@@ -3226,22 +3321,45 @@ class Fighter {
       this.slashCooldown = 4.0;
     }
 
+    let animKey = type;
+    if (!this.onGround) {
+      animKey = type === 'slash' ? 'air_slash' : type === 'kick' ? 'air_kick' : 'air_punch';
+    } else if (this.crouching) {
+      animKey = type === 'kick' ? 'crouch_kick' : type === 'punch' ? 'crouch_punch' : 'slash';
+    } else if (type === 'punch') {
+      if (this.punchComboStep === 1 && this.actions.punch_2) animKey = 'punch_2';
+      else if (this.punchComboStep === 2 && this.actions.punch_3) animKey = 'punch_3';
+      else animKey = 'punch';
+      this.punchComboStep = (this.punchComboStep + 1) % 3;
+    } else if (type === 'kick') {
+      if (this.kickComboStep === 1 && this.actions.kick_2) animKey = 'kick_2';
+      else if (this.kickComboStep === 2 && this.actions.kick_3) animKey = 'kick_3';
+      else animKey = 'kick';
+      this.kickComboStep = (this.kickComboStep + 1) % 3;
+    } else if (type === 'slash') {
+      if (this.slashComboStep === 1 && this.actions.slash_2) animKey = 'slash_2';
+      else animKey = 'slash';
+      this.slashComboStep = (this.slashComboStep + 1) % 2;
+    }
+
+    this.comboChainTimer = 1.15;
+    this.currentAttackAnim = animKey;
     this.state = type; this.attackApplied = false; this.blocking = false;
     this.queuedAction = null; this.queueTimer = 0;
 
     if (type === 'punch') {
-      this.attackDuration = this.getClipDuration('punch', 0.48);
+      this.attackDuration = this.getClipDuration(animKey, 0.48);
       sound.play('punch');
     } else if (type === 'kick') {
-      this.attackDuration = this.getClipDuration('kick', 0.58);
+      this.attackDuration = this.getClipDuration(animKey, 0.58);
       sound.play('punch');
     } else if (type === 'slash') {
-      this.attackDuration = this.getClipDuration('slash', 0.65);
+      this.attackDuration = this.getClipDuration(animKey, 0.65);
       sound.play('sword');
     }
 
     this.stateTimer = this.attackDuration;
-    this.playAnim(type);
+    this.playAnim(animKey);
   }
 
   takeDamage(amount, isPerfect = false, contactX = null, hitY = 1.15, attackType = 'punch', attackerFacing = 1) {
@@ -3256,6 +3374,16 @@ class Fighter {
       spawnHitSpark(sparkX, hitY, 0xe2e8f0, false);
       spawnDmgPopup(sparkX, 2.05, isTimedParry ? 'PARRY!' : `GUARD -${chip}`, '#93c5fd');
       sound.play('guard');
+
+      if (isTimedParry && this.actions.parry) {
+        this.state = 'parry';
+        this.stateTimer = Math.min(0.42, this.getClipDuration('parry', 0.36));
+        this.playAnim('parry');
+      } else if (this.actions.block_hit) {
+        this.state = 'block_hit';
+        this.stateTimer = Math.min(0.30, this.getClipDuration('block_hit', 0.26));
+        this.playAnim('block_hit');
+      }
       return false;
     }
 
@@ -3288,6 +3416,12 @@ class Fighter {
       this.stateTimer = this.getClipDuration('katana_hit', 1.4);
       this.playAnim('katana_hit');
       spawnDustRing(this.group.position.x, 0.85);
+    } else if (isPerfect && this.actions.stagger) {
+      this.state = 'hit';
+      this.hitAnimType = 'stagger';
+      this.knockbackVx = (attackerFacing || -this.facing) * 1.4;
+      this.stateTimer = this.getClipDuration('stagger', 0.72);
+      this.playAnim('stagger');
     } else {
       this.state = 'hit';
       this.hitAnimType = 'hit';
@@ -3302,8 +3436,15 @@ class Fighter {
   update(dt, input, opponent) {
     this.animClock += dt;
     if (this.comboResetTimer > 0) { this.comboResetTimer -= dt; if (this.comboResetTimer <= 0) this.comboCount = 0; }
+    if (this.comboChainTimer > 0) {
+      this.comboChainTimer -= dt;
+      if (this.comboChainTimer <= 0) {
+        this.punchComboStep = 0; this.kickComboStep = 0; this.slashComboStep = 0;
+      }
+    }
     if (this.queueTimer > 0) { this.queueTimer -= dt; if (this.queueTimer <= 0) this.queuedAction = null; }
     if (this.hitRecoilTimer > 0) this.hitRecoilTimer = Math.max(0, this.hitRecoilTimer - dt);
+    if (this.dashCooldown > 0) this.dashCooldown = Math.max(0, this.dashCooldown - dt);
 
     if (this.slashCharges < 2) {
       this.slashCooldown -= dt;
@@ -3311,6 +3452,13 @@ class Fighter {
         this.slashCharges = 2;
         this.slashCooldown = 0;
       }
+    }
+
+    if (Math.abs(this.dashVx) > 0.05 && (this.state === 'dash_f' || this.state === 'dodge_b')) {
+      this.group.position.x += this.dashVx * dt;
+      this.dashVx *= Math.exp(-3.5 * dt);
+    } else {
+      this.dashVx = 0;
     }
 
     if (Math.abs(this.knockbackVx) > 0.03) {
@@ -3366,8 +3514,9 @@ class Fighter {
             const isSweetTiming = Math.abs(this.stateTimer - peakTime) < 0.08 && dist <= reach * 0.86;
             const isPerfect = !opponent.blocking && (isCounter || isSweetTiming);
 
+            const isFinisher = ['punch_3', 'kick_3', 'slash_2'].includes(this.currentAttackAnim);
             const baseDmg = this.state === 'slash' ? 30 : this.state === 'kick' ? 20 : 14;
-            const dmg = Math.round(baseDmg * this.cfg.damageMult * (isPerfect ? 1.25 : 1.0));
+            const dmg = Math.round(baseDmg * this.cfg.damageMult * (isPerfect ? 1.25 : 1.0) * (isFinisher ? 1.15 : 1.0));
             const hitY = this.state === 'kick' ? 0.78 : (this.state === 'slash' ? 1.18 : 1.22);
             const contactX = this.group.position.x + this.facing * Math.min(dist * 0.72, reach * 0.65);
 
@@ -3375,7 +3524,7 @@ class Fighter {
             if (landed) {
               this.comboCount++;
               this.comboResetTimer = 2.2;
-              const instantPush = (this.state === 'slash' ? 0.35 : 0.38) * (isPerfect ? 1.2 : 1.0);
+              const instantPush = (this.state === 'slash' ? 0.35 : 0.38) * (isPerfect ? 1.2 : 1.0) * (isFinisher ? 1.2 : 1.0);
               opponent.group.position.x += this.facing * instantPush;
             } else {
               opponent.group.position.x += this.facing * 0.22;
@@ -3385,20 +3534,27 @@ class Fighter {
         }
       }
       if (this.stateTimer <= 0 && !['knockdown', 'victory'].includes(this.state)) {
-        this.state = 'idle';
-        this.hitAnimType = 'hit';
-        if (this.queuedAction && STATE.roundFreeze <= 0 && this.hp > 0) {
-          const nextAct = this.queuedAction;
-          if (nextAct !== 'slash' || this.slashCharges > 0) {
-            this.executeAction(nextAct);
-          } else {
-            this.queuedAction = null;
+        if (this.state === 'hit' && this.hitAnimType === 'katana_hit' && this.hp > 0 && this.actions.stand_up) {
+          this.state = 'stand_up';
+          this.hitAnimType = 'hit';
+          this.stateTimer = this.getClipDuration('stand_up', 1.05);
+          this.playAnim('stand_up');
+        } else {
+          this.state = 'idle';
+          this.hitAnimType = 'hit';
+          if (this.queuedAction && STATE.roundFreeze <= 0 && this.hp > 0) {
+            const nextAct = this.queuedAction;
+            if (nextAct !== 'slash' || this.slashCharges > 0) {
+              this.executeAction(nextAct);
+            } else {
+              this.queuedAction = null;
+            }
           }
         }
       }
     }
 
-    const canAct = this.hp > 0 && STATE.roundFreeze <= 0 && !['punch', 'kick', 'slash', 'hit', 'knockdown', 'victory'].includes(this.state);
+    const canAct = this.hp > 0 && STATE.roundFreeze <= 0 && !['punch', 'kick', 'slash', 'hit', 'stand_up', 'knockdown', 'victory', 'dash_f', 'dodge_b', 'block_hit', 'parry', 'intro'].includes(this.state);
     if (canAct && input) {
       this.blocking = !!input.block;
       this.crouching = !!input.down && this.onGround && !this.blocking;
@@ -3427,7 +3583,7 @@ class Fighter {
     }
 
     const jumpH = Math.max(0, this.group.position.y);
-    const isFallingOnFloor = this.state === 'knockdown' || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
+    const isFallingOnFloor = this.state === 'knockdown' || this.state === 'stand_up' || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
     this.shadowBlob.position.y = 0.025 - jumpH;
     this.shadowBlob.scale.setScalar(isFallingOnFloor ? 1.35 : Math.max(0.45, 1.0 - jumpH * 0.2));
     this.shadowBlob.material.opacity = Math.max(0.22, 0.72 - jumpH * 0.18);
@@ -3451,9 +3607,9 @@ class Fighter {
   groundCharacterByBones(dt) {
     if (!this.modelRoot) return;
 
-    const isFallingBody = (this.state === 'knockdown') || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
+    const isFallingBody = (this.state === 'knockdown') || (this.state === 'stand_up') || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
     if (isFallingBody) {
-      const hasClip = (this.state === 'knockdown') ? !!this.actions.knockdown : !!this.actions.katana_hit;
+      const hasClip = (this.state === 'knockdown') ? !!this.actions.knockdown : (this.state === 'stand_up' ? !!this.actions.stand_up : !!this.actions.katana_hit);
       if (this.knockdownBones.length > 0 && hasClip) {
         this.group.updateMatrixWorld(true);
         let minBoneY = Infinity;
@@ -3478,8 +3634,10 @@ class Fighter {
       this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, targetRotX, 1 - Math.exp(-18 * dt));
     }
 
-    if ((this.state === 'crouch' || this.state === 'hit') && this.onGround) {
-      if (this.footBones.length > 0 && (this.state === 'hit' ? this.actions.hit : this.actions.crouch)) {
+    const isCrouchAttack = (this.state === 'punch' || this.state === 'kick') && (this.currentAttackAnim === 'crouch_kick' || this.currentAttackAnim === 'crouch_punch') && this.onGround;
+    if ((this.state === 'crouch' || this.state === 'hit' || isCrouchAttack) && this.onGround) {
+      const activeClipExists = (this.state === 'hit') ? !!this.actions[this.hitAnimType] : (isCrouchAttack ? !!this.actions[this.currentAttackAnim] : !!this.actions.crouch);
+      if (this.footBones.length > 0 && activeClipExists) {
         this.group.updateMatrixWorld(true);
         let minFootWorldY = Infinity;
         for (let i = 0; i < this.footBones.length; i++) {
@@ -3488,7 +3646,7 @@ class Fighter {
         }
         if (Number.isFinite(minFootWorldY)) {
           const footOffsetWithoutModelY = (minFootWorldY - this.group.position.y) - this.modelRoot.position.y;
-          const floorRef = this.state === 'crouch' ? (this.restFootY - 0.03) : this.restFootY;
+          const floorRef = (this.state === 'crouch' || isCrouchAttack) ? (this.restFootY - 0.03) : this.restFootY;
           const targetY = THREE.MathUtils.clamp(
             floorRef - footOffsetWithoutModelY,
             this.baseModelY - 0.95,
@@ -3537,13 +3695,14 @@ class Fighter {
       this.modelRoot.position.y = -0.32;
       r.legL.rotation.x = -0.75; r.legR.rotation.x = 0.75;
       r.torso.rotation.x = 0.25;
-    } else if (this.state === 'walk_f' || this.state === 'walk_b') {
-      const s = Math.sin(t * 9) * 0.6;
+    } else if (this.state === 'walk_f' || this.state === 'walk_b' || this.state === 'dash_f' || this.state === 'dodge_b') {
+      const spd = (this.state === 'dash_f' || this.state === 'dodge_b') ? 15 : 9;
+      const s = Math.sin(t * spd) * 0.6;
       r.legL.rotation.x = s; r.legR.rotation.x = -s; r.armL.rotation.x = -s * 0.6; r.armR.rotation.x = s * 0.4;
     } else if (this.state === 'punch') { r.armL.rotation.x = -1.5; r.torso.rotation.y = -0.35; }
     else if (this.state === 'kick') { r.legR.rotation.x = -1.45; r.torso.rotation.x = -0.25; }
     else if (this.state === 'slash') { r.armR.rotation.x = -1.7 + Math.sin(t * 22) * 0.6; r.torso.rotation.x = 0.2; }
-    else if (this.state === 'block') { r.armL.rotation.x = -1.1; r.armR.rotation.x = -1.1; }
+    else if (this.state === 'block' || this.state === 'block_hit' || this.state === 'parry') { r.armL.rotation.x = -1.1; r.armR.rotation.x = -1.1; }
     else if (this.state === 'hit') {
       if (this.hitAnimType === 'katana_hit') { this.modelRoot.rotation.x = -Math.PI / 2.2; this.modelRoot.position.y = 0.22; }
       else r.torso.rotation.x = -0.4;
@@ -3577,6 +3736,7 @@ window.addEventListener('pointerup', () => { menuDragActive = false; });
 
 const keys = {};
 const touchInput = { moveX: 0, jump: false, down: false, block: false };
+let lastKeyDirTap = { dir: 0, time: 0 };
 
 window.addEventListener('keydown', (e) => {
   if (keys[e.code]) return;
@@ -3585,11 +3745,26 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyJ') p1.triggerAction('punch');
   if (e.code === 'KeyK') p1.triggerAction('kick');
   if (e.code === 'KeyL') p1.triggerAction('slash');
+
+  const dir = (e.code === 'KeyA' || e.code === 'ArrowLeft') ? -1 : ((e.code === 'KeyD' || e.code === 'ArrowRight') ? 1 : 0);
+  if (dir !== 0) {
+    const now = performance.now();
+    if (lastKeyDirTap.dir === dir && (now - lastKeyDirTap.time) < 260) {
+      p1.triggerDash(dir);
+      lastKeyDirTap.dir = 0;
+    } else {
+      lastKeyDirTap.dir = dir;
+      lastKeyDirTap.time = now;
+    }
+  }
 });
 window.addEventListener('keyup', (e) => { keys[e.code] = false; });
 
 const joyZone = document.getElementById('joystick-zone'), joyKnob = document.getElementById('joystick-knob');
 let joyActiveId = null;
+let joyFlickReady = true;
+let lastJoyFlick = { dir: 0, time: 0 };
+
 function handleJoystick(clientX, clientY) {
   const rect = joyZone.getBoundingClientRect();
   const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2, maxR = rect.width * 0.36;
@@ -3599,10 +3774,25 @@ function handleJoystick(clientX, clientY) {
   joyKnob.style.transform = `translate3d(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px), 0)`;
   const nx = dx / maxR, ny = dy / maxR;
   touchInput.moveX = Math.abs(nx) > 0.16 ? nx : 0; touchInput.jump = ny < -0.48; touchInput.down = ny > 0.48;
+
+  if (Math.abs(nx) < 0.25) {
+    joyFlickReady = true;
+  } else if (joyFlickReady && Math.abs(nx) > 0.72 && Math.abs(ny) < 0.45 && STATE.screen === 'fight' && !STATE.paused && p1) {
+    joyFlickReady = false;
+    const dir = nx > 0 ? 1 : -1;
+    const now = performance.now();
+    if (lastJoyFlick.dir === dir && (now - lastJoyFlick.time) < 320) {
+      p1.triggerDash(dir);
+      lastJoyFlick.dir = 0;
+    } else {
+      lastJoyFlick.dir = dir;
+      lastJoyFlick.time = now;
+    }
+  }
 }
 joyZone.addEventListener('pointerdown', (e) => { e.preventDefault(); joyActiveId = e.pointerId; joyZone.setPointerCapture(e.pointerId); handleJoystick(e.clientX, e.clientY); });
 joyZone.addEventListener('pointermove', (e) => { if (e.pointerId === joyActiveId) handleJoystick(e.clientX, e.clientY); });
-const resetJoy = (e) => { if (e && e.pointerId !== undefined && e.pointerId !== joyActiveId) return; joyActiveId = null; joyKnob.style.transform = 'translate3d(-50%, -50%, 0)'; touchInput.moveX = 0; touchInput.jump = false; touchInput.down = false; };
+const resetJoy = (e) => { if (e && e.pointerId !== undefined && e.pointerId !== joyActiveId) return; joyActiveId = null; joyFlickReady = true; joyKnob.style.transform = 'translate3d(-50%, -50%, 0)'; touchInput.moveX = 0; touchInput.jump = false; touchInput.down = false; };
 joyZone.addEventListener('pointerup', resetJoy); joyZone.addEventListener('pointercancel', resetJoy);
 
 function bindActionBtn(id, action, isHold = false) {
@@ -3702,6 +3892,9 @@ function spawnFightersForRound() {
   STATE.roundEndPhase = null;
   STATE.roundEndTimer = 0;
   _lastHud.p1Hp = -1; _lastHud.p2Hp = -1; _lastHud.timer = -1; _lastHud.combo = -1; _lastHud.slashText = '';
+
+  if (p1.actions.intro) { p1.state = 'intro'; p1.stateTimer = STATE.roundFreeze; p1.playAnim('intro'); }
+  if (p2.actions.intro) { p2.state = 'intro'; p2.stateTimer = STATE.roundFreeze; p2.playAnim('intro'); }
 
   const isFinal = (STATE.p1Wins === 1 && STATE.p2Wins === 1);
   HUD.roundBadge.textContent = isFinal ? 'FINAL ROUND' : `ROUND ${STATE.round} / 3`;
@@ -3959,7 +4152,7 @@ function openFightersAndOpponentModal(focusOpponent = false) {
     body.querySelectorAll('button').forEach((btn) => {
       btn.onclick = () => {
         const i = Number(btn.dataset.i);
-        if (btn.dataset.role === 'unlock') {
+if (btn.dataset.role === 'unlock') {
           document.getElementById('btn-mission').click();
           return;
         }
@@ -4051,9 +4244,9 @@ document.getElementById('btn-settings').onclick = () => {
     const arenaLines = Object.entries(DIAG.arena).map(([k, v]) => `<div>Arena ${k}: <strong style="color:#42e64d">${v}</strong></div>`).join('');
     const weaponLines = Object.entries(DIAG.weapons).map(([k, v]) => `<div>${k}: <strong style="color:#ffb800">${v}</strong></div>`).join('');
     const audioLine = `<div>BGM: <strong style="color:#42e64d">${DIAG.audio.BGM || 'Checking...'}</strong></div>`;
-    const missingAnims = Object.entries(DIAG.anims).filter(([, v]) => v !== 'Loaded').map(([k]) => k);
+    const missingAnims = Object.entries(DIAG.anims).filter(([, v]) => v === 'Missing').map(([k]) => k);
     const animLoaded = Object.values(DIAG.anims).filter(v => v === 'Loaded').length;
-    const totalAnimCount = Object.keys(ANIM_CANDIDATES).length;
+    const totalConfigured = Object.values(DIAG.anims).filter(v => v !== 'Optional').length || Object.keys(ANIM_CANDIDATES).length;
     body.innerHTML = `
       <div class="setting-row">
         <span>Low-End Ultra Smooth Mode</span>
@@ -4086,7 +4279,7 @@ document.getElementById('btn-settings').onclick = () => {
         ${modelLines || '<div>Streaming active models...</div>'}
         ${weaponLines}
         ${audioLine}
-        <div>Animations Loaded: <strong style="color:#00d4ff">${animLoaded} / ${totalAnimCount}</strong> ${missingAnims.length ? `(Missing: ${missingAnims.join(', ')})` : ''}</div>
+        <div>Animations Loaded: <strong style="color:#00d4ff">${animLoaded} / ${totalConfigured}</strong> ${missingAnims.length ? `(Missing: ${missingAnims.join(', ')})` : ''}</div>
         ${DIAG.errors.length ? `<div style="color:#ff6b6b;margin-top:4px;">Errors: ${DIAG.errors.slice(-2).join(' | ')}</div>` : ''}
         <div style="display:flex;gap:8px;margin-top:8px;">
           <button class="pill-btn active" id="btn-retry-dl">Sync Offline Assets</button>
