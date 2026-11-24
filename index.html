@@ -336,19 +336,132 @@
   .screen { position: absolute; inset: 0; display: none; pointer-events: auto; }
   .screen.active { display: flex; }
 
+  /* =========================================================
+     TOP CURRENCY BAR (COINS & DIAMONDS)
+     ========================================================= */
+  .currency-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto;
+  }
+  #home-currency-bar {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    z-index: 18;
+  }
+  .curr-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(180deg, rgba(20, 26, 48, 0.94), rgba(9, 13, 26, 0.94));
+    border: 1.5px solid rgba(255, 184, 0, 0.55);
+    border-radius: 99px;
+    padding: 3px 5px 3px 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+  }
+  .curr-pill.diamond {
+    border-color: rgba(0, 212, 255, 0.6);
+  }
+  .curr-val {
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    min-width: 34px;
+    text-align: center;
+  }
+  .curr-plus {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(180deg, #ffe066, #ff9900);
+    color: #111;
+    font-weight: 900;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .curr-pill.diamond .curr-plus {
+    background: linear-gradient(180deg, #7ef2ff, #00a8e8);
+  }
+
+  /* =========================================================
+     PERSISTENT BOTTOM NAVIGATION BAR (NO RANK / LEADERBOARD)
+     ========================================================= */
+  #bottom-nav-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 44px;
+    z-index: 45;
+    background: linear-gradient(180deg, rgba(16, 20, 38, 0.92), rgba(7, 10, 20, 0.98));
+    border-top: 2px solid rgba(255, 184, 0, 0.48);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 22px);
+    padding: 4px 16px;
+    pointer-events: auto;
+    box-shadow: 0 -6px 24px rgba(0,0,0,0.65);
+  }
+  #bottom-nav-bar.visible { display: flex; }
+  .bnav-tab {
+    flex: 1;
+    max-width: 175px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: linear-gradient(180deg, rgba(32, 40, 68, 0.85), rgba(16, 20, 38, 0.9));
+    color: #d7e0f5;
+    font-size: clamp(11px, 1.3vw, 13.5px);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .bnav-tab:hover { border-color: var(--gold); color: #fff; }
+  .bnav-tab.active {
+    background: linear-gradient(180deg, #ffd24c, #ff8800);
+    color: #111;
+    border-color: #fff3b0;
+    box-shadow: 0 0 14px rgba(255, 165, 0, 0.55);
+  }
+  .bnav-tab svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .nav-dot-alert {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff2d2d;
+    border: 2px solid #fff;
+    display: none;
+  }
+  .nav-dot-alert.show { display: block; }
+
   /* MAIN MENU */
   #menu-screen {
-    background: linear-gradient(90deg, rgba(6,8,18,0.82) 0%, rgba(6,8,18,0.3) 42%, rgba(6,8,18,0.02) 100%);
-    padding: 14px 24px;
+    background: linear-gradient(90deg, rgba(6,8,18,0.82) 0%, rgba(6,8,18,0.28) 42%, rgba(6,8,18,0.02) 100%);
+    padding: 12px 24px 54px;
     justify-content: space-between;
     align-items: stretch;
     pointer-events: none;
   }
   .menu-left, .menu-right { pointer-events: none; }
-  .menu-left *, .menu-right .menu-bottom-right { pointer-events: auto; }
+  .menu-left *, .menu-right .menu-bottom-right, #home-currency-bar * { pointer-events: auto; }
 
   .menu-left {
-    width: clamp(200px, 27vw, 290px);
+    width: clamp(200px, 26vw, 285px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -356,37 +469,38 @@
   }
 
   .logo-box { display: flex; flex-direction: column; align-items: flex-start; }
-  #menu-logo-img { max-width: 225px; max-height: 85px; object-fit: contain; display: none; }
+  #menu-logo-img { max-width: 210px; max-height: 74px; object-fit: contain; display: none; }
   .fallback-logo {
     line-height: 0.92; font-weight: 900; font-style: italic; text-transform: uppercase;
     filter: drop-shadow(0 4px 12px rgba(230, 36, 41, 0.75));
   }
-  .fallback-logo .l1 { font-size: clamp(22px, 2.8vw, 32px); color: #fff; letter-spacing: 2px; }
+  .fallback-logo .l1 { font-size: clamp(20px, 2.5vw, 30px); color: #fff; letter-spacing: 2px; }
   .fallback-logo .l2 {
-    font-size: clamp(26px, 3.4vw, 40px);
+    font-size: clamp(24px, 3.1vw, 37px);
     background: linear-gradient(180deg, #ffe270, #ff9900);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .fallback-logo .l3 { font-size: clamp(15px, 1.9vw, 21px); color: #ff474c; letter-spacing: 5px; margin-top: 2px; }
+  .fallback-logo .l3 { font-size: clamp(14px, 1.7vw, 19px); color: #ff474c; letter-spacing: 5px; margin-top: 2px; }
 
   .unlock-badge {
-    margin-top: 8px;
+    margin-top: 6px;
     background: rgba(15, 20, 36, 0.85);
     border: 1px solid rgba(0, 212, 255, 0.6);
-    padding: 4px 12px; border-radius: 20px;
-    font-size: 11px; font-weight: 700; color: var(--cyan);
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 10.5px; font-weight: 700; color: var(--cyan);
     display: inline-flex; align-items: center; gap: 6px;
   }
 
-  .menu-nav { display: flex; flex-direction: column; gap: 7px; margin: 6px 0; }
+  .menu-nav { display: flex; flex-direction: column; gap: 6px; margin: 4px 0; }
   .nav-btn {
     background: linear-gradient(90deg, rgba(25, 32, 58, 0.92), rgba(15, 18, 32, 0.85));
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-left: 4px solid rgba(255,255,255,0.35);
-    color: #e9eefc; padding: 9px 14px; border-radius: 8px;
-    font-size: clamp(12.5px, 1.4vw, 15px); font-weight: 700; text-align: left;
+    color: #e9eefc; padding: 8px 13px; border-radius: 8px;
+    font-size: clamp(12px, 1.35vw, 14.5px); font-weight: 700; text-align: left;
     cursor: pointer; display: flex; align-items: center; gap: 10px;
     transition: transform 0.15s ease, border-color 0.15s ease;
+    position: relative;
   }
   .nav-btn:hover, .nav-btn:active {
     transform: translateX(5px); border-color: var(--gold); color: #fff;
@@ -395,26 +509,26 @@
   .nav-btn.play-primary {
     background: linear-gradient(90deg, #ff7b00, #d91e26);
     border: 1px solid #ffd257; border-left: 5px solid #fff;
-    font-size: clamp(14.5px, 1.65vw, 18px);
+    font-size: clamp(14px, 1.6vw, 17.5px);
     box-shadow: 0 0 18px rgba(255, 115, 0, 0.45);
   }
 
   .menu-right {
     flex: 1; display: flex; flex-direction: column;
-    justify-content: flex-end; align-items: flex-end; padding-bottom: 2px;
+    justify-content: flex-end; align-items: flex-end; padding-bottom: 0;
   }
 
   .menu-bottom-right { display: flex; flex-direction: column; align-items: flex-end; }
   .fighter-preview-info {
     background: var(--glass);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px; padding: 10px 15px; margin-bottom: 8px;
-    width: min(295px, 38vw);
+    border-radius: 12px; padding: 9px 14px; margin-bottom: 6px;
+    width: min(290px, 37vw);
     box-shadow: 0 8px 24px rgba(0,0,0,0.45);
   }
-  .fighter-preview-info h3 { font-size: 16.5px; color: var(--gold); margin-bottom: 3px; }
-  .fighter-preview-info p { font-size: 11px; color: #c5cde3; margin-bottom: 7px; }
-  .stat-row { display: flex; align-items: center; gap: 8px; font-size: 10px; margin-top: 4px; }
+  .fighter-preview-info h3 { font-size: 15.5px; color: var(--gold); margin-bottom: 2px; }
+  .fighter-preview-info p { font-size: 10.5px; color: #c5cde3; margin-bottom: 6px; }
+  .stat-row { display: flex; align-items: center; gap: 8px; font-size: 10px; margin-top: 3px; }
   .stat-row span { width: 54px; color: #9aa7cc; font-weight: 600; }
   .stat-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
   .stat-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width 0.25s ease; }
@@ -424,9 +538,9 @@
     background: rgba(15, 22, 42, 0.9);
     border: 1px solid rgba(0, 212, 255, 0.45);
     border-radius: 10px;
-    padding: 5px 10px;
-    margin-bottom: 8px;
-    width: min(295px, 38vw);
+    padding: 4px 10px;
+    margin-bottom: 6px;
+    width: min(290px, 37vw);
     font-size: 11px;
   }
   .opponent-bar strong { color: var(--cyan); }
@@ -434,17 +548,17 @@
     background: rgba(0, 212, 255, 0.18);
     border: 1px solid var(--cyan);
     color: #fff;
-    padding: 3px 9px;
+    padding: 2px 9px;
     border-radius: 12px;
     font-size: 10px;
     font-weight: 700;
     cursor: pointer;
   }
 
-  .select-strip-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
+  .select-strip-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
   .select-banner {
     background: linear-gradient(90deg, transparent, var(--crimson));
-    padding: 4px 18px; font-size: 11px; font-weight: 800;
+    padding: 3px 16px; font-size: 10.5px; font-weight: 800;
     letter-spacing: 2px; border-radius: 4px; text-transform: uppercase;
   }
   .fighter-carousel-row {
@@ -454,8 +568,8 @@
     gap: 8px;
   }
   .carousel-arrow-btn {
-    width: 34px;
-    height: clamp(66px, 9vw, 92px);
+    width: 32px;
+    height: clamp(60px, 8.2vw, 84px);
     border-radius: 10px;
     border: 1.5px solid rgba(255, 184, 0, 0.65);
     background: linear-gradient(180deg, rgba(25, 34, 62, 0.94), rgba(10, 14, 28, 0.94));
@@ -479,7 +593,7 @@
 
   .fighter-cards { display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-end; }
   .fighter-card {
-    width: clamp(58px, 8vw, 82px); height: clamp(66px, 9vw, 92px);
+    width: clamp(54px, 7.5vw, 76px); height: clamp(60px, 8.2vw, 84px);
     border-radius: 10px; border: 2px solid rgba(255,255,255,0.22);
     background: rgba(15, 20, 36, 0.9); cursor: pointer; overflow: hidden;
     position: relative; transition: transform 0.15s ease, border-color 0.15s ease;
@@ -497,8 +611,303 @@
   .fighter-card img, .fighter-card svg { width: 100%; height: 76%; object-fit: cover; }
   .fighter-card .card-name {
     width: 100%; height: 24%; background: rgba(0,0,0,0.85);
-    font-size: 9.5px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;
   }
+
+  /* =========================================================
+     FULL-SCREEN SECTION PAGES (MISSION / ACHIEVEMENTS / MORE / SHOP / PROFILE / FAQ)
+     ========================================================= */
+  #app-page-overlay {
+    position: fixed;
+    inset: 0 0 44px 0;
+    z-index: 40;
+    background: rgba(7, 10, 22, 0.88);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    display: none;
+    flex-direction: column;
+    pointer-events: auto;
+  }
+  #app-page-overlay.open { display: flex; }
+
+  .app-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, rgba(20, 25, 48, 0.96), rgba(10, 14, 28, 0.92));
+    border-bottom: 1.5px solid rgba(255, 184, 0, 0.35);
+    flex-shrink: 0;
+  }
+  .app-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-square-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(255, 184, 0, 0.7);
+    background: rgba(25, 32, 58, 0.95);
+    color: var(--gold);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .app-page-title {
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 1px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .app-page-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 20px;
+  }
+
+  /* Mission Split Layout */
+  .mission-layout {
+    display: flex;
+    gap: 16px;
+    height: 100%;
+    min-height: 240px;
+  }
+  .mission-sidebar {
+    width: clamp(145px, 22vw, 200px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .mside-tab {
+    background: rgba(20, 27, 50, 0.9);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-left: 4px solid transparent;
+    color: #d7e0f5;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .mside-tab.active {
+    background: linear-gradient(90deg, rgba(255, 184, 0, 0.92), rgba(245, 130, 0, 0.92));
+    color: #111;
+    border-color: #fff2b2;
+    border-left-color: #fff;
+  }
+  .mside-refresh {
+    margin-top: auto;
+    font-size: 11px;
+    color: #facc15;
+    padding: 6px 8px;
+    background: rgba(0,0,0,0.38);
+    border-radius: 8px;
+    border: 1px solid rgba(250, 204, 21, 0.3);
+  }
+  .mission-list-col {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-right: 4px;
+  }
+  .m-task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(22, 29, 54, 0.94), rgba(13, 18, 36, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .m-task-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+  .m-task-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: rgba(255, 184, 0, 0.14);
+    border: 1px solid rgba(255, 184, 0, 0.45);
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .m-task-info { flex: 1; }
+  .m-task-title { font-size: 13.5px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .m-prog-wrap { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #b7c4e0; }
+  .m-prog-bar { flex: 1; max-width: 190px; height: 6px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
+  .m-prog-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), #42e64d); }
+  .m-reward-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #fff;
+    min-width: 68px;
+    justify-content: center;
+  }
+  .m-action-btn {
+    min-width: 78px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #ffd257;
+    background: linear-gradient(180deg, #ffe066, #ff9900);
+    color: #111;
+    font-weight: 900;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .m-action-btn.claim {
+    background: linear-gradient(180deg, #52f060, #16a34a);
+    border-color: #bbf7d0;
+    color: #fff;
+    animation: pulseClaim 1.2s infinite ease-in-out;
+  }
+  .m-action-btn.done {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(66, 230, 77, 0.5);
+    color: #42e64d;
+    cursor: default;
+  }
+  @keyframes pulseClaim { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+  /* More Grid (4x2 Symmetrical Grid) */
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 12px;
+    max-width: 820px;
+    margin: 6px auto;
+  }
+  @media (max-width: 640px) {
+    .more-grid { grid-template-columns: repeat(3, minmax(95px, 1fr)); gap: 9px; }
+  }
+  .more-tile {
+    background: linear-gradient(180deg, rgba(24, 31, 58, 0.94), rgba(12, 16, 32, 0.96));
+    border: 1.5px solid rgba(255, 184, 0, 0.42);
+    border-radius: 12px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.14s ease, border-color 0.14s ease;
+  }
+  .more-tile:hover, .more-tile:active {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    background: linear-gradient(180deg, rgba(45, 52, 92, 0.95), rgba(16, 20, 40, 0.98));
+  }
+  .more-tile svg { width: 32px; height: 32px; fill: #f1f5f9; }
+  .more-tile span { font-size: 12.5px; font-weight: 800; color: #f8fafc; text-align: center; }
+
+  /* Katana Shop Grid */
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .shop-card {
+    background: linear-gradient(180deg, rgba(22, 29, 56, 0.95), rgba(11, 15, 30, 0.96));
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .shop-card.equipped {
+    border-color: #42e64d;
+    box-shadow: 0 0 16px rgba(66, 230, 77, 0.28);
+  }
+  .shop-preview {
+    height: 76px;
+    border-radius: 9px;
+    background: radial-gradient(circle at center, rgba(255,184,0,0.18), rgba(0,0,0,0.5));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .shop-preview img { max-height: 68px; max-width: 90%; object-fit: contain; }
+  .shop-tag {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    font-size: 9.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(0,0,0,0.75);
+    color: var(--cyan);
+    border: 1px solid rgba(0,212,255,0.45);
+  }
+
+  /* Profile & Help Cards */
+  .profile-panel {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  @media (max-width: 680px) {
+    .profile-panel { grid-template-columns: 1fr; }
+  }
+  .panel-card {
+    background: rgba(18, 25, 48, 0.92);
+    border: 1px solid rgba(255, 184, 0, 0.35);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-top: 10px;
+  }
+  .stat-tile {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px;
+    padding: 9px;
+    text-align: center;
+  }
+  .stat-tile .sv { font-size: 18px; font-weight: 900; color: var(--gold); }
+  .stat-tile .sl { font-size: 10.5px; color: #9aa7cc; margin-top: 2px; }
+
+  .faq-item {
+    background: rgba(18, 25, 48, 0.9);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 9px;
+  }
+  .faq-q { font-size: 13.5px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+  .faq-a { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 
   /* MODAL PANELS */
   .modal-overlay {
@@ -540,7 +949,7 @@
     border: 1px solid rgba(255, 184, 0, 0.35);
     border-radius: 12px;
     padding: 12px 14px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .mission-card.done { border-color: rgba(66, 230, 77, 0.6); background: rgba(15, 34, 28, 0.72); }
   .mission-head {
@@ -562,6 +971,53 @@
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     padding: 6px 8px; background: rgba(0, 0, 0, 0.32); border-radius: 8px;
     margin-top: 6px; font-size: 12px;
+  }
+
+  /* WATCH AD MODAL (300x250 + 15s TIMER) */
+  #ad-watch-modal { z-index: 80; }
+  .ad-box-card {
+    background: #0d1324;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 96vw;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.9);
+  }
+  .ad-slot-frame {
+    width: 300px;
+    height: 250px;
+    background: #050814;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ad-slot-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px;
+    color: #94a3b8;
+    font-size: 12px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  #ad-iframe-host {
+    position: relative;
+    z-index: 2;
+    width: 300px;
+    height: 250px;
   }
 
   /* FIGHT HUD */
@@ -726,12 +1182,16 @@
 
   /* Compact Mobile Landscape Layout Fixes */
   @media screen and (max-height: 440px) {
-    #menu-screen { padding: 8px 16px; }
-    .nav-btn { padding: 6px 11px; font-size: 12px; }
-    .fighter-preview-info { padding: 7px 11px; margin-bottom: 5px; }
-    .opponent-bar { padding: 4px 8px; margin-bottom: 5px; }
-    .fighter-card { width: 54px; height: 60px; }
-    .carousel-arrow-btn { width: 28px; height: 60px; }
+    #menu-screen { padding: 6px 14px 44px; }
+    #bottom-nav-bar { height: 38px; }
+    .bnav-tab { height: 29px; font-size: 11px; }
+    #app-page-overlay { inset: 0 0 38px 0; }
+    #home-currency-bar { top: 6px; right: 14px; }
+    .nav-btn { padding: 5.5px 10px; font-size: 11.5px; }
+    .fighter-preview-info { padding: 6px 10px; margin-bottom: 4px; }
+    .opponent-bar { padding: 3px 8px; margin-bottom: 4px; }
+    .fighter-card { width: 50px; height: 56px; }
+    .carousel-arrow-btn { width: 26px; height: 56px; }
     #hud-screen { padding: 6px 14px 8px; }
     .dpad-area { width: 108px; height: 108px; }
     .action-cluster { width: 170px; height: 132px; }
@@ -830,8 +1290,22 @@
   <div id="dmg-layer"></div>
 
   <div class="ui-layer">
-    <!-- MAIN MENU -->
+    <!-- MAIN MENU (HOME) -->
     <section id="menu-screen" class="screen active">
+      <!-- Top Right Currency Pill Bar -->
+      <div class="currency-bar" id="home-currency-bar">
+        <div class="curr-pill coin">
+          <svg style="width:18px;height:18px;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb800" stroke="#fff3b0" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-weight="900" text-anchor="middle" fill="#7c2d12">$</text></svg>
+          <span class="curr-val" id="home-coins">500</span>
+          <button class="curr-plus" data-open-shop="1" aria-label="Get Coins">+</button>
+        </div>
+        <div class="curr-pill diamond">
+          <svg style="width:18px;height:18px;flex-shrink:0;" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="#00d4ff" stroke="#c2f5ff" stroke-width="1.4"/></svg>
+          <span class="curr-val" id="home-diamonds">25</span>
+          <button class="curr-plus" data-open-shop="1" aria-label="Get Diamonds">+</button>
+        </div>
+      </div>
+
       <div class="menu-left">
         <div class="logo-box">
           <img id="menu-logo-img" alt="War Legend Arena" />
@@ -857,7 +1331,8 @@
           </button>
           <button class="nav-btn" id="btn-mission">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8.5 14l-4-4 1.4-1.4 2.6 2.6 5.6-5.6L17.5 10l-7 7z"/></svg>
-            Arena Mission
+            Mission Hub
+            <span class="nav-dot-alert" id="dot-home-mission"></span>
           </button>
           <button class="nav-btn" id="btn-settings">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M19.4 13a7.7 7.7 0 0 0 .1-1 7.7 7.7 0 0 0-.1-1l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0-.1 1 7.7 7.7 0 0 0 .1 1l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5a.5.5 0 0 0 .6.2l2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6a.5.5 0 0 0 .5.4h4a.5.5 0 0 0 .5-.4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1a.5.5 0 0 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/></svg>
@@ -865,7 +1340,7 @@
           </button>
         </nav>
 
-        <div style="font-size:11px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v11.2 • Sunny Arena • Offline Ready</div>
+        <div style="font-size:10.5px;color:#e0e7ff;text-shadow:0 1px 3px #000;">v11.3 • Sunny Arena • Offline Ready</div>
       </div>
 
       <div class="menu-right">
@@ -898,6 +1373,53 @@
         </div>
       </div>
     </section>
+
+    <!-- DEDICATED FULL-SCREEN SECTION OVERLAY (MISSION / ACHIEVEMENTS / MORE / PROFILE / SHOP / FAQ / ETC.) -->
+    <section id="app-page-overlay">
+      <div class="app-page-header">
+        <div class="app-header-left">
+          <button class="back-square-btn" id="btn-page-back" aria-label="Back">
+            <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+          <div class="app-page-title" id="app-page-title">Mission</div>
+        </div>
+        <div class="currency-bar">
+          <div class="curr-pill coin">
+            <svg style="width:18px;height:18px;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb800" stroke="#fff3b0" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-weight="900" text-anchor="middle" fill="#7c2d12">$</text></svg>
+            <span class="curr-val" id="page-coins">500</span>
+            <button class="curr-plus" data-open-shop="1" aria-label="Get Coins">+</button>
+          </div>
+          <div class="curr-pill diamond">
+            <svg style="width:18px;height:18px;flex-shrink:0;" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="#00d4ff" stroke="#c2f5ff" stroke-width="1.4"/></svg>
+            <span class="curr-val" id="page-diamonds">25</span>
+            <button class="curr-plus" data-open-shop="1" aria-label="Get Diamonds">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="app-page-body" id="app-page-body"></div>
+    </section>
+
+    <!-- PERSISTENT BOTTOM NAVIGATION BAR (NO RANK / LEADERBOARD) -->
+    <nav id="bottom-nav-bar" class="visible">
+      <button class="bnav-tab active" data-nav="home">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="bnav-tab" data-nav="mission">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8.5 14l-4-4 1.4-1.4 2.6 2.6 5.6-5.6L17.5 10l-7 7z"/></svg>
+        <span>Mission</span>
+        <span class="nav-dot-alert" id="dot-bnav-mission"></span>
+      </button>
+      <button class="bnav-tab" data-nav="achievements">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3L22 9.2l-5 4.8 1.2 6.8L12 17.5 5.8 20.8 7 14 2 9.2l7.1-.9z"/></svg>
+        <span>Achievements</span>
+        <span class="nav-dot-alert" id="dot-bnav-ach"></span>
+      </button>
+      <button class="bnav-tab" data-nav="more">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg>
+        <span>More</span>
+      </button>
+    </nav>
 
     <!-- FIGHT HUD -->
     <section id="hud-screen" class="screen">
@@ -971,7 +1493,7 @@
     </section>
   </div>
 
-  <!-- MODAL -->
+  <!-- MODAL (FIGHTERS & SETTINGS) -->
   <div class="modal-overlay" id="modal-panel">
     <div class="modal-box">
       <div class="modal-header">
@@ -981,6 +1503,24 @@
         </button>
       </div>
       <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- WATCH AD MODAL (ONLY OPENS WHEN USER CLICKS WATCH AD, MIN 15 SECONDS) -->
+  <div class="modal-overlay" id="ad-watch-modal">
+    <div class="ad-box-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+        <strong style="color:var(--gold);font-size:14px;letter-spacing:0.8px;">SPONSORED REWARD AD</strong>
+        <span id="ad-timer-badge" style="font-size:12px;font-weight:800;color:#fff;background:#b91c1c;padding:3px 10px;border-radius:99px;">Wait 15s</span>
+      </div>
+      <div class="ad-slot-frame">
+        <div class="ad-slot-placeholder" id="ad-placeholder-text">
+          Loading Sponsored Ad (300×250)...<br>
+          <small style="margin-top:4px;color:#64748b;">Keep this window open for 15 seconds to earn your reward.</small>
+        </div>
+        <div id="ad-iframe-host"></div>
+      </div>
+      <button class="m-action-btn" id="btn-ad-finish" disabled style="width:100%;opacity:0.5;cursor:not-allowed;">Please Wait 15s...</button>
     </div>
   </div>
 
@@ -1023,13 +1563,6 @@ window.__GAME_BOOTED = true;
 
 /* ============================================================================
    [EASY EDIT 1] ক্যারেক্টার লিস্ট (এখানে নতুন নতুন ক্যারেক্টার যোগ করতে পারবেন)
-   ----------------------------------------------------------------------------
-   নতুন ক্যারেক্টার যোগ করতে চাইলে নিচের মতো একটা { ... } ব্লক কপি করে বসান:
-   - id: ইউনিক নাম (যেমন: 'ninja')
-   - file: আপনার আপলোড করা .fbx বা .glb ফাইলের নাম (যেমন: './ninja.fbx')
-   - icon: ক্যারেক্টারের আইকন ছবি (যেমন: './ninja_icon.png')
-   - unlockedByDefault: true দিলে মিশন ছাড়াই শুরু থেকে খেলা যাবে।
-     যদি মিশন দিয়ে আনলক করতে চান, তাহলে [EASY EDIT 3] ARENA_MISSIONS-এ যোগ করুন।
    ============================================================================ */
 const CHARACTER_LIST = [
   {
@@ -1080,10 +1613,9 @@ const CHARACTER_LIST = [
 ];
 
 /* ============================================================================
-   [EASY EDIT 2] অ্যারেনা ফাইল কনফিগারেশন (3D Model + PNG Scenery + Katana)
+   [EASY EDIT 2] অ্যারেনা ফাইল কনফিগারেশন (কাস্টম ফাইটিং ফ্লোর কোডে বানানো হয়েছে)
    ============================================================================ */
 const ARENA_CONFIG = {
-  floorFile:  './tileable_stylized_wooden_floor_texture.glb',
   treeFile:   './japanese_maple_tree.glb',
   houseFile:  './20261121_071556.png',
   templeFile: './20261122_002848.png',
@@ -1093,9 +1625,6 @@ const ARENA_CONFIG = {
 
 /* ============================================================================
    [EASY EDIT 3] ARENA MISSIONS (নতুন ক্যারেক্টারের জন্য নতুন মিশন এখানে যোগ করুন)
-   ----------------------------------------------------------------------------
-   - unlockId: কোন ক্যারেক্টার আনলক হবে (CHARACTER_LIST-এর id এর সাথে মিলতে হবে)
-   - targets: কাকে কতবার হারাতে হবে ({ targetId: '...', needed: 2 })
    ============================================================================ */
 const ARENA_MISSIONS = [
   {
@@ -1131,13 +1660,8 @@ const ARENA_MISSIONS = [
 
 /* ============================================================================
    [EASY EDIT 4] ANIMATION FILES (.fbx অথবা .glb ফাইল)
-   ----------------------------------------------------------------------------
-   পরবর্তীতে যেকোনো নতুন অ্যানিমেশন ডাউনলোড করলে নিচের ফাঁকা [] ব্র্যাকেটের ভেতরে
-   ফাইলের নাম বসিয়ে দেবেন (যেমন: punch_2: ['./Hook Punch.fbx'], )।
-   ফাঁকা [] থাকলে গেম অটোমেটিক বেসিক অ্যানিমেশন দিয়ে চলবে—কিছুই নষ্ট হবে না!
    ============================================================================ */
 const ANIM_CANDIDATES = {
-  // --- মূল বেসিক অ্যানিমেশন (আগেরগুলো) ---
   idle:       ['./Idle.fbx', './idle.fbx', './animations/Idle.fbx'],
   walk_f:     ['./walk_f.fbx', './animations/walk_f.fbx'],
   walk_b:     ['./walk_b.fbx', './animations/walk_b.fbx'],
@@ -1158,23 +1682,18 @@ const ANIM_CANDIDATES = {
     './victory.fbx',
     './animations/victory.fbx'
   ],
-
-  // --- নতুন অ্যানিমেশন স্লট (এখানে আপনার ফাইলের নাম বসাবেন, যেমন: ['./file.fbx']) ---
   punch_2:      ['./Hook.fbx', './animations/Hook.fbx'],
   punch_3:      ['./Uppercut.fbx', './animations/Uppercut.fbx'],
   kick_2:       ['./Mma Kick.fbx', './animations/Mma Kick.fbx'],
   kick_3:       ['./Drop Kick.fbx', './animations/Drop Kick.fbx'],
   slash_2:      ['./Sword And Shield Slash.fbx', './animations/Sword And Shield Slash.fbx'],
-
   air_punch:    ['./Flying Knee Punch Combo.fbx', './animations/Flying Knee Punch Combo.fbx'],
   air_kick:     ['./Jumping.fbx', './animations/Jumping.fbx'],
   air_slash:    ['./Sword And Shield Slash (1).fbx', './animations/Sword And Shield Slash (1).fbx'],
   crouch_punch: ['./Female Crouch Pose.fbx', './animations/Female Crouch Pose.fbx'],
   crouch_kick:  ['./Leg Sweep.fbx', './animations/Leg Sweep.fbx'],
-
   dash_f:       ['./Fast Run.fbx', './animations/Fast Run.fbx'],
   dodge_b:      ['./Step Backward.fbx', './animations/Step Backward.fbx'],
-
   block_hit:    ['./Sword And Shield Impact.fbx', './animations/Sword And Shield Impact.fbx'],
   parry:        ['./Sword And Shield Impact.fbx', './animations/Sword And Shield Impact.fbx'],
   stagger:      ['./Big Hit To Head.fbx', './animations/Big Hit To Head.fbx'],
@@ -1183,7 +1702,7 @@ const ANIM_CANDIDATES = {
 };
 
 /* ============================================================================
-   [EASY EDIT 5] GTA V STYLE LOADING SCREEN SLIDES (এখানে ছবির নাম বসাতে পারবে)
+   [EASY EDIT 5] GTA V STYLE LOADING SCREEN SLIDES
    ============================================================================ */
 const GTA_LOADING_CONFIG = {
   enabled: true,
@@ -1230,14 +1749,101 @@ const SPLASH_AND_ANNOUNCEMENT_CONFIG = {
 };
 
 /* ============================================================================
-   [EASY EDIT 7] ACTION BUTTON IMAGES (এখানে আপনার বাটন ছবির ফাইলের নাম বসাবেন)
-   যেমন: slash: './katana_btn.png' (খালি '' রাখলে ডিফল্ট আইকন দেখাবে)
+   [EASY EDIT 7] ACTION BUTTON IMAGES
    ============================================================================ */
 const ACTION_BUTTON_IMAGES = {
-  slash: '', // Katana / Slash button image (e.g. './katana_btn.png')
-  punch: '', // Punch button image (e.g. './punch_btn.png')
-  kick:  '', // Kick button image (e.g. './kick_btn.png')
-  block: ''  // Guard button image (e.g. './guard_btn.png')
+  slash: '',
+  punch: '',
+  kick:  '',
+  block: ''
+};
+
+/* ============================================================================
+   [EASY EDIT 8] SHOP KATANAS (এখানে নতুন নতুন Katana এবং Price যোগ করতে পারবেন!)
+   ----------------------------------------------------------------------------
+   নতুন Katana যোগ করতে নিচের যেকোনো একটি { ... } ব্লক কপি করে শেষে বসান:
+   - id: ইউনিক নাম (যেমন: 'emerald_katana')
+   - name: দোকানে যে নাম দেখাবে
+   - file: আপনার আপলোড করা .glb/.fbx ফাইল (খালি বা না থাকলে default katana ব্যবহার হবে)
+   - icon: optional ছবির ফাইল (খালি '' থাকলে সুন্দর SVG Katana আইকন দেখাবে)
+   - currency: 'coin' অথবা 'diamond'
+   - price: দাম (সংখ্যা)
+   - damageBonus: Slash আক্রমণে অতিরিক্ত ড্যামেজ বোনাস (+0 থেকে +15 এর মধ্যে রাখা ব্যালেন্সড)
+   - tintColor: 3D তলোয়ারের রঙ / আভা (যেমন: 0x00ffaa অথবা null)
+   ============================================================================ */
+const SHOP_KATANAS = [
+  {
+    id: 'dragon_katana',
+    name: 'Dragon Katana',
+    desc: 'Classic forged arena katana balanced for every warrior.',
+    file: './katana_with_dragon.glb',
+    icon: '',
+    currency: 'coin',
+    price: 0,
+    damageBonus: 0,
+    tintColor: null,
+    unlockedByDefault: true
+  },
+  {
+    id: 'crimson_samurai',
+    name: 'Crimson Fang Katana',
+    desc: 'Tempered crimson steel infused with blazing dojo embers.',
+    file: './katana_with_dragon.glb',
+    icon: '',
+    currency: 'coin',
+    price: 650,
+    damageBonus: 4,
+    tintColor: 0xff3b30
+  },
+  {
+    id: 'azure_storm',
+    name: 'Azure Storm Blade',
+    desc: 'Lightning-etched katana channeling swift thunder strikes.',
+    file: './katana_with_dragon.glb',
+    icon: '',
+    currency: 'coin',
+    price: 1200,
+    damageBonus: 7,
+    tintColor: 0x00d4ff
+  },
+  {
+    id: 'golden_shogun',
+    name: 'Golden Shogun Katana',
+    desc: 'Royal ceremonial blade crafted for true arena masters.',
+    file: './katana_with_dragon.glb',
+    icon: '',
+    currency: 'diamond',
+    price: 45,
+    damageBonus: 10,
+    tintColor: 0xffb800
+  },
+  {
+    id: 'shadow_eclipse',
+    name: 'Shadow Eclipse Katana',
+    desc: 'Mythic dark-violet edge forged from eclipse obsidian.',
+    file: './katana_with_dragon.glb',
+    icon: '',
+    currency: 'diamond',
+    price: 90,
+    damageBonus: 14,
+    tintColor: 0xa855f7
+  }
+];
+
+/* ============================================================================
+   [EASY EDIT 9] SUPPORT EMAIL & BALANCED ECONOMY LIMITS
+   ============================================================================ */
+const SUPPORT_EMAIL = 'olyst050@gmail.com';
+const ECONOMY_CONFIG = {
+  startingCoins: 500,
+  startingDiamonds: 25,
+  winCoinReward: 40,
+  lossCoinReward: 10,
+  dailyMatchCoinCap: 350, // গেম ব্যালেন্স ঠিক রাখতে ডেইলি ম্যাচ থেকে সর্বোচ্চ ৩৫০ কয়েন
+  adCoinReward: 80,
+  dailyMaxAds: 4,
+  adCooldownSec: 90,
+  adMinWatchSec: 15
 };
 
 const ONE_SHOT_ANIMS = new Set([
@@ -1282,6 +1888,7 @@ const FIGHTERS = CHARACTER_LIST.map((c) => ({
 
 const CACHE_NAME = 'war-legend-offline-v13';
 const PROGRESS_KEY = 'war_legend_mission_progress_v1';
+const PLAYER_DATA_KEY = 'war_legend_player_economy_v1';
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
 const DEVICE_MEM = navigator.deviceMemory || (IS_MOBILE ? 3 : 8);
 const CPU_CORES = navigator.hardwareConcurrency || 4;
@@ -1291,6 +1898,21 @@ const IS_LOW_END = IS_MOBILE && (DEVICE_MEM <= 4 || CPU_CORES <= 6 || IS_ANDROID
 const WEAPON_CANDIDATES = {
   katana: [ARENA_CONFIG.katanaFile, './models/weapons/katana_with_dragon.glb', './katana.glb'].filter(Boolean)
 };
+
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getWeekKey() {
+  const d = new Date();
+  const tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = tmp.getUTCDay() || 7;
+  tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+  return `${tmp.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+}
 
 function getDefaultUnlockedIds() {
   const missionIds = new Set(ARENA_MISSIONS.map((m) => m.unlockId));
@@ -1320,12 +1942,85 @@ function loadProgress() {
 }
 
 function saveProgress() {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(PROGRESS)); } catch (_) {}
+}
+
+function loadPlayerData() {
+  const today = getTodayKey();
+  const week = getWeekKey();
+  const defaultKatanas = SHOP_KATANAS.filter((k) => k.unlockedByDefault || k.price === 0).map((k) => k.id);
+  if (!defaultKatanas.length && SHOP_KATANAS[0]) defaultKatanas.push(SHOP_KATANAS[0].id);
+
+  const base = {
+    name: 'LegendWarrior',
+    coins: ECONOMY_CONFIG.startingCoins,
+    diamonds: ECONOMY_CONFIG.startingDiamonds,
+    xp: 0,
+    level: 1,
+    ownedKatanas: [...defaultKatanas],
+    equippedKatana: defaultKatanas[0] || 'dragon_katana',
+    lastAdTime: 0,
+    stats: { matches: 0, wins: 0, losses: 0, kos: 0, slashes: 0, parries: 0, adsWatched: 0, profileEdited: 0, shared: 0 },
+    daily: { dateKey: today, matches: 0, wins: 0, ads: 0, slashes: 0, coinEarnedToday: 0, claimed: {} },
+    weekly: { weekKey: week, matches: 0, wins: 0, kos: 0, claimed: {} },
+    specialClaimed: {},
+    achievementsClaimed: {}
+  };
+
   try {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(PROGRESS));
+    const raw = localStorage.getItem(PLAYER_DATA_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed.name === 'string' && parsed.name.trim()) base.name = parsed.name.trim().slice(0, 18);
+      if (Number.isFinite(parsed.coins) && parsed.coins >= 0) base.coins = Math.min(999999, Math.floor(parsed.coins));
+      if (Number.isFinite(parsed.diamonds) && parsed.diamonds >= 0) base.diamonds = Math.min(99999, Math.floor(parsed.diamonds));
+      if (Number.isFinite(parsed.xp) && parsed.xp >= 0) base.xp = Math.floor(parsed.xp);
+      if (Number.isFinite(parsed.level) && parsed.level >= 1) base.level = Math.floor(parsed.level);
+      if (Array.isArray(parsed.ownedKatanas)) base.ownedKatanas = Array.from(new Set([...defaultKatanas, ...parsed.ownedKatanas]));
+      if (typeof parsed.equippedKatana === 'string' && base.ownedKatanas.includes(parsed.equippedKatana)) base.equippedKatana = parsed.equippedKatana;
+      if (Number.isFinite(parsed.lastAdTime)) base.lastAdTime = parsed.lastAdTime;
+      if (parsed.stats && typeof parsed.stats === 'object') Object.assign(base.stats, parsed.stats);
+      if (parsed.daily && parsed.daily.dateKey === today) Object.assign(base.daily, parsed.daily);
+      if (parsed.weekly && parsed.weekly.weekKey === week) Object.assign(base.weekly, parsed.weekly);
+      if (parsed.specialClaimed && typeof parsed.specialClaimed === 'object') base.specialClaimed = parsed.specialClaimed;
+      if (parsed.achievementsClaimed && typeof parsed.achievementsClaimed === 'object') base.achievementsClaimed = parsed.achievementsClaimed;
+    }
   } catch (_) {}
+  return base;
 }
 
 const PROGRESS = loadProgress();
+const PLAYER_DATA = loadPlayerData();
+
+function ensureDailyWeeklyFresh() {
+  const t = getTodayKey();
+  const w = getWeekKey();
+  if (PLAYER_DATA.daily.dateKey !== t) {
+    PLAYER_DATA.daily = { dateKey: t, matches: 0, wins: 0, ads: 0, slashes: 0, coinEarnedToday: 0, claimed: {} };
+  }
+  if (PLAYER_DATA.weekly.weekKey !== w) {
+    PLAYER_DATA.weekly = { weekKey: w, matches: 0, wins: 0, kos: 0, claimed: {} };
+  }
+}
+
+function savePlayerData() {
+  ensureDailyWeeklyFresh();
+  try { localStorage.setItem(PLAYER_DATA_KEY, JSON.stringify(PLAYER_DATA)); } catch (_) {}
+  updateCurrencyUI();
+}
+
+function getEquippedKatanaConfig() {
+  return SHOP_KATANAS.find((k) => k.id === PLAYER_DATA.equippedKatana) || SHOP_KATANAS[0];
+}
+
+function addXp(amount) {
+  PLAYER_DATA.xp += Math.max(0, amount);
+  while (PLAYER_DATA.xp >= PLAYER_DATA.level * 100) {
+    PLAYER_DATA.xp -= PLAYER_DATA.level * 100;
+    PLAYER_DATA.level++;
+  }
+}
+
 function isFighterUnlocked(id) {
   if (PROGRESS.unlocked.includes(id)) return true;
   const f = FIGHTERS.find((x) => x.id === id);
@@ -1369,6 +2064,8 @@ let fighterCarouselOffset = 0;
 
 const STATE = {
   screen: 'menu',
+  activeSection: 'home',
+  activeMissionTab: 'daily',
   quality: IS_LOW_END ? 'low' : (IS_MOBILE ? 'med' : 'high'),
   lowEndMode: IS_LOW_END,
   selectedHeroIdx: 0,
@@ -1960,7 +2657,6 @@ async function startBootSequence() {
   const bootStart = performance.now();
   setGtaProgress(3, 'Starting 3D Arena');
 
-  // Wait for ALL assets, fighters, animations, images & audio to finish loading & caching
   await streamAllAssets((pct, label) => setGtaProgress(pct, label));
 
   const elapsed = performance.now() - bootStart;
@@ -1978,14 +2674,13 @@ async function startBootSequence() {
   gtaEl.classList.add('fade-out');
   setTimeout(() => { gtaEl.style.display = 'none'; }, 460);
 
-  // Re-refresh menu portraits & showcase in case icons/models just finished caching
   renderMenuFighterCards();
   spawnMenuShowcase();
   startWelcomeSplash();
 }
 
 /* ============================================================
-   6. THREE.JS SCENE (BRIGHT COLOURFUL SUNNY DAYTIME ONLY)
+   6. THREE.JS SCENE & CUSTOM PROCEDURAL FIGHTING-STYLE FLOOR
    ============================================================ */
 const canvas = document.getElementById('game-canvas');
 let renderer;
@@ -2027,7 +2722,7 @@ scene.background = new THREE.Color(0x87cefa);
 scene.fog = new THREE.FogExp2(0xd8eeff, 0.0065);
 
 const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.25, 130);
-camera.position.set(0, 2.2, 8.2);
+camera.position.set(0, 2.0, 7.2);
 
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffeed8, IS_MOBILE ? 2.25 : 2.05);
 scene.add(hemiLight);
@@ -2062,12 +2757,169 @@ const customArenaGroup = new THREE.Group();
 scene.add(customArenaGroup);
 
 const fallbackFloorMesh = new THREE.Mesh(
-  new THREE.PlaneGeometry(54, 32),
-  new THREE.MeshLambertMaterial({ color: 0x7c5836, side: THREE.DoubleSide })
+  new THREE.PlaneGeometry(60, 40),
+  new THREE.MeshLambertMaterial({ color: 0x8b6742, side: THREE.DoubleSide })
 );
 fallbackFloorMesh.rotation.x = -Math.PI / 2;
-fallbackFloorMesh.position.y = -0.02;
+fallbackFloorMesh.position.y = -0.05;
 scene.add(fallbackFloorMesh);
+
+/* ---- CUSTOM PROCEDURAL FIGHTING-STYLE DOJO FLOOR (NO EXTERNAL FLOOR GLB NEEDED) ---- */
+let fightingFloorBuilt = false;
+function buildFightingStyleFloor() {
+  if (fightingFloorBuilt) return;
+  fightingFloorBuilt = true;
+
+  // 1. Outer Sunny Courtyard Stone & Warm Earth Ground (keeps trees, temple & houses grounded & clearly visible)
+  const stoneCanvas = document.createElement('canvas');
+  stoneCanvas.width = 512; stoneCanvas.height = 512;
+  const sCtx = stoneCanvas.getContext('2d');
+  sCtx.fillStyle = '#a4835b';
+  sCtx.fillRect(0, 0, 512, 512);
+  // Subtle paving tiles & warm sand speckles
+  for (let y = 0; y < 512; y += 64) {
+    for (let x = 0; x < 512; x += 64) {
+      const shade = ((x + y) / 64) % 2 === 0 ? '#9c7b52' : '#ab8a60';
+      sCtx.fillStyle = shade;
+      sCtx.fillRect(x + 2, y + 2, 60, 60);
+    }
+  }
+  for (let i = 0; i < 650; i++) {
+    sCtx.fillStyle = i % 2 === 0 ? 'rgba(255,236,195,0.16)' : 'rgba(62,40,18,0.12)';
+    sCtx.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
+  }
+  const courtyardTex = new THREE.CanvasTexture(stoneCanvas);
+  courtyardTex.colorSpace = THREE.SRGBColorSpace;
+  courtyardTex.wrapS = THREE.RepeatWrapping;
+  courtyardTex.wrapT = THREE.RepeatWrapping;
+  courtyardTex.repeat.set(10, 7);
+
+  const courtyardMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(66, 44),
+    new THREE.MeshLambertMaterial({ map: courtyardTex })
+  );
+  courtyardMesh.rotation.x = -Math.PI / 2;
+  courtyardMesh.position.set(0, -0.04, -4);
+  customArenaGroup.add(courtyardMesh);
+  freezeStaticTransforms(courtyardMesh);
+
+  // 2. Main Fighting Dojo Timber Stage (Top surface strictly at y = 0.00)
+  const woodCanvas = document.createElement('canvas');
+  woodCanvas.width = 512; woodCanvas.height = 512;
+  const wCtx = woodCanvas.getContext('2d');
+  wCtx.fillStyle = '#8e572c';
+  wCtx.fillRect(0, 0, 512, 512);
+
+  const plankH = 32;
+  const woodShades = ['#975d30', '#8b5328', '#a26636', '#834e25'];
+  for (let row = 0; row < 512 / plankH; row++) {
+    const y = row * plankH;
+    wCtx.fillStyle = woodShades[row % woodShades.length];
+    wCtx.fillRect(0, y, 512, plankH - 2);
+    wCtx.fillStyle = 'rgba(42, 20, 6, 0.45)';
+    wCtx.fillRect(0, y + plankH - 2, 512, 2);
+
+    // Subtle wood grain streaks
+    wCtx.fillStyle = 'rgba(255, 214, 165, 0.09)';
+    for (let g = 0; g < 5; g++) {
+      wCtx.fillRect((row * 53 + g * 97) % 512, y + 6 + g * 4, 46, 2);
+    }
+    // Vertical plank joints
+    const offset = (row % 2) * 128 + 64;
+    wCtx.fillStyle = 'rgba(42, 20, 6, 0.5)';
+    wCtx.fillRect(offset, y, 2, plankH);
+    wCtx.fillRect((offset + 256) % 512, y, 2, plankH);
+  }
+
+  const woodTex = new THREE.CanvasTexture(woodCanvas);
+  woodTex.colorSpace = THREE.SRGBColorSpace;
+  woodTex.wrapS = THREE.RepeatWrapping;
+  woodTex.wrapT = THREE.RepeatWrapping;
+  woodTex.repeat.set(5, 2);
+
+  // Stage platform (width 21.5, depth 7.4, height 0.08 -> top at y = 0.0)
+  const stageMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(21.6, 0.08, 7.6),
+    [
+      new THREE.MeshLambertMaterial({ color: 0x4b2811 }),
+      new THREE.MeshLambertMaterial({ color: 0x4b2811 }),
+      new THREE.MeshLambertMaterial({ map: woodTex }),
+      new THREE.MeshLambertMaterial({ color: 0x3b1f0c }),
+      new THREE.MeshLambertMaterial({ color: 0x5c3216 }),
+      new THREE.MeshLambertMaterial({ color: 0x4b2811 })
+    ]
+  );
+  stageMesh.position.set(0, -0.04, -0.2);
+  customArenaGroup.add(stageMesh);
+  freezeStaticTransforms(stageMesh);
+
+  // 3. Fighting Arena Ring Emblem & Lacquer Borders on the Stage (y = 0.003)
+  const ringCanvas = document.createElement('canvas');
+  ringCanvas.width = 512; ringCanvas.height = 512;
+  const rCtx = ringCanvas.getContext('2d');
+  rCtx.clearRect(0, 0, 512, 512);
+
+  // Outer golden circle
+  rCtx.strokeStyle = 'rgba(255, 196, 36, 0.78)';
+  rCtx.lineWidth = 10;
+  rCtx.beginPath();
+  rCtx.arc(256, 256, 224, 0, Math.PI * 2);
+  rCtx.stroke();
+
+  // Crimson dojo ring band
+  rCtx.strokeStyle = 'rgba(204, 34, 34, 0.72)';
+  rCtx.lineWidth = 18;
+  rCtx.beginPath();
+  rCtx.arc(256, 256, 196, 0, Math.PI * 2);
+  rCtx.stroke();
+
+  // Inner thin gold ring & center combat diamond
+  rCtx.strokeStyle = 'rgba(255, 215, 100, 0.55)';
+  rCtx.lineWidth = 4;
+  rCtx.beginPath();
+  rCtx.arc(256, 256, 174, 0, Math.PI * 2);
+  rCtx.stroke();
+
+  // Center emblem star/diamond
+  rCtx.fillStyle = 'rgba(220, 38, 38, 0.34)';
+  rCtx.beginPath();
+  rCtx.moveTo(256, 180); rCtx.lineTo(332, 256); rCtx.lineTo(256, 332); rCtx.lineTo(180, 256);
+  rCtx.closePath();
+  rCtx.fill();
+  rCtx.strokeStyle = 'rgba(255, 196, 36, 0.65)';
+  rCtx.lineWidth = 5;
+  rCtx.stroke();
+
+  const ringTex = new THREE.CanvasTexture(ringCanvas);
+  ringTex.colorSpace = THREE.SRGBColorSpace;
+  const ringEmblem = new THREE.Mesh(
+    new THREE.PlaneGeometry(5.6, 5.6),
+    new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, depthWrite: false })
+  );
+  ringEmblem.rotation.x = -Math.PI / 2;
+  ringEmblem.position.set(0, 0.004, 0);
+  customArenaGroup.add(ringEmblem);
+  freezeStaticTransforms(ringEmblem);
+
+  // Subtle fighting lane boundary stripes (left & right bounds at +/- 8.9)
+  const trimMat = new THREE.MeshLambertMaterial({ color: 0xb91c1c });
+  const goldTrimMat = new THREE.MeshLambertMaterial({ color: 0xd97706 });
+  [-8.95, 8.95].forEach((bx) => {
+    const line = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.012, 6.8), trimMat);
+    line.position.set(bx, 0.006, -0.2);
+    customArenaGroup.add(line);
+    freezeStaticTransforms(line);
+  });
+  [-3.85, 3.45].forEach((bz) => {
+    const border = new THREE.Mesh(new THREE.BoxGeometry(21.6, 0.025, 0.18), goldTrimMat);
+    border.position.set(0, 0.01, bz);
+    customArenaGroup.add(border);
+    freezeStaticTransforms(border);
+  });
+
+  fallbackFloorMesh.visible = false;
+  DIAG.arena.Floor = 'Custom Fighting Dojo Stage (Built-in)';
+}
 
 let loadedSkyTex = null;
 
@@ -2260,9 +3112,6 @@ function pruneUnusedModels() {
   }
 }
 
-/* ============================================================================
-   FBX PARSER WITH SAFE `model.bind` PROTECTION (FIXES VENOM.FBX CRASH)
-   ============================================================================ */
 function upgradePendingSkinnedMeshes(root) {
   const toReplace = [];
   root.traverse((obj) => {
@@ -2307,7 +3156,6 @@ async function parseBufferToObject(buf) {
     return { scene: gltf.scene, animations: gltf.animations || [] };
   }
 
-  // Safely handle FBX models where a Group or plain Mesh receives `.bind(skeleton, bindMatrix)` (e.g. venom.fbx)
   const hadObjBind = Object.prototype.hasOwnProperty.call(THREE.Object3D.prototype, 'bind');
   const prevObjBind = THREE.Object3D.prototype.bind;
   if (!hadObjBind) {
@@ -2466,9 +3314,9 @@ const BONE_ALIASES = {
 const KEY_KNOCKDOWN_BONES = new Set([
   'hips', 'spine', 'spine2', 'head',
   'leftforearm', 'rightforearm', 'leftleg', 'rightleg',
-  'leftfoot', 'rightfoot'
+  'leftfoot', 'rightfoot', 'lefttoebase', 'righttoebase'
 ]);
-const MOBILE_SKIP_BONE_RE = /(thumb|index|middle|ring|pinky|toebase)/;
+const MOBILE_SKIP_BONE_RE = /(thumb|index|middle|ring|pinky)/;
 
 function canonicalBoneKey(name) {
   let k = name.toLowerCase()
@@ -2537,81 +3385,6 @@ function prepareLoadedModel(model, targetHeight = 1.88) {
   }
 }
 
-function placeCustomFloor(obj) {
-  obj.position.set(0, 0, 0);
-  obj.rotation.set(0, 0, 0);
-  obj.scale.setScalar(1);
-  obj.updateMatrixWorld(true);
-
-  let box = getAccurateMeshBox(obj);
-  let sz = new THREE.Vector3(); box.getSize(sz);
-
-  if (sz.z < sz.y * 0.25 && sz.x > sz.z * 2) {
-    obj.rotation.x = -Math.PI / 2;
-    obj.updateMatrixWorld(true);
-    box = getAccurateMeshBox(obj);
-    box.getSize(sz);
-  }
-
-  const tileW = 18;
-  const tileD = 16;
-  const sx = tileW / Math.max(sz.x, 0.1);
-  const szScale = tileD / Math.max(sz.z, 0.1);
-  const sy = sz.y > 0.05 ? Math.min(Math.max(sx, szScale), 1.5) : 1;
-  obj.scale.set(sx, sy, szScale);
-
-  obj.updateMatrixWorld(true);
-  const box2 = getAccurateMeshBox(obj);
-  const center = new THREE.Vector3(); box2.getCenter(center);
-  obj.position.set(-center.x, -box2.max.y, -center.z);
-  obj.updateMatrixWorld(true);
-
-  const tileOffsets = [
-    [-18, -8], [0, -8], [18, -8],
-    [-18,  8], [0,  8], [18,  8]
-  ];
-
-  let instancedOk = true;
-  const meshes = [];
-  obj.traverse((c) => {
-    if (c.isMesh) {
-      if (c.isSkinnedMesh || !c.geometry) instancedOk = false;
-      meshes.push(c);
-    }
-  });
-
-  if (instancedOk && meshes.length > 0) {
-    const transMat = new THREE.Matrix4();
-    const finalMat = new THREE.Matrix4();
-    meshes.forEach((mesh) => {
-      const im = new THREE.InstancedMesh(mesh.geometry, mesh.material, tileOffsets.length);
-      im.castShadow = false;
-      im.receiveShadow = false;
-      im.frustumCulled = false;
-      for (let i = 0; i < tileOffsets.length; i++) {
-        transMat.makeTranslation(tileOffsets[i][0], 0, tileOffsets[i][1]);
-        finalMat.multiplyMatrices(transMat, mesh.matrixWorld);
-        im.setMatrixAt(i, finalMat);
-      }
-      im.instanceMatrix.needsUpdate = true;
-      customArenaGroup.add(im);
-      freezeStaticTransforms(im);
-    });
-    fallbackFloorMesh.visible = false;
-  } else if (meshes.length > 0) {
-    obj.scale.set(sx * 3, sy, szScale * 2);
-    obj.position.set(0, 0, 0);
-    obj.updateMatrixWorld(true);
-    const box3 = getAccurateMeshBox(obj);
-    box3.getCenter(center);
-    obj.position.set(-center.x, -box3.max.y, -center.z);
-    obj.traverse(c => { if (c.isMesh) { c.receiveShadow = false; c.castShadow = false; c.frustumCulled = false; } });
-    customArenaGroup.add(obj);
-    freezeStaticTransforms(obj);
-    fallbackFloorMesh.visible = false;
-  }
-}
-
 function placeInstancedTrees(obj, placements) {
   obj.position.set(0, 0, 0);
   obj.rotation.set(0, 0, 0);
@@ -2620,12 +3393,12 @@ function placeInstancedTrees(obj, placements) {
 
   const box = getAccurateMeshBox(obj);
   const sz = new THREE.Vector3(); box.getSize(sz);
-  if (sz.y > 0.05) obj.scale.setScalar(5.0 / sz.y);
+  if (sz.y > 0.05) obj.scale.setScalar(5.1 / sz.y);
 
   obj.updateMatrixWorld(true);
   const box2 = getAccurateMeshBox(obj);
   const center = new THREE.Vector3(); box2.getCenter(center);
-  obj.position.set(-center.x, -box2.min.y, -center.z);
+  obj.position.set(-center.x, -box2.min.y - 0.04, -center.z);
   obj.updateMatrixWorld(true);
 
   const meshes = [];
@@ -2667,7 +3440,7 @@ function placeInstancedTrees(obj, placements) {
   } else {
     placements.forEach((p, idx) => {
       const clone = idx === placements.length - 1 ? obj : obj.clone();
-      clone.position.set(p.x, -box2.min.y, p.z);
+      clone.position.set(p.x, -box2.min.y - 0.04, p.z);
       clone.rotation.y = p.rotY;
       clone.scale.multiplyScalar(p.scaleMul);
       customArenaGroup.add(clone);
@@ -2683,7 +3456,7 @@ function placeCustomProp(obj, x, z, targetHeight, rotY = 0, reuseOriginal = fals
   const sz = new THREE.Vector3(); box.getSize(sz);
   if (sz.y > 0.05) clone.scale.multiplyScalar(targetHeight / sz.y);
   const box2 = getAccurateMeshBox(clone);
-  clone.position.set(x, -box2.min.y, z);
+  clone.position.set(x, -box2.min.y - 0.04, z);
   clone.rotation.y = rotY;
   clone.traverse(c => { if (c.isMesh) { c.castShadow = false; c.receiveShadow = false; } });
   customArenaGroup.add(clone);
@@ -2708,6 +3481,19 @@ async function ensureFighterLoaded(fighter) {
   }
 }
 
+async function ensureShopKatanaLoaded(katanaCfg) {
+  if (!katanaCfg) return assetCache.weapons.katana || null;
+  const key = katanaCfg.file || WEAPON_CANDIDATES.katana[0];
+  if (assetCache.weapons[key]) return assetCache.weapons[key];
+  const loaded = await loadCustomProp(key, false);
+  if (loaded) {
+    assetCache.weapons[key] = loaded;
+    if (!assetCache.weapons.katana) assetCache.weapons.katana = loaded;
+    return loaded;
+  }
+  return assetCache.weapons.katana || null;
+}
+
 let isStreaming = false;
 async function streamAllAssets(onProgress) {
   if (isStreaming) return;
@@ -2717,6 +3503,9 @@ async function streamAllAssets(onProgress) {
   };
 
   await sound.initBGM();
+
+  // Build our custom fighting-style dojo floor immediately!
+  buildFightingStyleFloor();
 
   if (location.protocol === 'file:') {
     report(100, 'Ready');
@@ -2736,73 +3525,55 @@ async function streamAllAssets(onProgress) {
     }
   }
 
-  if (customArenaGroup.children.length === 0) {
-    let loadedFloorObj = null;
-    if (is3DModelPath(ARENA_CONFIG.floorFile)) {
-      report(12, 'Building Wooden Arena');
-      const fl = await loadCustomProp(ARENA_CONFIG.floorFile, true, true);
-      if (fl) {
-        loadedFloorObj = fl;
-        placeCustomFloor(fl);
-        DIAG.arena.Floor = 'Custom Big Floor Loaded (6x Tiled)';
-      } else {
-        DIAG.arena.Floor = 'Failed to load floor GLB';
+  if (ARENA_CONFIG.templeFile && !DIAG.arena.Temple) {
+    report(16, 'Building Temple');
+    if (is3DModelPath(ARENA_CONFIG.templeFile)) {
+      const tp = await loadCustomProp(ARENA_CONFIG.templeFile, true, true);
+      if (tp) {
+        placeCustomProp(tp, 0, -8.2, 8.0, 0, true);
+        DIAG.arena.Temple = '3D Temple Loaded';
       }
-      await yieldFrame();
+    } else if (isImagePath(ARENA_CONFIG.templeFile)) {
+      const ok = await loadAndPlaceImageProp(ARENA_CONFIG.templeFile, [
+        { x: 0, z: -9.5, height: 8.6, rotY: 0 }
+      ]);
+      DIAG.arena.Temple = ok ? 'Temple Image Placed' : 'Temple Image Not Found';
     }
+    await yieldFrame();
+  }
 
-    if (ARENA_CONFIG.templeFile) {
-      report(18, 'Building Temple');
-      if (is3DModelPath(ARENA_CONFIG.templeFile)) {
-        const tp = (ARENA_CONFIG.templeFile === ARENA_CONFIG.floorFile && loadedFloorObj)
-          ? loadedFloorObj.clone()
-          : await loadCustomProp(ARENA_CONFIG.templeFile, true, true);
-        if (tp) {
-          placeCustomProp(tp, 0, -7.8, 7.8, 0, true);
-          DIAG.arena.Temple = '3D Temple Loaded';
-        }
-      } else if (isImagePath(ARENA_CONFIG.templeFile)) {
-        const ok = await loadAndPlaceImageProp(ARENA_CONFIG.templeFile, [
-          { x: 0, z: -9.5, height: 8.6, rotY: 0 }
-        ]);
-        DIAG.arena.Temple = ok ? 'Temple Image Placed' : 'Temple Image Not Found';
-      }
-      await yieldFrame();
+  if (is3DModelPath(ARENA_CONFIG.treeFile) && !DIAG.arena.Trees) {
+    report(24, 'Planting Maple Trees');
+    const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, false);
+    if (tr) {
+      placeInstancedTrees(tr, [
+        { x: -6.8, z: -5.2, scaleMul: 0.96, rotY: 0.4 },
+        { x:  6.8, z: -5.4, scaleMul: 1.00, rotY: -0.6 },
+        { x: -10.5, z: -8.2, scaleMul: 1.08, rotY: 1.2 },
+        { x:  10.5, z: -8.6, scaleMul: 1.04, rotY: -1.1 }
+      ]);
+      DIAG.arena.Trees = 'Custom Instanced (4x)';
     }
+    await yieldFrame();
+  }
 
-    if (is3DModelPath(ARENA_CONFIG.treeFile)) {
-      report(24, 'Planting Maple Trees');
-      const tr = await loadCustomProp(ARENA_CONFIG.treeFile, true, false);
-      if (tr) {
-        placeInstancedTrees(tr, [
-          { x: -6.8, z: -5.0, scaleMul: 0.96, rotY: 0.4 },
-          { x:  6.8, z: -5.2, scaleMul: 1.00, rotY: -0.6 },
-          { x: -10.5, z: -8.2, scaleMul: 1.08, rotY: 1.2 },
-          { x:  10.5, z: -8.6, scaleMul: 1.04, rotY: -1.1 }
-        ]);
-        DIAG.arena.Trees = 'Custom Instanced (4x)';
+  if (ARENA_CONFIG.houseFile && !DIAG.arena.Houses) {
+    report(30, 'Setting Scenery');
+    if (is3DModelPath(ARENA_CONFIG.houseFile)) {
+      const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, true);
+      if (hs) {
+        placeCustomProp(hs, -6.6, -10.8, 6.2, 0.2, false);
+        placeCustomProp(hs, 6.8, -11.2, 5.8, -0.2, true);
+        DIAG.arena.Houses = '3D Houses Loaded (2x)';
       }
-      await yieldFrame();
+    } else if (isImagePath(ARENA_CONFIG.houseFile)) {
+      const ok = await loadAndPlaceImageProp(ARENA_CONFIG.houseFile, [
+        { x: -8.5, z: -10.2, height: 6.4, rotY: 0.12 },
+        { x:  8.5, z: -10.4, height: 6.2, rotY: -0.12, flipX: true }
+      ]);
+      DIAG.arena.Houses = ok ? 'House Images Placed (2x)' : 'House Image Not Found';
     }
-
-    if (ARENA_CONFIG.houseFile) {
-      report(30, 'Setting Scenery');
-      if (is3DModelPath(ARENA_CONFIG.houseFile)) {
-        const hs = await loadCustomProp(ARENA_CONFIG.houseFile, true, true);
-        if (hs) {
-          placeCustomProp(hs, -6.6, -10.8, 6.2, 0.2, false);
-          placeCustomProp(hs, 6.8, -11.2, 5.8, -0.2, true);
-          DIAG.arena.Houses = '3D Houses Loaded (2x)';
-        }
-      } else if (isImagePath(ARENA_CONFIG.houseFile)) {
-        const ok = await loadAndPlaceImageProp(ARENA_CONFIG.houseFile, [
-          { x: -8.5, z: -10.2, height: 6.4, rotY: 0.12 },
-          { x:  8.5, z: -10.4, height: 6.2, rotY: -0.12, flipX: true }
-        ]);
-        DIAG.arena.Houses = ok ? 'House Images Placed (2x)' : 'House Image Not Found';
-      }
-      await yieldFrame();
-    }
+    await yieldFrame();
   }
 
   let processedAnims = 0;
@@ -2832,13 +3603,13 @@ async function streamAllAssets(onProgress) {
     const katRes = await loadCustomProp(WEAPON_CANDIDATES.katana[0], false) || await loadCustomProp(WEAPON_CANDIDATES.katana[1], false);
     if (katRes) {
       assetCache.weapons.katana = katRes;
+      assetCache.weapons[WEAPON_CANDIDATES.katana[0]] = katRes;
       DIAG.weapons['Dragon Katana'] = 'Loaded (Slash Ready)';
     } else {
       DIAG.weapons['Dragon Katana'] = 'Missing (katana_with_dragon.glb)';
     }
   }
 
-  // Download & cache ALL characters together on both Desktop and Mobile so offline play & switching works seamlessly
   const orderedFighters = [
     FIGHTERS[STATE.selectedHeroIdx],
     FIGHTERS[STATE.selectedRivalIdx],
@@ -2849,7 +3620,6 @@ async function streamAllAssets(onProgress) {
     const f = orderedFighters[idx];
     report(60 + (idx / Math.max(1, orderedFighters.length)) * 26, `Loading ${f.shortName}`);
     if (STATE.lowEndMode && orderedFighters.length > 5 && idx >= 2) {
-      // Cache binary offline for low-end devices with huge rosters without exhausting GPU RAM
       for (const url of f.candidates) {
         if (await cacheUrlSilently(url)) break;
       }
@@ -2969,7 +3739,7 @@ function spawnDmgPopup(worldX, worldY, text, color) {
 }
 
 /* ============================================================
-   9. FIGHTER CONTROLLER (COMBO + CONTEXTUAL + DASH + FLOOR GROUNDING)
+   9. FIGHTER CONTROLLER (GROUNDED ANIMS FIXED ON ALL DEVICES)
    ============================================================ */
 function buildProceduralFighter(fighterCfg) {
   const root = new THREE.Group();
@@ -3031,15 +3801,16 @@ class Fighter {
     this.hitFlashTimer = 0;
     this.comboCount = 0; this.comboResetTimer = 0;
     this.queuedAction = null; this.queueTimer = 0;
-    this.slashCharges = 2; // Max 2 slashes every 4 seconds
+    this.slashCharges = 2;
     this.slashCooldown = 0;
     this.mixer = null; this.actions = {}; this.currentAction = null;
     this.isProcedural = false; this.animClock = 0; this.modelRoot = null;
     this.baseModelY = 0;
     this.footBones = [];
     this.knockdownBones = [];
-    this.restFootY = 0.08;
+    this.restFootY = 0.05;
     this.katanaAttached = null;
+    this.katanaParent = null;
     this.builtinAnims = [];
     this._flashMats = [];
 
@@ -3084,7 +3855,8 @@ class Fighter {
   buildVisual() {
     if (this.modelRoot) { this.group.remove(this.modelRoot); this.modelRoot = null; }
     this.mixer = null; this.actions = {}; this.currentAction = null;
-    this.katanaAttached = null; this.footBones = []; this.knockdownBones = [];
+    this.katanaAttached = null; this.katanaParent = null;
+    this.footBones = []; this.knockdownBones = [];
     this._flashMats = [];
 
     const cached = assetCache.models[this.cfg.id];
@@ -3106,7 +3878,8 @@ class Fighter {
           if (!rawLow.includes('root') && !rawLow.includes('armature')) fallbackBones.push(obj);
           const k = canonicalBoneKey(obj.name);
           if (KEY_KNOCKDOWN_BONES.has(k)) this.knockdownBones.push(obj);
-          if (k === 'leftfoot' || k === 'rightfoot') {
+          // Collect BOTH foot and toe bones so grounding keeps soles strictly on floor!
+          if (k === 'leftfoot' || k === 'rightfoot' || k === 'lefttoebase' || k === 'righttoebase') {
             this.footBones.push(obj);
             obj.getWorldPosition(_tmpFootPos);
             const relY = _tmpFootPos.y - this.group.position.y;
@@ -3115,7 +3888,7 @@ class Fighter {
         }
       });
       if (this.knockdownBones.length === 0) this.knockdownBones = fallbackBones.slice(0, 8);
-      this.restFootY = Number.isFinite(minFootY) ? Math.max(0.02, minFootY) : 0.08;
+      this.restFootY = Number.isFinite(minFootY) ? THREE.MathUtils.clamp(minFootY, 0.015, 0.085) : 0.05;
 
       this.mixer = new THREE.AnimationMixer(clone);
       this.mixer.timeScale = 0.88;
@@ -3133,13 +3906,41 @@ class Fighter {
 
   upgradeToLoadedModel() { if (this.isProcedural && assetCache.models[this.cfg.id]) this.buildVisual(); }
 
-  attachKatana() {
-    if (this.katanaAttached || !assetCache.weapons.katana || !this.modelRoot) return;
+  applyKatanaTint(katanaObj, tintHex) {
+    if (!tintHex || !katanaObj) return;
+    katanaObj.traverse((c) => {
+      if (c.isMesh && c.material) {
+        const mats = Array.isArray(c.material) ? c.material : [c.material];
+        const cloned = mats.map((m) => {
+          const mc = m.clone();
+          if (mc.color) mc.color.lerp(new THREE.Color(tintHex), 0.55);
+          if (mc.emissive) {
+            mc.emissive.setHex(tintHex);
+            if (mc.emissiveIntensity !== undefined) mc.emissiveIntensity = 0.35;
+          }
+          return mc;
+        });
+        c.material = Array.isArray(c.material) ? cloned : cloned[0];
+      }
+    });
+  }
+
+  attachKatana(forceRefresh = false) {
+    if (forceRefresh && this.katanaAttached && this.katanaParent) {
+      this.katanaParent.remove(this.katanaAttached);
+      this.katanaAttached = null;
+    }
+    if (this.katanaAttached || !this.modelRoot) return;
+
+    const katCfg = this.isPlayer ? getEquippedKatanaConfig() : SHOP_KATANAS[0];
+    const baseModel = (katCfg && assetCache.weapons[katCfg.file]) || assetCache.weapons.katana;
+    if (!baseModel) return;
 
     if (this.isProcedural) {
       const rig = this.modelRoot.userData.rig;
       if (!rig || !rig.armR) return;
-      const katana = assetCache.weapons.katana.clone();
+      const katana = baseModel.clone();
+      this.applyKatanaTint(katana, katCfg ? katCfg.tintColor : null);
       const box = getAccurateMeshBox(katana);
       const sz = new THREE.Vector3(); box.getSize(sz);
       const rawLen = Math.max(sz.x, sz.y, sz.z, 0.1);
@@ -3149,6 +3950,7 @@ class Fighter {
       katana.visible = false;
       rig.armR.add(katana);
       this.katanaAttached = katana;
+      this.katanaParent = rig.armR;
       return;
     }
 
@@ -3162,7 +3964,8 @@ class Fighter {
     });
     if (!handBone) return;
 
-    const katana = assetCache.weapons.katana.clone();
+    const katana = baseModel.clone();
+    this.applyKatanaTint(katana, katCfg ? katCfg.tintColor : null);
     this.modelRoot.updateMatrixWorld(true);
     const box = getAccurateMeshBox(katana);
     const sz = new THREE.Vector3(); box.getSize(sz);
@@ -3177,6 +3980,7 @@ class Fighter {
     katana.visible = false;
     handBone.add(katana);
     this.katanaAttached = katana;
+    this.katanaParent = handBone;
   }
 
   bindAllAnimations() {
@@ -3230,7 +4034,7 @@ class Fighter {
     this.playAnim(this.state || 'idle');
   }
 
-  buildGroundAndHalo() {
+buildGroundAndHalo() {
     this.shadowBlob = new THREE.Mesh(
       new THREE.PlaneGeometry(1.45, 1.45),
       new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.72, depthWrite: false })
@@ -3319,6 +4123,12 @@ class Fighter {
       if (this.slashCharges <= 0) { this.state = 'idle'; return; }
       this.slashCharges = Math.max(0, this.slashCharges - 1);
       this.slashCooldown = 4.0;
+      if (this.isPlayer) {
+        ensureDailyWeeklyFresh();
+        PLAYER_DATA.stats.slashes++;
+        PLAYER_DATA.daily.slashes++;
+        savePlayerData();
+      }
     }
 
     let animKey = type;
@@ -3374,6 +4184,11 @@ class Fighter {
       spawnHitSpark(sparkX, hitY, 0xe2e8f0, false);
       spawnDmgPopup(sparkX, 2.05, isTimedParry ? 'PARRY!' : `GUARD -${chip}`, '#93c5fd');
       sound.play('guard');
+
+      if (this.isPlayer) {
+        PLAYER_DATA.stats.parries++;
+        savePlayerData();
+      }
 
       if (isTimedParry && this.actions.parry) {
         this.state = 'parry';
@@ -3515,7 +4330,8 @@ class Fighter {
             const isPerfect = !opponent.blocking && (isCounter || isSweetTiming);
 
             const isFinisher = ['punch_3', 'kick_3', 'slash_2'].includes(this.currentAttackAnim);
-            const baseDmg = this.state === 'slash' ? 30 : this.state === 'kick' ? 20 : 14;
+            const katanaBonus = (this.state === 'slash' && this.isPlayer) ? (getEquippedKatanaConfig()?.damageBonus || 0) : 0;
+            const baseDmg = (this.state === 'slash' ? (30 + katanaBonus) : this.state === 'kick' ? 20 : 14);
             const dmg = Math.round(baseDmg * this.cfg.damageMult * (isPerfect ? 1.25 : 1.0) * (isFinisher ? 1.15 : 1.0));
             const hitY = this.state === 'kick' ? 0.78 : (this.state === 'slash' ? 1.18 : 1.22);
             const contactX = this.group.position.x + this.facing * Math.min(dist * 0.72, reach * 0.65);
@@ -3604,10 +4420,15 @@ class Fighter {
     }
   }
 
+  /* ============================================================================
+     GROUNDING FIX (সব নিচের Animation মাটিতে চলবে, শুধুমাত্র Jump/Air Punch আসমানে থাকবে!)
+     ============================================================================ */
   groundCharacterByBones(dt) {
     if (!this.modelRoot) return;
 
+    const isAerialAnim = !this.onGround || this.state === 'jump' || ['air_punch', 'air_kick', 'air_slash'].includes(this.currentAttackAnim);
     const isFallingBody = (this.state === 'knockdown') || (this.state === 'stand_up') || (this.state === 'hit' && this.hitAnimType === 'katana_hit');
+
     if (isFallingBody) {
       const hasClip = (this.state === 'knockdown') ? !!this.actions.knockdown : (this.state === 'stand_up' ? !!this.actions.stand_up : !!this.actions.katana_hit);
       if (this.knockdownBones.length > 0 && hasClip) {
@@ -3619,8 +4440,8 @@ class Fighter {
         }
         if (Number.isFinite(minBoneY)) {
           const minOffsetWithoutModelY = (minBoneY - this.group.position.y) - this.modelRoot.position.y;
-          const targetY = THREE.MathUtils.clamp(0.08 - minOffsetWithoutModelY, this.baseModelY - 1.5, this.baseModelY + 0.05);
-          this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-22 * dt));
+          const targetY = THREE.MathUtils.clamp(0.05 - minOffsetWithoutModelY, this.baseModelY - 1.65, this.baseModelY + 0.15);
+          this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-26 * dt));
         }
       } else if (this.state === 'knockdown') {
         this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, -Math.PI / 2, 1 - Math.exp(-10 * dt));
@@ -3634,35 +4455,17 @@ class Fighter {
       this.modelRoot.rotation.x = THREE.MathUtils.lerp(this.modelRoot.rotation.x, targetRotX, 1 - Math.exp(-18 * dt));
     }
 
-    const isCrouchAttack = (this.state === 'punch' || this.state === 'kick') && (this.currentAttackAnim === 'crouch_kick' || this.currentAttackAnim === 'crouch_punch') && this.onGround;
-    if ((this.state === 'crouch' || this.state === 'hit' || isCrouchAttack) && this.onGround) {
-      const activeClipExists = (this.state === 'hit') ? !!this.actions[this.hitAnimType] : (isCrouchAttack ? !!this.actions[this.currentAttackAnim] : !!this.actions.crouch);
-      if (this.footBones.length > 0 && activeClipExists) {
-        this.group.updateMatrixWorld(true);
-        let minFootWorldY = Infinity;
-        for (let i = 0; i < this.footBones.length; i++) {
-          const fy = this.footBones[i].matrixWorld.elements[13];
-          if (fy < minFootWorldY) minFootWorldY = fy;
-        }
-        if (Number.isFinite(minFootWorldY)) {
-          const footOffsetWithoutModelY = (minFootWorldY - this.group.position.y) - this.modelRoot.position.y;
-          const floorRef = (this.state === 'crouch' || isCrouchAttack) ? (this.restFootY - 0.03) : this.restFootY;
-          const targetY = THREE.MathUtils.clamp(
-            floorRef - footOffsetWithoutModelY,
-            this.baseModelY - 0.95,
-            this.baseModelY + 0.05
-          );
-          this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-22 * dt));
-          return;
-        }
+    // If jumping / air-attacking, keep model at baseModelY so group.position.y controls the aerial arc cleanly
+    if (isAerialAnim) {
+      if (Math.abs(this.modelRoot.position.y - this.baseModelY) > 0.002) {
+        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, this.baseModelY, 1 - Math.exp(-18 * dt));
       }
-      if (this.state === 'crouch') {
-        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, this.baseModelY - 0.42, 1 - Math.exp(-20 * dt));
-        return;
-      }
+      return;
     }
 
-    if (!IS_MOBILE && !STATE.lowEndMode && STATE.quality === 'high' && this.footBones.length > 0 && this.onGround) {
+    // For ALL grounded states (crouch, sweep, crouch punch, walk, hit, guard, punch, kick, slash, idle) on ALL devices:
+    // Keep the lowest foot/toe bone planted solidly on the floor so nobody floats in mid-air!
+    if (this.footBones.length > 0 && this.onGround) {
       this.group.updateMatrixWorld(true);
       let minFootWorldY = Infinity;
       for (let i = 0; i < this.footBones.length; i++) {
@@ -3671,14 +4474,22 @@ class Fighter {
       }
       if (Number.isFinite(minFootWorldY)) {
         const footOffsetWithoutModelY = (minFootWorldY - this.group.position.y) - this.modelRoot.position.y;
-        const targetY = THREE.MathUtils.clamp(this.restFootY - footOffsetWithoutModelY, this.baseModelY - 0.65, this.baseModelY + 0.05);
-        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-18 * dt));
+        const isCrouchLike = (this.state === 'crouch') || (['crouch_kick', 'crouch_punch'].includes(this.currentAttackAnim) && ['punch', 'kick'].includes(this.state));
+        const floorRef = isCrouchLike ? Math.min(this.restFootY, 0.03) : Math.min(this.restFootY, 0.06);
+        const targetY = THREE.MathUtils.clamp(
+          floorRef - footOffsetWithoutModelY,
+          this.baseModelY - 1.45,
+          this.baseModelY + 0.35
+        );
+        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-26 * dt));
+        return;
       }
-    } else {
-      const targetY = this.baseModelY;
-      if (Math.abs(this.modelRoot.position.y - targetY) > 0.002) {
-        this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, targetY, 1 - Math.exp(-16 * dt));
-      }
+    }
+
+    if (this.state === 'crouch') {
+      this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, this.baseModelY - 0.42, 1 - Math.exp(-20 * dt));
+    } else if (Math.abs(this.modelRoot.position.y - this.baseModelY) > 0.002) {
+      this.modelRoot.position.y = THREE.MathUtils.lerp(this.modelRoot.position.y, this.baseModelY, 1 - Math.exp(-18 * dt));
     }
   }
 
@@ -3722,7 +4533,7 @@ function shakeCamera(amount) { camShake = Math.max(camShake, amount); }
 
 let menuDragActive = false, menuLastX = 0, menuUserYaw = 0;
 canvas.addEventListener('pointerdown', (e) => {
-  if (STATE.screen === 'menu' && !STATE.gtaLoadingActive && !STATE.splashActive) {
+  if (STATE.screen === 'menu' && STATE.activeSection === 'home' && !STATE.gtaLoadingActive && !STATE.splashActive) {
     menuDragActive = true; menuLastX = e.clientX;
   }
 });
@@ -3848,7 +4659,756 @@ function updateAI(dt, ai, target) {
 }
 
 /* ============================================================
-   11. MATCH MANAGEMENT, ANNOUNCEMENTS & ARENA MISSION
+   11. MISSIONS, ACHIEVEMENTS, SHOP, PROFILE, HELP & AD SYSTEM
+   ============================================================ */
+const DAILY_MISSION_DEFS = [
+  { id: 'd_win3',    title: 'Win 3 Fight Matches',     goal: 3,  getCur: () => PLAYER_DATA.daily.wins,    rewardType: 'coin',    reward: 180, action: 'fight' },
+  { id: 'd_match5',  title: 'Complete 5 Arena Matches', goal: 5, getCur: () => PLAYER_DATA.daily.matches, rewardType: 'diamond', reward: 15,  action: 'fight' },
+  { id: 'd_ad1',     title: 'Watch 1 Ad Video',        goal: 1,  getCur: () => PLAYER_DATA.daily.ads,     rewardType: 'coin',    reward: 120, action: 'ad' },
+  { id: 'd_slash10', title: 'Land 10 Katana Slashes',  goal: 10, getCur: () => PLAYER_DATA.daily.slashes, rewardType: 'coin',    reward: 100, action: 'fight' }
+];
+
+const WEEKLY_MISSION_DEFS = [
+  { id: 'w_win10',   title: 'Win 10 Fight Matches',     goal: 10, getCur: () => PLAYER_DATA.weekly.wins,    rewardType: 'coin',    reward: 500, action: 'fight' },
+  { id: 'w_ko12',    title: 'Score 12 K.O. Victories',  goal: 12, getCur: () => PLAYER_DATA.weekly.kos,     rewardType: 'diamond', reward: 35,  action: 'fight' },
+  { id: 'w_match20', title: 'Complete 20 Arena Matches',goal: 20, getCur: () => PLAYER_DATA.weekly.matches, rewardType: 'coin',    reward: 600, action: 'fight' }
+];
+
+const SPECIAL_MISSION_DEFS = [
+  { id: 's_profile', title: 'Customize Player Name in Profile', goal: 1, getCur: () => PLAYER_DATA.stats.profileEdited, rewardType: 'coin', reward: 150, action: 'profile' },
+  { id: 's_katana',  title: 'Own 2 Katanas from Shop',          goal: 2, getCur: () => PLAYER_DATA.ownedKatanas.length, rewardType: 'diamond', reward: 20, action: 'shop' },
+  { id: 's_share',   title: 'Invite / Share Game with a Friend',goal: 1, getCur: () => PLAYER_DATA.stats.shared, rewardType: 'diamond', reward: 15, action: 'share' }
+];
+
+const ACHIEVEMENT_DEFS = [
+  { id: 'a_first_win', title: 'First Blood',       desc: 'Win your very first arena match.',      goal: 1,  getCur: () => PLAYER_DATA.stats.wins,           rewardType: 'coin',    reward: 100 },
+  { id: 'a_vet_10',    title: 'Arena Veteran',     desc: 'Complete 10 arena matches.',            goal: 10, getCur: () => PLAYER_DATA.stats.matches,        rewardType: 'coin',    reward: 200 },
+  { id: 'a_champ_15',  title: 'Arena Champion',    desc: 'Win 15 matches in War Legend Arena.',   goal: 15, getCur: () => PLAYER_DATA.stats.wins,           rewardType: 'diamond', reward: 25 },
+  { id: 'a_katana_30', title: 'Katana Master',     desc: 'Use Katana Slash 30 times in battle.',  goal: 30, getCur: () => PLAYER_DATA.stats.slashes,        rewardType: 'coin',    reward: 180 },
+  { id: 'a_parry_10',  title: 'Iron Guardian',     desc: 'Block or Parry 10 enemy attacks.',      goal: 10, getCur: () => PLAYER_DATA.stats.parries,        rewardType: 'coin',    reward: 140 },
+  { id: 'a_blade_3',   title: 'Blade Collector',   desc: 'Collect 3 Katanas in the Katana Shop.', goal: 3,  getCur: () => PLAYER_DATA.ownedKatanas.length,  rewardType: 'diamond', reward: 30 },
+  { id: 'a_unlock_3',  title: 'Roster Conqueror',  desc: 'Unlock 3 fighters in Arena Missions.',  goal: 3,  getCur: () => FIGHTERS.filter(f => isFighterUnlocked(f.id)).length, rewardType: 'diamond', reward: 35 }
+];
+
+function coinIconSVG(size = 16) {
+  return `<svg style="width:${size}px;height:${size}px;vertical-align:middle;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb800" stroke="#fff3b0" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-weight="900" text-anchor="middle" fill="#7c2d12">$</text></svg>`;
+}
+function diamondIconSVG(size = 16) {
+  return `<svg style="width:${size}px;height:${size}px;vertical-align:middle;flex-shrink:0;" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="#00d4ff" stroke="#c2f5ff" stroke-width="1.4"/></svg>`;
+}
+
+function updateCurrencyUI() {
+  const cStr = PLAYER_DATA.coins.toLocaleString();
+  const dStr = PLAYER_DATA.diamonds.toLocaleString();
+  ['home-coins', 'page-coins'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = cStr;
+  });
+  ['home-diamonds', 'page-diamonds'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = dStr;
+  });
+  updateAlertDots();
+}
+
+function hasClaimableMissions() {
+  ensureDailyWeeklyFresh();
+  const check = (list, claimedObj) => list.some((m) => !claimedObj[m.id] && m.getCur() >= m.goal);
+  return check(DAILY_MISSION_DEFS, PLAYER_DATA.daily.claimed) ||
+         check(WEEKLY_MISSION_DEFS, PLAYER_DATA.weekly.claimed) ||
+         check(SPECIAL_MISSION_DEFS, PLAYER_DATA.specialClaimed);
+}
+
+function hasClaimableAchievements() {
+  return ACHIEVEMENT_DEFS.some((a) => !PLAYER_DATA.achievementsClaimed[a.id] && a.getCur() >= a.goal);
+}
+
+function updateAlertDots() {
+  const mReady = hasClaimableMissions();
+  const aReady = hasClaimableAchievements();
+  document.getElementById('dot-home-mission')?.classList.toggle('show', mReady);
+  document.getElementById('dot-bnav-mission')?.classList.toggle('show', mReady);
+  document.getElementById('dot-bnav-ach')?.classList.toggle('show', aReady);
+}
+
+function grantReward(type, amount) {
+  if (type === 'diamond') PLAYER_DATA.diamonds += amount;
+  else PLAYER_DATA.coins += amount;
+  savePlayerData();
+}
+
+/* ---- WATCH AD MODAL (ONLY ON CLICK, MIN 15s, EXACT atOptions) ---- */
+let adCountdownTimer = null;
+function openWatchAdModal(onCompletedCallback = null) {
+  ensureDailyWeeklyFresh();
+  const nowSec = Math.floor(Date.now() / 1000);
+  const sinceLast = nowSec - (PLAYER_DATA.lastAdTime || 0);
+
+  if (PLAYER_DATA.daily.ads >= ECONOMY_CONFIG.dailyMaxAds) {
+    alert(`Daily Ad limit reached (${ECONOMY_CONFIG.dailyMaxAds}/${ECONOMY_CONFIG.dailyMaxAds} today). Come back tomorrow for more Ad rewards!`);
+    return;
+  }
+  if (sinceLast < ECONOMY_CONFIG.adCooldownSec) {
+    const waitLeft = ECONOMY_CONFIG.adCooldownSec - sinceLast;
+    alert(`Please wait ${waitLeft}s before watching another rewarded Ad.`);
+    return;
+  }
+
+  const modal = document.getElementById('ad-watch-modal');
+  const timerBadge = document.getElementById('ad-timer-badge');
+  const btnFinish = document.getElementById('btn-ad-finish');
+  const host = document.getElementById('ad-iframe-host');
+  const placeholder = document.getElementById('ad-placeholder-text');
+
+  host.innerHTML = '';
+  if (!navigator.onLine) {
+    placeholder.innerHTML = 'You are currently Offline.<br><small style="margin-top:4px;color:#fbbf24;">Connect to internet to load Sponsored Ad. Timer runs for 15s.</small>';
+  } else {
+    placeholder.innerHTML = 'Loading Sponsored Ad (300×250)...<br><small style="margin-top:4px;color:#64748b;">Keep this window open for 15 seconds to earn your reward.</small>';
+    const adIframe = document.createElement('iframe');
+    adIframe.width = '300';
+    adIframe.height = '250';
+    adIframe.scrolling = 'no';
+    adIframe.frameBorder = '0';
+    adIframe.style.cssText = 'border:0;width:300px;height:250px;background:transparent;display:block;';
+    adIframe.srcdoc = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;width:300px;height:250px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent;">
+<script type="text/javascript">
+  atOptions = {
+    'key' : 'a5f4542629d9ca4f8ab40ed81fce3f77',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+<\/script>
+<script type="text/javascript" src="https://www.highperformanceformat.com/a5f4542629d9ca4f8ab40ed81fce3f77/invoke.js"><\/script>
+</body></html>`;
+    host.appendChild(adIframe);
+  }
+
+  let rem = ECONOMY_CONFIG.adMinWatchSec;
+  timerBadge.textContent = `Wait ${rem}s`;
+  timerBadge.style.background = '#b91c1c';
+  btnFinish.disabled = true;
+  btnFinish.style.opacity = '0.5';
+  btnFinish.style.cursor = 'not-allowed';
+  btnFinish.classList.remove('claim');
+  btnFinish.textContent = `Please Wait ${rem}s...`;
+
+  modal.classList.add('open');
+
+  clearInterval(adCountdownTimer);
+  adCountdownTimer = setInterval(() => {
+    rem--;
+    if (rem > 0) {
+      timerBadge.textContent = `Wait ${rem}s`;
+      btnFinish.textContent = `Please Wait ${rem}s...`;
+    } else {
+      clearInterval(adCountdownTimer);
+      timerBadge.textContent = 'REWARD READY';
+      timerBadge.style.background = '#15803d';
+      btnFinish.disabled = false;
+      btnFinish.style.opacity = '1';
+      btnFinish.style.cursor = 'pointer';
+      btnFinish.classList.add('claim');
+      btnFinish.textContent = navigator.onLine
+        ? `Claim +${ECONOMY_CONFIG.adCoinReward} Coins & Close`
+        : 'Close Ad Window';
+    }
+  }, 1000);
+
+  btnFinish.onclick = () => {
+    if (rem > 0) return;
+    clearInterval(adCountdownTimer);
+    host.innerHTML = '';
+    modal.classList.remove('open');
+    if (navigator.onLine) {
+      ensureDailyWeeklyFresh();
+      PLAYER_DATA.daily.ads++;
+      PLAYER_DATA.stats.adsWatched++;
+      PLAYER_DATA.lastAdTime = Math.floor(Date.now() / 1000);
+      grantReward('coin', ECONOMY_CONFIG.adCoinReward);
+    }
+    if (onCompletedCallback) onCompletedCallback();
+    if (STATE.activeSection !== 'home') renderAppPage(STATE.activeSection);
+  };
+}
+
+function getDailyResetCountdownText() {
+  const now = new Date();
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+  const diffMin = Math.max(0, Math.floor((tomorrow - now) / 60000));
+  const h = Math.floor(diffMin / 60);
+  const m = diffMin % 60;
+  return `Refresh in: ${h}h ${String(m).padStart(2, '0')}m`;
+}
+
+/* ---- DEDICATED SECTION PAGES ROUTER ---- */
+function openSectionPage(section, subTab = null) {
+  STATE.activeSection = section;
+  if (section === 'mission' && subTab) STATE.activeMissionTab = subTab;
+
+  document.querySelectorAll('#bottom-nav-bar .bnav-tab').forEach((btn) => {
+    const nav = btn.dataset.nav;
+    const isMatch = (nav === section) ||
+      (nav === 'more' && ['profile', 'shop', 'faq', 'privacy', 'about'].includes(section));
+    btn.classList.toggle('active', isMatch);
+  });
+
+  const overlay = document.getElementById('app-page-overlay');
+  if (section === 'home') {
+    overlay.classList.remove('open');
+    return;
+  }
+
+  overlay.classList.add('open');
+  renderAppPage(section);
+}
+
+function renderAppPage(section) {
+  ensureDailyWeeklyFresh();
+  const titleEl = document.getElementById('app-page-title');
+  const body = document.getElementById('app-page-body');
+  body.innerHTML = '';
+  updateCurrencyUI();
+
+  if (section === 'mission') {
+    titleEl.textContent = 'Mission';
+    renderMissionPage(body);
+  } else if (section === 'achievements') {
+    titleEl.textContent = 'Achievements';
+    renderAchievementsPage(body);
+  } else if (section === 'more') {
+    titleEl.textContent = 'More';
+    renderMorePage(body);
+  } else if (section === 'profile') {
+    titleEl.textContent = 'Player Profile';
+    renderProfilePage(body);
+  } else if (section === 'shop') {
+    titleEl.textContent = 'Katana Shop';
+    renderShopPage(body);
+  } else if (section === 'faq') {
+    titleEl.textContent = 'Help & FAQ';
+    renderHelpFaqPage(body);
+  } else if (section === 'privacy') {
+    titleEl.textContent = 'Privacy Policy';
+    renderPrivacyPage(body);
+  } else if (section === 'about') {
+    titleEl.textContent = 'About Game';
+    renderAboutPage(body);
+  }
+}
+
+function renderMissionTaskList(container, defs, claimedObj) {
+  defs.forEach((m) => {
+    const cur = Math.min(m.goal, m.getCur());
+    const claimed = !!claimedObj[m.id];
+    const ready = !claimed && cur >= m.goal;
+    const pct = Math.min(100, Math.round((cur / m.goal) * 100));
+
+    const row = document.createElement('div');
+    row.className = 'm-task-row';
+    row.innerHTML = `
+      <div class="m-task-left">
+        <div class="m-task-ico">
+          <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3L22 9.2l-5 4.8 1.2 6.8L12 17.5 5.8 20.8 7 14 2 9.2l7.1-.9z"/></svg>
+        </div>
+        <div class="m-task-info">
+          <div class="m-task-title">${m.title}</div>
+          <div class="m-prog-wrap">
+            <div class="m-prog-bar"><div class="m-prog-fill" style="width:${pct}%"></div></div>
+            <span>${cur} / ${m.goal}</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-reward-box">
+        ${m.rewardType === 'diamond' ? diamondIconSVG(18) : coinIconSVG(18)}
+        <span>${m.reward}</span>
+      </div>
+      <button class="m-action-btn ${claimed ? 'done' : (ready ? 'claim' : '')}">
+        ${claimed ? 'Claimed' : (ready ? 'Claim' : 'Go')}
+      </button>
+    `;
+
+    const btn = row.querySelector('button');
+    btn.onclick = () => {
+      if (claimed) return;
+      if (ready) {
+        claimedObj[m.id] = true;
+        grantReward(m.rewardType, m.reward);
+        renderAppPage('mission');
+        return;
+      }
+      if (m.action === 'fight') {
+        openSectionPage('home');
+        startMatch();
+      } else if (m.action === 'ad') {
+        openWatchAdModal(() => renderAppPage('mission'));
+      } else if (m.action === 'profile') {
+        openSectionPage('profile');
+      } else if (m.action === 'shop') {
+        openSectionPage('shop');
+      } else if (m.action === 'share') {
+        const shareText = 'Join me in War Legend Arena — 3D Fighting Game!';
+        if (navigator.share) {
+          navigator.share({ title: 'War Legend Arena', text: shareText, url: location.href }).catch(() => {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(location.href).catch(() => {});
+          alert('Game link copied to clipboard! Share it with a friend.');
+        }
+        PLAYER_DATA.stats.shared = 1;
+        savePlayerData();
+        renderAppPage('mission');
+      }
+    };
+    container.appendChild(row);
+  });
+}
+
+function renderArenaUnlockMissions(container) {
+  const info = document.createElement('div');
+  info.style.cssText = 'font-size:12px;color:#b8c2df;margin-bottom:6px;line-height:1.45;';
+  info.textContent = 'Defeat the required arena opponents in 3-round matches to unlock locked characters!';
+  container.appendChild(info);
+
+  ARENA_MISSIONS.forEach((m) => {
+    const reward = FIGHTERS.find((f) => f.id === m.unlockId);
+    if (!reward) return;
+    const unlocked = isFighterUnlocked(m.unlockId);
+    const mKills = PROGRESS.kills[m.unlockId] || {};
+
+    const card = document.createElement('div');
+    card.className = `mission-card ${unlocked ? 'done' : ''}`;
+
+    const head = document.createElement('div');
+    head.className = 'mission-head';
+
+    const leftWrap = document.createElement('div');
+    leftWrap.style.cssText = 'display:flex;align-items:center;gap:10px;';
+    const ava = document.createElement('div');
+    ava.className = 'mission-avatar';
+    setPortrait(ava, reward);
+    const txtWrap = document.createElement('div');
+    txtWrap.innerHTML = `<strong style="color:${reward.accent};font-size:14px;">${m.title}</strong><br><small style="color:#9aa7cc;">${m.desc}</small>`;
+    leftWrap.append(ava, txtWrap);
+
+    const badge = document.createElement('span');
+    badge.className = `mission-status ${unlocked ? 'unlocked' : 'locked'}`;
+    badge.textContent = unlocked ? 'UNLOCKED' : 'LOCKED';
+    head.append(leftWrap, badge);
+    card.appendChild(head);
+
+    m.targets.forEach((t) => {
+      const tgtFighter = FIGHTERS.find((f) => f.id === t.targetId);
+      const tgtIdx = FIGHTERS.findIndex((f) => f.id === t.targetId);
+      if (!tgtFighter) return;
+      const cur = unlocked ? t.needed : Math.min(t.needed, mKills[t.targetId] || 0);
+      const targetDone = cur >= t.needed;
+
+      const row = document.createElement('div');
+      row.className = 'mission-target';
+      row.innerHTML = `
+        <span>Defeat <strong style="color:${tgtFighter.accent};">${tgtFighter.shortName}</strong> (${cur} / ${t.needed})</span>
+        ${targetDone
+          ? '<span style="color:#42e64d;font-weight:800;font-size:11px;">COMPLETED</span>'
+          : `<button class="pill-btn active" data-opp="${tgtIdx}">Fight Now</button>`
+        }`;
+      const fightBtn = row.querySelector('button');
+      if (fightBtn) {
+        fightBtn.onclick = () => {
+          STATE.selectedRivalIdx = Number(fightBtn.dataset.opp);
+          renderMenuFighterCards();
+          openSectionPage('home');
+          startMatch();
+        };
+      }
+      card.appendChild(row);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function renderMissionPage(body) {
+  const layout = document.createElement('div');
+  layout.className = 'mission-layout';
+
+  const sidebar = document.createElement('div');
+  sidebar.className = 'mission-sidebar';
+
+  const tabs = [
+    { key: 'daily',   label: 'Daily Mission' },
+    { key: 'weekly',  label: 'Weekly Mission' },
+    { key: 'arena',   label: 'Arena Mission' },
+    { key: 'special', label: 'Special Mission' }
+  ];
+
+  tabs.forEach((t) => {
+    const btn = document.createElement('button');
+    btn.className = `mside-tab ${STATE.activeMissionTab === t.key ? 'active' : ''}`;
+    btn.textContent = t.label;
+    btn.onclick = () => {
+      STATE.activeMissionTab = t.key;
+      renderAppPage('mission');
+    };
+    sidebar.appendChild(btn);
+  });
+
+  const refreshBox = document.createElement('div');
+  refreshBox.className = 'mside-refresh';
+  refreshBox.innerHTML = `<div>${getDailyResetCountdownText()}</div><div style="color:#94a3b8;font-size:10px;margin-top:2px;">Daily Match Coin Cap: ${PLAYER_DATA.daily.coinEarnedToday}/${ECONOMY_CONFIG.dailyMatchCoinCap}</div>`;
+  sidebar.appendChild(refreshBox);
+
+  const listCol = document.createElement('div');
+  listCol.className = 'mission-list-col';
+
+  if (STATE.activeMissionTab === 'daily') {
+    renderMissionTaskList(listCol, DAILY_MISSION_DEFS, PLAYER_DATA.daily.claimed);
+  } else if (STATE.activeMissionTab === 'weekly') {
+    renderMissionTaskList(listCol, WEEKLY_MISSION_DEFS, PLAYER_DATA.weekly.claimed);
+  } else if (STATE.activeMissionTab === 'arena') {
+    renderArenaUnlockMissions(listCol);
+  } else {
+    renderMissionTaskList(listCol, SPECIAL_MISSION_DEFS, PLAYER_DATA.specialClaimed);
+  }
+
+  layout.append(sidebar, listCol);
+  body.appendChild(layout);
+}
+
+function renderAchievementsPage(body) {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:9px;';
+
+  ACHIEVEMENT_DEFS.forEach((a) => {
+    const cur = Math.min(a.goal, a.getCur());
+    const claimed = !!PLAYER_DATA.achievementsClaimed[a.id];
+    const ready = !claimed && cur >= a.goal;
+    const pct = Math.min(100, Math.round((cur / a.goal) * 100));
+
+    const row = document.createElement('div');
+    row.className = 'm-task-row';
+    row.innerHTML = `
+      <div class="m-task-left">
+        <div class="m-task-ico" style="color:${claimed ? '#42e64d' : 'var(--gold)'};">
+          <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3L22 9.2l-5 4.8 1.2 6.8L12 17.5 5.8 20.8 7 14 2 9.2l7.1-.9z"/></svg>
+        </div>
+        <div class="m-task-info">
+          <div class="m-task-title">${a.title} <small style="color:#94a3b8;font-weight:500;">— ${a.desc}</small></div>
+          <div class="m-prog-wrap">
+            <div class="m-prog-bar"><div class="m-prog-fill" style="width:${pct}%"></div></div>
+            <span>${cur} / ${a.goal}</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-reward-box">
+        ${a.rewardType === 'diamond' ? diamondIconSVG(18) : coinIconSVG(18)}
+        <span>${a.reward}</span>
+      </div>
+      <button class="m-action-btn ${claimed ? 'done' : (ready ? 'claim' : '')}" ${!ready && !claimed ? 'disabled style="opacity:0.5;cursor:default;"' : ''}>
+        ${claimed ? 'Unlocked' : (ready ? 'Claim' : 'Locked')}
+      </button>
+    `;
+    const btn = row.querySelector('button');
+    if (ready) {
+      btn.onclick = () => {
+        PLAYER_DATA.achievementsClaimed[a.id] = true;
+        grantReward(a.rewardType, a.reward);
+        renderAppPage('achievements');
+      };
+    }
+    wrap.appendChild(row);
+  });
+
+  body.appendChild(wrap);
+}
+
+function renderMorePage(body) {
+  const grid = document.createElement('div');
+  grid.className = 'more-grid';
+
+  const items = [
+    {
+      label: 'Profile',
+      icon: '<path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/>',
+      onClick: () => openSectionPage('profile')
+    },
+    {
+      label: 'Katana Shop',
+      badge: true,
+      icon: '<path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.2 14.6l.1-.1L8.1 13h7.4c.8 0 1.4-.4 1.7-1l3.6-6.5-1.7-1-3.6 6.5H8.5L4.3 2H1v2h2l3.6 7.6-1.4 2.5C4.5 15.3 5.4 17 7 17h12v-2H7.4c-.1 0-.2-.1-.2-.4z"/>',
+      onClick: () => openSectionPage('shop')
+    },
+    {
+      label: 'Settings',
+      icon: '<path d="M19.4 13a7.7 7.7 0 0 0 .1-1 7.7 7.7 0 0 0-.1-1l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0-.1 1 7.7 7.7 0 0 0 .1 1l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5a.5.5 0 0 0 .6.2l2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6a.5.5 0 0 0 .5.4h4a.5.5 0 0 0 .5-.4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1a.5.5 0 0 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/>',
+      onClick: () => document.getElementById('btn-settings').click()
+    },
+    {
+      label: 'Watch Ad (+Coins)',
+      icon: '<path d="M8 5v14l11-7z"/>',
+      onClick: () => openWatchAdModal()
+    },
+    {
+      label: 'Help & FAQ',
+      icon: '<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 17h-2v-2h2v2zm2.1-7.7l-.9.9c-.7.7-1.2 1.3-1.2 2.8h-2v-.5c0-1.1.5-2.1 1.2-2.8l1.2-1.3c.4-.4.6-.9.6-1.4 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.2 1.8-4 4-4s4 1.8 4 4c0 .9-.4 1.7-.9 2.3z"/>',
+      onClick: () => openSectionPage('faq')
+    },
+    {
+      label: 'Privacy Policy',
+      icon: '<path d="M12 1L3 5v6c0 5.6 3.8 10.7 9 12 5.2-1.3 9-6.4 9-12V5l-9-4zm0 11h7c-.5 4.1-3.3 7.8-7 8.9V12H5V6.3l7-3.1V12z"/>',
+      onClick: () => openSectionPage('privacy')
+    },
+    {
+      label: 'About Game',
+      icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>',
+      onClick: () => openSectionPage('about')
+    },
+    {
+      label: 'Fighters Roster',
+      icon: '<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>',
+      onClick: () => { openSectionPage('home'); openFightersAndOpponentModal(false); }
+    }
+  ];
+
+  items.forEach((item) => {
+    const tile = document.createElement('button');
+    tile.className = 'more-tile';
+    tile.innerHTML = `<svg viewBox="0 0 24 24">${item.icon}</svg><span>${item.label}</span>`;
+    tile.onclick = item.onClick;
+    grid.appendChild(tile);
+  });
+
+  const foot = document.createElement('div');
+  foot.style.cssText = 'text-align:center;font-size:11px;color:#94a3b8;margin-top:14px;';
+  foot.textContent = 'War Legend Arena v11.3 • Fighting for Glory';
+  body.append(grid, foot);
+}
+
+function renderProfilePage(body) {
+  const hero = FIGHTERS[STATE.selectedHeroIdx] || FIGHTERS[0];
+  const eqKat = getEquippedKatanaConfig();
+  const winRate = PLAYER_DATA.stats.matches > 0 ? Math.round((PLAYER_DATA.stats.wins / PLAYER_DATA.stats.matches) * 100) : 0;
+  const xpNeeded = PLAYER_DATA.level * 100;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'profile-panel';
+
+  const leftCard = document.createElement('div');
+  leftCard.className = 'panel-card';
+  leftCard.style.textAlign = 'center';
+  const avaDiv = document.createElement('div');
+  avaDiv.style.cssText = 'width:82px;height:82px;border-radius:50%;border:3px solid var(--gold);overflow:hidden;margin:0 auto 10px;';
+  setPortrait(avaDiv, hero);
+  leftCard.appendChild(avaDiv);
+
+  const nameRow = document.createElement('div');
+  nameRow.innerHTML = `
+    <div style="font-size:17px;font-weight:900;color:var(--gold);margin-bottom:4px;">${PLAYER_DATA.name}</div>
+    <div style="font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:8px;">Level ${PLAYER_DATA.level} Warrior (${PLAYER_DATA.xp}/${xpNeeded} XP)</div>
+    <div style="display:flex;gap:6px;justify-content:center;">
+      <input id="inp-player-name" type="text" maxlength="18" value="${PLAYER_DATA.name}" style="width:125px;padding:5px 8px;border-radius:6px;border:1px solid #475569;background:#0b1020;color:#fff;font-size:12px;" />
+      <button id="btn-save-name" class="pill-btn active">Save</button>
+    </div>
+    <div style="margin-top:12px;font-size:11.5px;color:#cbd5e1;background:rgba(0,0,0,0.32);padding:7px;border-radius:8px;">
+      Equipped Katana:<br><strong style="color:var(--gold);">${eqKat ? eqKat.name : 'Dragon Katana'}</strong>
+    </div>
+  `;
+  leftCard.appendChild(nameRow);
+
+  const rightCard = document.createElement('div');
+  rightCard.className = 'panel-card';
+  rightCard.innerHTML = `
+    <h3 style="color:var(--gold);font-size:15px;margin-bottom:4px;">Combat Statistics</h3>
+    <p style="font-size:11.5px;color:#9aa7cc;">Your lifetime performance across all 3-round arena battles.</p>
+    <div class="stats-grid">
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.stats.matches}</div><div class="sl">Matches</div></div>
+      <div class="stat-tile"><div class="sv" style="color:#42e64d;">${PLAYER_DATA.stats.wins}</div><div class="sl">Wins</div></div>
+      <div class="stat-tile"><div class="sv" style="color:var(--cyan);">${winRate}%</div><div class="sl">Win Rate</div></div>
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.stats.kos}</div><div class="sl">K.O.s</div></div>
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.stats.slashes}</div><div class="sl">Katana Slashes</div></div>
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.ownedKatanas.length}/${SHOP_KATANAS.length}</div><div class="sl">Katanas Owned</div></div>
+      <div class="stat-tile"><div class="sv">${FIGHTERS.filter(f => isFighterUnlocked(f.id)).length}/${FIGHTERS.length}</div><div class="sl">Fighters</div></div>
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.stats.parries}</div><div class="sl">Guards/Parries</div></div>
+      <div class="stat-tile"><div class="sv">${PLAYER_DATA.stats.adsWatched}</div><div class="sl">Ads Watched</div></div>
+    </div>
+  `;
+
+  wrap.append(leftCard, rightCard);
+  body.appendChild(wrap);
+
+  leftCard.querySelector('#btn-save-name').onclick = () => {
+    const val = leftCard.querySelector('#inp-player-name').value.trim();
+    if (val) {
+      PLAYER_DATA.name = val.slice(0, 18);
+      PLAYER_DATA.stats.profileEdited = 1;
+      savePlayerData();
+      renderAppPage('profile');
+    }
+  };
+}
+
+function katanaShopSVG(accent = '#ffb800') {
+  return `<svg viewBox="0 0 160 60" style="width:130px;height:52px;">
+    <path d="M18 38 L126 14 L148 16 L128 24 L20 44 Z" fill="#e2e8f0" stroke="${accent}" stroke-width="2"/>
+    <rect x="26" y="33" width="6" height="16" rx="2" transform="rotate(-12 26 33)" fill="${accent}"/>
+    <path d="M4 44 L26 39 L28 45 L6 50 Z" fill="#1e293b" stroke="${accent}" stroke-width="1.5"/>
+  </svg>`;
+}
+
+function renderShopPage(body) {
+  const topBanner = document.createElement('div');
+  topBanner.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:rgba(20,27,50,0.9);border:1px solid rgba(255,184,0,0.35);border-radius:10px;padding:10px 14px;margin-bottom:12px;';
+  topBanner.innerHTML = `
+    <div>
+      <strong style="color:var(--gold);font-size:14px;">Katana Armory Shop</strong>
+      <div style="font-size:11.5px;color:#cbd5e1;">Buy &amp; equip Katanas to power up your Slash attack in battle!</div>
+    </div>
+    <button class="m-action-btn" id="btn-shop-watch-ad">Watch Ad (+${ECONOMY_CONFIG.adCoinReward} Coins)</button>
+  `;
+  body.appendChild(topBanner);
+  topBanner.querySelector('#btn-shop-watch-ad').onclick = () => openWatchAdModal(() => renderAppPage('shop'));
+
+  const grid = document.createElement('div');
+  grid.className = 'shop-grid';
+
+  SHOP_KATANAS.forEach((k) => {
+    const owned = PLAYER_DATA.ownedKatanas.includes(k.id);
+    const equipped = PLAYER_DATA.equippedKatana === k.id;
+    const accentHex = k.tintColor ? `#${k.tintColor.toString(16).padStart(6, '0')}` : '#ffb800';
+
+    const card = document.createElement('div');
+    card.className = `shop-card ${equipped ? 'equipped' : ''}`;
+    card.innerHTML = `
+      <div class="shop-preview">
+        ${k.icon ? `<img src="${encodeURI(k.icon)}" alt="${k.name}" />` : katanaShopSVG(accentHex)}
+        <span class="shop-tag">+${k.damageBonus} SLASH DMG</span>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:${accentHex};margin-bottom:3px;">${k.name}</div>
+        <div style="font-size:11px;color:#9aa7cc;line-height:1.35;">${k.desc}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:5px;font-weight:900;font-size:13px;">
+          ${owned ? '<span style="color:#42e64d;font-size:12px;">OWNED</span>' : `${k.currency === 'diamond' ? diamondIconSVG(16) : coinIconSVG(16)} <span>${k.price}</span>`}
+        </div>
+        <button class="m-action-btn ${equipped ? 'done' : (owned ? 'claim' : '')}" style="min-width:88px;">
+          ${equipped ? 'Equipped' : (owned ? 'Equip' : 'Buy')}
+        </button>
+      </div>
+    `;
+
+    const btn = card.querySelector('button');
+    btn.onclick = async () => {
+      if (equipped) return;
+      if (owned) {
+        PLAYER_DATA.equippedKatana = k.id;
+        savePlayerData();
+        await ensureShopKatanaLoaded(k);
+        if (menuShowcase) menuShowcase.attachKatana(true);
+        if (p1) p1.attachKatana(true);
+        renderAppPage('shop');
+        return;
+      }
+
+      const canAfford = k.currency === 'diamond'
+        ? PLAYER_DATA.diamonds >= k.price
+        : PLAYER_DATA.coins >= k.price;
+
+      if (!canAfford) {
+        alert(`Not enough ${k.currency === 'diamond' ? 'Diamonds' : 'Coins'}! Complete Missions or Watch Ads to earn more.`);
+        return;
+      }
+
+      if (k.currency === 'diamond') PLAYER_DATA.diamonds -= k.price;
+      else PLAYER_DATA.coins -= k.price;
+
+      PLAYER_DATA.ownedKatanas.push(k.id);
+      PLAYER_DATA.equippedKatana = k.id;
+      savePlayerData();
+      await ensureShopKatanaLoaded(k);
+      if (menuShowcase) menuShowcase.attachKatana(true);
+      if (p1) p1.attachKatana(true);
+      renderAppPage('shop');
+    };
+
+    grid.appendChild(card);
+  });
+
+  body.appendChild(grid);
+}
+
+function renderHelpFaqPage(body) {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'max-width:780px;margin:0 auto;';
+  wrap.innerHTML = `
+    <div class="panel-card" style="margin-bottom:12px;border-color:rgba(0,212,255,0.5);">
+      <h3 style="color:var(--gold);font-size:16px;margin-bottom:6px;">Player Support &amp; Services</h3>
+      <p style="font-size:12.5px;color:#e2e8f0;line-height:1.55;margin-bottom:8px;">
+        Need assistance in <strong>War Legend Arena</strong>? Reach out to our official support email for any of the following services:
+      </p>
+      <ul style="font-size:12px;color:#cbd5e1;line-height:1.65;padding-left:18px;margin-bottom:10px;">
+        <li><strong>Bug &amp; Crash Reports:</strong> Report visual glitches, animation issues, or device lag for fast fixes.</li>
+        <li><strong>Shop &amp; Reward Support:</strong> Help with Katana purchases, mission claims, or ad reward issues.</li>
+        <li><strong>Progress &amp; Unlock Help:</strong> Guidance on Arena Missions, character unlocks, and offline caching.</li>
+        <li><strong>Feedback &amp; New Content:</strong> Suggest new fighters, new Katanas, and arena features!</li>
+      </ul>
+      <div style="background:rgba(0,0,0,0.4);padding:9px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:12.5px;">Official Support Email: <strong style="color:var(--cyan);">${SUPPORT_EMAIL}</strong></span>
+        <a href="mailto:${SUPPORT_EMAIL}?subject=War%20Legend%20Arena%20Support" class="pill-btn active" style="text-decoration:none;">Send Email</a>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q: How do I unlock locked characters?</div>
+      <div class="faq-a">Open <strong>Mission &rarr; Arena Mission</strong> and defeat the required opponents in 3-round matches. Once completed, the character unlocks permanently!</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: How do I earn Coins and Diamonds without cheating?</div>
+      <div class="faq-a">Win matches, complete Daily, Weekly &amp; Special Missions, unlock Achievements, and watch rewarded Ads. Coin earnings are balanced daily to keep the game fair.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: How do I equip a Katana I bought from the Shop?</div>
+      <div class="faq-a">Go to <strong>More &rarr; Katana Shop</strong>, buy your favorite Katana, and click <strong>Equip</strong>. It will automatically appear whenever you press <strong>SLASH</strong> in combat!</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: How do I fix lag on low-end mobile phones?</div>
+      <div class="faq-a">Open <strong>Settings &amp; Graphics</strong> and turn <strong>Low-End Ultra Smooth Mode ON</strong> or set Graphics Quality to <strong>LOW</strong>.</div>
+    </div>
+  `;
+  body.appendChild(wrap);
+}
+
+function renderPrivacyPage(body) {
+  const wrap = document.createElement('div');
+  wrap.className = 'panel-card';
+  wrap.style.cssText = 'max-width:780px;margin:0 auto;line-height:1.6;font-size:12.5px;color:#cbd5e1;';
+  wrap.innerHTML = `
+    <h3 style="color:var(--gold);font-size:16px;margin-bottom:8px;">Privacy Policy — War Legend Arena</h3>
+    <p style="margin-bottom:8px;">1. <strong>Local Storage Only:</strong> Your player name, Coins, Diamonds, Katanas, Achievements, and Mission progress are saved locally on your device using browser LocalStorage and Offline Cache.</p>
+    <p style="margin-bottom:8px;">2. <strong>Sponsored Ads:</strong> Rewarded ads are only loaded when you explicitly tap a "Watch Ad" button. Third-party ad networks may use standard non-personal technical cookies to display the 300×250 ad banner.</p>
+    <p style="margin-bottom:8px;">3. <strong>Contact:</strong> For any privacy questions or data removal requests, email us at <strong style="color:var(--cyan);">${SUPPORT_EMAIL}</strong>.</p>
+  `;
+  body.appendChild(wrap);
+}
+
+function renderAboutPage(body) {
+  const wrap = document.createElement('div');
+  wrap.className = 'panel-card';
+  wrap.style.cssText = 'max-width:780px;margin:0 auto;line-height:1.6;font-size:12.5px;color:#cbd5e1;';
+  wrap.innerHTML = `
+    <h3 style="color:var(--gold);font-size:18px;margin-bottom:6px;">War Legend Arena (v11.3)</h3>
+    <p style="margin-bottom:8px;">Built with Three.js WebGL 3D Engine for smooth Landscape combat on both Mobile and PC browsers, with full Offline Asset Caching support.</p>
+    <p style="margin-bottom:8px;">Features 3-Round Dojo Combat, Timed Guard Parries, Dragon Katana Slash Combos, Arena Unlock Missions, Daily/Weekly Missions, Achievements, and a Katana Armory Shop.</p>
+    <p>Support &amp; Inquiries: <strong style="color:var(--cyan);">${SUPPORT_EMAIL}</strong></p>
+  `;
+  body.appendChild(wrap);
+}
+
+/* ============================================================
+   12. MATCH MANAGEMENT, ANNOUNCEMENTS & MENU BINDINGS
    ============================================================ */
 let p1 = null, p2 = null, menuShowcase = null;
 
@@ -3917,6 +5477,8 @@ function startMatch() {
   STATE.screen = 'fight'; STATE.paused = false; STATE.matchOver = false;
   STATE.round = 1; STATE.p1Wins = 0; STATE.p2Wins = 0;
   STATE.roundEndPhase = null; STATE.hitStop = 0;
+  document.getElementById('app-page-overlay').classList.remove('open');
+  document.getElementById('bottom-nav-bar').classList.remove('visible');
   document.getElementById('menu-screen').classList.remove('active');
   document.getElementById('hud-screen').classList.add('active');
   document.getElementById('pause-modal').classList.remove('open');
@@ -3932,8 +5494,11 @@ function returnToMenu() {
   document.getElementById('hud-screen').classList.remove('active');
   document.getElementById('pause-modal').classList.remove('open');
   document.getElementById('menu-screen').classList.add('active');
+  document.getElementById('bottom-nav-bar').classList.add('visible');
+  openSectionPage('home');
   renderMenuFighterCards();
   updatePreviewInfo();
+  updateCurrencyUI();
   spawnMenuShowcase();
   sound.startBGM();
 }
@@ -3943,7 +5508,7 @@ function spawnMenuShowcase() {
   menuUserYaw = 0;
   if (!isFighterUnlocked(FIGHTERS[STATE.selectedHeroIdx].id)) STATE.selectedHeroIdx = 0;
   const hero = FIGHTERS[STATE.selectedHeroIdx];
-  menuShowcase = new Fighter(hero, 0.85, true, true);
+  menuShowcase = new Fighter(hero, 0.72, true, true);
   menuShowcase.group.rotation.y = -0.35;
   if (!assetCache.models[hero.id] && !isStreaming) {
     ensureFighterLoaded(hero);
@@ -3961,6 +5526,12 @@ function beginRoundEnd(winner) {
     p1.state = 'idle'; p1.playAnim('idle');
     STATE.roundEndTimer = Math.max(2.0, p2.getClipDuration('knockdown', 2.2) + 0.35);
     showAnnounce(STATE.timer <= 0 ? 'TIME UP!' : 'K.O.!', 1.5);
+    if (STATE.timer > 0) {
+      ensureDailyWeeklyFresh();
+      PLAYER_DATA.stats.kos++;
+      PLAYER_DATA.weekly.kos++;
+      savePlayerData();
+    }
   } else if (winner === 2) {
     if (p1.state !== 'knockdown') { p1.state = 'knockdown'; p1.playAnim('knockdown'); }
     p2.state = 'idle'; p2.playAnim('idle');
@@ -3997,6 +5568,32 @@ function advanceRoundEnd(dt) {
     if (STATE.p1Wins >= 2 || STATE.p2Wins >= 2) {
       STATE.matchOver = true;
       const won = STATE.p1Wins >= 2;
+
+      ensureDailyWeeklyFresh();
+      PLAYER_DATA.stats.matches++;
+      PLAYER_DATA.daily.matches++;
+      PLAYER_DATA.weekly.matches++;
+      let coinGain = 0;
+
+      if (won) {
+        PLAYER_DATA.stats.wins++;
+        PLAYER_DATA.daily.wins++;
+        PLAYER_DATA.weekly.wins++;
+        addXp(30);
+        const capLeft = Math.max(0, ECONOMY_CONFIG.dailyMatchCoinCap - PLAYER_DATA.daily.coinEarnedToday);
+        coinGain = Math.min(ECONOMY_CONFIG.winCoinReward, capLeft);
+      } else {
+        PLAYER_DATA.stats.losses++;
+        addXp(10);
+        const capLeft = Math.max(0, ECONOMY_CONFIG.dailyMatchCoinCap - PLAYER_DATA.daily.coinEarnedToday);
+        coinGain = Math.min(ECONOMY_CONFIG.lossCoinReward, capLeft);
+      }
+      if (coinGain > 0) {
+        PLAYER_DATA.coins += coinGain;
+        PLAYER_DATA.daily.coinEarnedToday += coinGain;
+      }
+      savePlayerData();
+
       let unlockedNames = [];
       if (won) {
         unlockedNames = recordMissionVictory(p2.cfg.id);
@@ -4005,11 +5602,12 @@ function advanceRoundEnd(dt) {
         sound.playAnnouncement('youLose');
       }
       document.getElementById('overlay-title').textContent = won ? 'VICTORY!' : 'DEFEAT';
+      const rewardLine = coinGain > 0 ? `<div style="color:var(--gold);font-weight:800;margin-top:4px;">+${coinGain} Coins Earned!</div>` : `<div style="color:#94a3b8;font-size:12px;margin-top:4px;">Daily Match Coin Cap Reached (${ECONOMY_CONFIG.dailyMatchCoinCap})</div>`;
       document.getElementById('overlay-sub').innerHTML = won
         ? (unlockedNames.length
-            ? `<strong style="color:#42e64d;">NEW FIGHTER UNLOCKED: ${unlockedNames.join(', ')}!</strong>`
-            : 'Victory recorded in Arena Missions! Ready for the next fight?')
-        : 'Train harder and challenge again!';
+            ? `<strong style="color:#42e64d;">NEW FIGHTER UNLOCKED: ${unlockedNames.join(', ')}!</strong>${rewardLine}`
+            : `Victory recorded in Missions!${rewardLine}`)
+        : `Train harder and challenge again!${rewardLine}`;
       document.getElementById('pause-modal').classList.add('open');
       sound.startBGM();
     } else {
@@ -4088,7 +5686,7 @@ function renderMenuFighterCards() {
     card.append(thumb, lbl);
     card.addEventListener('click', () => {
       if (!unlocked) {
-        document.getElementById('btn-mission').click();
+        openSectionPage('mission', 'arena');
         return;
       }
       STATE.selectedHeroIdx = idx;
@@ -4152,8 +5750,9 @@ function openFightersAndOpponentModal(focusOpponent = false) {
     body.querySelectorAll('button').forEach((btn) => {
       btn.onclick = () => {
         const i = Number(btn.dataset.i);
-if (btn.dataset.role === 'unlock') {
-          document.getElementById('btn-mission').click();
+        if (btn.dataset.role === 'unlock') {
+          document.getElementById('modal-panel').classList.remove('open');
+          openSectionPage('mission', 'arena');
           return;
         }
         if (btn.dataset.role === 'hero') {
@@ -4171,72 +5770,23 @@ if (btn.dataset.role === 'unlock') {
 
 document.getElementById('btn-character').onclick = () => openFightersAndOpponentModal(false);
 document.getElementById('btn-select-opponent').onclick = () => openFightersAndOpponentModal(true);
+document.getElementById('btn-mission').onclick = () => openSectionPage('mission', 'daily');
 
-document.getElementById('btn-mission').onclick = () => {
-  openModal('Arena Mission — Unlock Fighters', (body) => {
-    const info = document.createElement('div');
-    info.style.cssText = 'font-size:12px;color:#b8c2df;margin-bottom:12px;line-height:1.45;';
-    info.textContent = 'Defeat the required arena opponents in 3-round matches to unlock locked characters!';
-    body.appendChild(info);
+document.querySelectorAll('#bottom-nav-bar .bnav-tab').forEach((btn) => {
+  btn.onclick = () => openSectionPage(btn.dataset.nav);
+});
 
-    ARENA_MISSIONS.forEach((m) => {
-      const reward = FIGHTERS.find((f) => f.id === m.unlockId);
-      if (!reward) return;
-      const unlocked = isFighterUnlocked(m.unlockId);
-      const mKills = PROGRESS.kills[m.unlockId] || {};
-
-      const card = document.createElement('div');
-      card.className = `mission-card ${unlocked ? 'done' : ''}`;
-
-      const head = document.createElement('div');
-      head.className = 'mission-head';
-
-      const leftWrap = document.createElement('div');
-      leftWrap.style.cssText = 'display:flex;align-items:center;gap:10px;';
-      const ava = document.createElement('div');
-      ava.className = 'mission-avatar';
-      setPortrait(ava, reward);
-      const txtWrap = document.createElement('div');
-      txtWrap.innerHTML = `<strong style="color:${reward.accent};font-size:14px;">${m.title}</strong><br><small style="color:#9aa7cc;">${m.desc}</small>`;
-      leftWrap.append(ava, txtWrap);
-
-      const badge = document.createElement('span');
-      badge.className = `mission-status ${unlocked ? 'unlocked' : 'locked'}`;
-      badge.textContent = unlocked ? 'UNLOCKED' : 'LOCKED';
-      head.append(leftWrap, badge);
-      card.appendChild(head);
-
-      m.targets.forEach((t) => {
-        const tgtFighter = FIGHTERS.find((f) => f.id === t.targetId);
-        const tgtIdx = FIGHTERS.findIndex((f) => f.id === t.targetId);
-        if (!tgtFighter) return;
-        const cur = unlocked ? t.needed : Math.min(t.needed, mKills[t.targetId] || 0);
-        const targetDone = cur >= t.needed;
-
-        const row = document.createElement('div');
-        row.className = 'mission-target';
-        row.innerHTML = `
-          <span>Defeat <strong style="color:${tgtFighter.accent};">${tgtFighter.shortName}</strong> (${cur} / ${t.needed})</span>
-          ${targetDone
-            ? '<span style="color:#42e64d;font-weight:800;font-size:11px;">COMPLETED</span>'
-            : `<button class="pill-btn active" data-opp="${tgtIdx}">Fight Now</button>`
-          }`;
-        const fightBtn = row.querySelector('button');
-        if (fightBtn) {
-          fightBtn.onclick = () => {
-            STATE.selectedRivalIdx = Number(fightBtn.dataset.opp);
-            renderMenuFighterCards();
-            document.getElementById('modal-panel').classList.remove('open');
-            startMatch();
-          };
-        }
-        card.appendChild(row);
-      });
-
-      body.appendChild(card);
-    });
-  });
+document.getElementById('btn-page-back').onclick = () => {
+  if (['profile', 'shop', 'faq', 'privacy', 'about'].includes(STATE.activeSection)) {
+    openSectionPage('more');
+  } else {
+    openSectionPage('home');
+  }
 };
+
+document.querySelectorAll('[data-open-shop="1"]').forEach((btn) => {
+  btn.onclick = () => openSectionPage('shop');
+});
 
 document.getElementById('btn-settings').onclick = () => {
   openModal('Settings & Mobile Graphics', (body) => {
@@ -4317,13 +5867,13 @@ document.getElementById('btn-resume').onclick = () => {
 document.getElementById('btn-quit-match').onclick = returnToMenu;
 
 /* ============================================================
-   12. MAIN RENDER LOOP
+   13. MAIN RENDER LOOP (SLIGHTLY CLOSER CINEMATIC CAMERA)
    ============================================================ */
 const clock = new THREE.Clock();
 const _camTarget = new THREE.Vector3();
-const _camLookTarget = new THREE.Vector3(0, 1.25, 0);
-const _camLookCur = new THREE.Vector3(0, 1.25, 0);
-const _menuCamPos = new THREE.Vector3(0.2, 1.85, 5.2);
+const _camLookTarget = new THREE.Vector3(0, 1.2, 0);
+const _camLookCur = new THREE.Vector3(0, 1.2, 0);
+const _menuCamPos = new THREE.Vector3(0.18, 1.74, 4.45);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -4374,7 +5924,7 @@ function animate() {
       else { menuShowcase.animClock += rawDt; menuShowcase.updateProceduralPose(); }
     }
     camera.position.lerp(_menuCamPos, camLerp);
-    _camLookTarget.set(0.45, 1.15, 0);
+    _camLookTarget.set(0.35, 1.12, 0);
     _camLookCur.lerp(_camLookTarget, camLerp);
     camera.lookAt(_camLookCur);
   } else if (STATE.screen === 'fight' && !STATE.paused && p1 && p2) {
@@ -4405,19 +5955,20 @@ function animate() {
     if (STATE.roundEndPhase === 'loser' && (STATE.roundWinnerIdx === 1 || STATE.roundWinnerIdx === 2)) {
       const loser = STATE.roundWinnerIdx === 1 ? p2 : p1;
       const lx = loser.group.position.x;
-      _camTarget.set(lx, 1.5, 4.15);
+      _camTarget.set(lx, 1.45, 3.75);
       _camLookTarget.set(lx, 0.72, 0);
     } else if (STATE.roundEndPhase === 'winner' && (STATE.roundWinnerIdx === 1 || STATE.roundWinnerIdx === 2)) {
       const winner = STATE.roundWinnerIdx === 1 ? p1 : p2;
       const wx = winner.group.position.x;
-      _camTarget.set(wx, 1.78, 4.25);
-      _camLookTarget.set(wx, 1.18, 0);
+      _camTarget.set(wx, 1.72, 3.85);
+      _camLookTarget.set(wx, 1.15, 0);
     } else {
       const midX = (p1.group.position.x + p2.group.position.x) * 0.5;
       const sep = Math.abs(p1.group.position.x - p2.group.position.x);
-      const targetZ = THREE.MathUtils.clamp(5.7 + sep * 0.65, 5.9, 10.6);
-      _camTarget.set(midX + (Math.random() - 0.5) * camShake, 2.0 + (Math.random() - 0.5) * camShake, targetZ);
-      _camLookTarget.set(midX, 1.25, 0);
+      // Slightly closer cinematic fighting camera
+      const targetZ = THREE.MathUtils.clamp(4.65 + sep * 0.56, 4.9, 9.1);
+      _camTarget.set(midX + (Math.random() - 0.5) * camShake, 1.82 + (Math.random() - 0.5) * camShake, targetZ);
+      _camLookTarget.set(midX, 1.2, 0);
     }
 
     camera.position.lerp(_camTarget, camLerp);
@@ -4436,6 +5987,7 @@ window.addEventListener('resize', () => {
 
 checkOptionalLogo();
 applyActionButtonImages();
+updateCurrencyUI();
 renderMenuFighterCards();
 updatePreviewInfo();
 spawnMenuShowcase();
